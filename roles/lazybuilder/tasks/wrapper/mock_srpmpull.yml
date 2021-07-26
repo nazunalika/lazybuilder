@@ -1,0 +1,337 @@
+---
+- name: Pull down source rpm - git mode
+  block:
+    - name: Verify that at most git_url is set
+      assert:
+        that:
+          - git_url is defined
+          - '"http" in git_url'
+        fail_msg: "git_url is NOT defined, failing out"
+        success_msg: "git_url is defined, continuing..."
+
+    # TODO - Put in the splitter for the git url and make facts
+    - name: Clone the repository
+      git:
+        repo: "{{ git_url }}"
+        dest: "/home/{{ mock_builder }}/{{ source_name }}"
+        version: "{{ git_commit_hash }}"
+      tags:
+        - mock
+        - git_pull
+
+    - name: Check for metadata file
+      stat:
+        path: "/home/{{ mock_builder }}/{{ source_name }}/.{{ source_name }}.metadata"
+      register: metadata_check
+      check_mode: false
+      changed_when: "1 != 1"
+#     when:
+#       - "git_use_metadata|bool"
+      tags:
+        - mock
+        - git_pull
+
+    - name: Check for sources file
+      stat:
+        path: "/home/{{ mock_builder }}/{{ source_name }}/sources"
+      register: source_metadata_check
+      check_mode: false
+      changed_when: "1 != 1"
+#     when:
+#       - "git_use_metadata|bool"
+      tags:
+        - mock
+        - git_pull
+
+    ############################################################################ 
+    # This runs if a .metadata file was found and has a size > 0
+    # Format is expected to be "SUM  SOURCES/name", which is the output of any
+    # *sum command. It is also expected the sources here are from sha256sum as
+    # we do not have a way of detecting the sums just yet. This might require
+    # something custom.
+    - name: .metadata based lookup and pull
+      block:
+        - name: Lookup the metadata file
+          set_fact:
+            metadata_ls: "{{ lookup('file', '/home/{{ mock_builder }}/{{ source_name }}/.{{ source_name }}.metadata') }}"
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Generate dictionary for the metadata
+          set_fact:
+            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[0]: item.split()[1]}) }}"
+          with_items:
+            - "{{ metadata_ls.strip().split('\n') }}"
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Ensure SOURCES directory exists
+          file:
+            path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+            state: directory
+            mode: '0755'
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Pull down sources
+          get_url:
+            url: "{{ git_source_url }}/{{ item.key }}"
+            dest: "/home/{{ mock_builder }}/{{ source_name }}/{{ item.value }}"
+            checksum: "sha256:{{ item.key }}"
+          loop: "{{ metadata_ds | dict2items }}"
+          tags:
+            - git_pull
+            - metadata
+
+      when:
+        - "git_use_metadata|bool"
+        - git_source_url is defined
+        - metadata_check.stat.exists
+        - metadata_check.stat.size > 0
+      tags:
+        - git_pull
+        - metadata
+    # end
+    ############################################################################
+
+    ############################################################################ 
+    # This runs if a sources file was found and has a size > 0
+    # Format is expected to be "type (name) = SUM" - we are able to also take
+    # the type of sum and use it for the get_url checksum verification
+    # something custom.
+    - name: sources based lookup and pull
+      block:
+        - name: Ensure SOURCES directory exists
+          file:
+            path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+            state: directory
+            mode: '0755'
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Ensure SPECS directory exists
+          file:
+            path: "/home/{{ mock_builder }}/{{ source_name }}/SPECS"
+            state: directory
+            mode: '0755'
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Lookup the metadata file
+          set_fact:
+            metadata_ls: "{{ lookup('file', '/home/{{ mock_builder }}/{{ source_name }}/sources') }}"
+          when:
+            - git_source_url is defined
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Generate dictionary for the metadata
+          set_fact:
+            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[3]: {'sum': item.split()[0], 'name': item.split()[1]}}) }}"
+          with_items:
+            - "{{ metadata_ls.strip().split('\n') }}"
+          when:
+            - git_source_url is defined
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Pull down sources
+          get_url:
+            url: "{{ git_source_url }}/{{ item.key }}"
+            dest: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES/{{ item.value.name | regex_replace('\\((.*)\\)','\\1') }}"
+            checksum: "{{ item.value.sum | lower }}:{{ item.key }}"
+          loop: "{{ metadata_ds | dict2items }}"
+          when:
+            - git_source_url is defined
+          tags:
+            - git_pull
+            - metadata
+
+        - name: Move all files to their correct locations
+          shell:
+            cmd: |
+              shopt -s extglob
+              mv !(*.spec) SOURCES/
+              mv *.spec SPECS/
+            chdir: "/home/{{ mock_builder }}/{{ source_name }}"
+          changed_when: "1 != 1"
+          check_mode: false
+          register: git_pull_source_ret
+          failed_when: "git_pull_source_ret != 0"
+
+      when:
+        - "git_use_metadata|bool"
+        - source_metadata_check.stat.exists
+        - source_metadata_check.stat.size > 0
+      tags:
+        - git_pull
+        - metadata
+    # end
+    ############################################################################
+    - name: Notify user of possible playbook end
+      debug:
+        msg:
+          - "!! Warning !!"
+          - "This role will exit if:"
+          - "  * git_use_metadata is true"
+          - "  * metadata or sources file was not found"
+          - "  * SPECS/SOURCES directories are missing"
+
+    - name: Verifying SPECS directory
+      stat:
+        path: "/home/{{ mock_builder }}/{{ source_name }}/SPECS"
+      register: git_specs_dir
+      check_mode: false
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - git_pull
+
+    - name: Verifying SOURCES directory
+      stat:
+        path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+      register: git_sources_dir
+      check_mode: false
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - git_pull
+
+    - name: Exit if metadata was not found, we don't consider it an rpm repo
+      fail:
+        msg: "Metadata nor sources file were found. Failed."
+      when:
+        - "git_use_metadata|bool"
+        - not metadata_check.stat.exists
+        - not source_metadata_check.stat.exists
+      tags:
+        - git_pull
+        - metadata
+
+    - name: Exit if SPECS/SOURCES were not found, it is not properly set up
+      fail:
+        msg: "SPECS or SOURCES directory were not found or are not directories. Failed."
+      when:
+        - (not git_specs_dir.stat.exists) or (not git_sources_dir.stat.exists)
+        - (not git_specs_dir.stat.isdir) or (not git_sources_dir.stat.isdir)
+
+    - name: Get spec name
+      find:
+        paths: "/home/{{ mock_builder }}/{{ source_name }}"
+        patterns: "{{ source_name }}*.spec"
+        recurse: true
+      register: srpm_find
+
+    - name: Set spec filename
+      set_fact:
+        srpm_spec: "{{ srpm_find['files'][0]['path'].split('/')[-1] }}"
+
+    - name: Copy the relevant sources into rpmbuild
+      synchronize:
+        src: "/home/{{ mock_builder }}/{{ source_name }}/"
+        dest: "/home/{{ mock_builder }}/rpmbuild"
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=.{{ source_name }}.metadata"
+      tags:
+        - git_pull
+        - metadata
+
+    - name: Clean up the git clone
+      file:
+        path: "/home/{{ mock_builder }}/{{ source_name }}"
+        state: absent
+      tags:
+        - git_pull
+
+    - name: Generate srpm
+      command: "/usr/bin/rpmbuild -bs /home/{{ mock_builder }}/rpmbuild/SPECS/{{ srpm_spec }}"
+      changed_when: '"Wrote:" in srpm_build_ret.stdout'
+      failed_when: "srpm_build_ret.rc != 0"
+      register: srpm_build_ret
+
+    - name: Set path to the srpm
+      set_fact:
+        mock_srpm_path: "{{ srpm_build_ret.stdout.split()[1] }}"
+      tags:
+        - git_pull
+
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to pull git repo or metadata: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '/home/{{ mock_builder }}/{{ source_name }}'
+        - '/home/{{ mock_builder }}/rpmbuild'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+
+  when:
+    - "source_mode == 'git'"
+  tags:
+    - mock
+    - git_pull
+
+- name: Pull down source rpm - srpm mode
+  block:
+    - name: Check that srpm_url is a web URL
+      assert:
+        that:
+          - '("http:" in srpm_url or "https:" in srpm_url)'
+          - '".rpm" in srpm_url'
+        fail_msg: "srpm_url does not appear to be a URL, is file://, or is NOT an .rpm"
+        success_msg: "it's a web link, continuing..."
+      tags:
+        - srpm_pull
+
+    - name: Pull down the source rpm and place in SRPMS (web)
+      get_url:
+        url: "{{ srpm_url }}"
+        dest: "/home/{{ mock_builder }}/rpmbuild/SRPMS/"
+      register: srpm_pull
+      tags:
+        - srpm_pull
+
+    - name: Set path to the srpm
+      set_fact:
+        mock_srpm_path: "{{ srpm_pull.dest }}"
+      tags:
+        - srpm_pull
+
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to srpm or set our vars: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '/home/{{ mock_builder }}/rpmbuild'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+
+  when:
+    - "source_mode == 'srpm'"
+    - 'srpm_url is defined'
+  tags:
+    - mock
+    - srpm_pull
+...

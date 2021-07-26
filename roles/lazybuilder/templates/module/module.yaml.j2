@@ -1,0 +1,107 @@
+---
+document: {{ module_data.document }}
+version: {{ module_data.version }}
+data:
+  name: {{ module_data.data.name | default("source") }}
+  stream: "{{ module_data.data.stream }}"
+  version: {{ module_version | default(8040) }}
+  context: {{ module_context | default('deadb33f') }}
+  arch: {{ build_arch | default(ansible_architecture) }}
+  summary: {{ module_data.data.summary | wordwrap(width=79) | indent(width=4) }}
+  description: {{ module_data.data.description | wordwrap(width=79) | indent(width=4) }}
+  license:
+{% for (key, value) in module_data.data.license.iteritems() %}
+    {{ key }}:
+{% for l in value %}
+      - {{ l | indent(width=4) }}
+{% endfor %}
+{% endfor %}
+  xmd: {{ xmd_data | default({}) }}
+{% if module_data.data.dependencies is defined %}
+  dependencies:
+{% for l in module_data.data.dependencies %}
+{% for r in l.keys() %}
+{% if loop.index == 1 %}
+  - {{ r }}:
+{% else %}
+    {{ r }}:
+{% endif %}
+{% for (m, n) in l[r].iteritems() %}
+      {{ m }}: [{{ n | join(', ') }}]
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if module_data.data.filter is defined %}
+  filter:
+{% for (key, value) in module_data.data.filter.iteritems() %}
+    {{ key }}:
+{% for l in value %}
+    - {{ l }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if module_data.data.profiles is defined %}
+  profiles:
+{% for (key, value) in module_data.data.profiles.iteritems() %}
+    {{ key }}:
+{% for (key, value) in value.iteritems() %}
+{% if value is iterable and (value is not string and value is not mapping) %}
+      {{ key | indent(width=6) }}: [{{ value | join(', ') }}]
+{% else %}
+      {{ key | indent(width=6) }}: {{ value }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if module_data.data.api is defined %}
+  api:
+{% for (key, value) in module_data.data.api.iteritems() %}
+    {{ key }}:
+{% for l in value %}
+    - {{ l }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if module_data.data.buildopts is defined %}
+  buildopts:
+{% for (key, value) in module_data.data.buildopts.iteritems() %}
+    {{ key }}:
+{% for (key, value) in value.iteritems() %}
+      {{ key }}: |
+        {{ value | indent(width=8) }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if module_data.data.references is defined %}
+  references:
+{% for (key, value) in module_data.data.references.iteritems() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% if module_data.data.components is defined %}
+  components:
+{% for (key, value) in module_data.data.components.iteritems() %}
+    {{ key }}:
+{% for (key, value) in value.iteritems() %}
+      {{ key }}:
+{% for (key, value) in value.iteritems() %}
+{% if value is iterable and (value is not string and value is not mapping) %}
+        {{ key | indent(width=8) }}: [{{ value | join(', ') }}]
+{% else %}
+        {{ key | indent(width=8) }}: {{ value }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{% if artifacts is defined %}
+  artifacts:
+{% for (key, value) in artifacts.iteritems() %}
+    {{ key }}:
+{% for l in value %}
+    - {{ l }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+...

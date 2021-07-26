@@ -1,0 +1,14 @@
+---
+# module specific builds, inherits some mock tasks but not all
+- name: "Import el{{ major }} bootstrap repos"
+  include_tasks: wrapper/mock_vars.yml
+  tags:
+    - mock
+
+- name: "Ensure that {{ mock_builder }} is setup properly"
+  include_tasks: wrapper/mock_setup.yml
+  tags:
+    - mock
+
+# !! OTHER STEPS REMOVED FOR NOW - WILL BE REDONE !!
+...

@@ -1,0 +1,87 @@
+---
+################################################################################
+# Check that mock_srpm_path is defined
+- name: Verify that that the srpm path is defined
+  assert:
+    that:
+      - mock_srpm_path is defined
+      - '"src.rpm" in mock_srpm_path'
+    fail_msg: |
+      - "The path to the srpm was not defined."
+      - "Did you properly pull it or build it from source?"
+    success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
+
+################################################################################
+# perform the build - the RPMs made will be put into a var
+- name: Build Process
+  block:
+    - name: Display vars
+      debug:
+        msg:
+          - "Name: {{ mock_vendor }}"
+          - "Version: {{ full }}"
+          - "Dist tag: {{ mock_dist | default(dist) }}"
+          - "Source: {{ source_name }} {{ mock_srpm_path }}"
+          - "Architecture: {{ mock_arch }}"
+          - "Module: {{ module_mode }}"
+      tags:
+        - mock
+        - build_phase
+
+    ############################################################################
+    # Mock wrapper that calls the config deployed
+    - name: Deploy mock build script
+      template:
+        src: "mock/mock-wrapper.sh.j2"
+        dest: "/home/{{ mock_builder }}/mock-wrapper.sh"
+        owner: "{{ mock_builder }}"
+        group: "{{ mock_builder }}"
+        mode: "0755"
+      tags:
+        - mock
+
+    ############################################################################
+    # Runs the mock build
+    - name: Run the mock build
+      command:
+        cmd: "/home/{{ mock_builder }}/mock-wrapper.sh"
+        chdir: "/home/{{ mock_builder }}"
+      register: mock_finish
+      changed_when: "1 != 1"
+      ignore_errors: true
+
+    ############################################################################
+    # Verify that mock exited cleanly.
+    - name: Check that mock exited cleanly
+      assert:
+        that:
+          - mock_finish.rc == 0
+        fail_msg:
+          - "=========================================================================="
+          - "Mock did not exit cleanly - build likely failed"
+          - "Please verify the logs on {{ ansible_hostname }} in:"
+          - "/var/lib/mock/{{ mock_build_root }}/result"
+        success_msg:
+          - "Mock build succeeded"
+          - "Results: /var/lib/mock/{{ distro }}-{{ major }}-{{ mock_arch }}/result"
+          - "!! NOTE !!"
+          - "If transfer mode is enabled, these RPMs will be copied appropriately."
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to build our RPM: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '/home/{{ mock_builder }}/rpmbuild'
+        - '/home/{{ mock_builder }}/{{ source_name }}'
+        - '/home/{{ mock_builder }}/mock-wrapper.sh'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+...

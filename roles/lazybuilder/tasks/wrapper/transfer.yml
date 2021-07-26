@@ -1,0 +1,5 @@
+---
+################################################################################
+# transfer wrapper, copy the files to where they need to be and optionally
+# generate the repo data for said repo
+...

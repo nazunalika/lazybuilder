@@ -1,0 +1,28 @@
+---
+# Calls a lazy mock build
+- hosts: "{{ host | default('localhost') }}"
+  become: true
+  become_user: "{{ mock_builder | default('rpmbuild') }}"
+  gather_facts: true
+  vars:
+    module_mode: true
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "Builder is available"
+        fail_msg: "Builder is unavailable"
+
+    # We should assert here if the proper vars are provided
+
+  - name: Include lazybuilder mock tasks
+    include_role:
+      name: lazybuilder
+      tasks_from: "mock.yml"

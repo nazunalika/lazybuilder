@@ -1,0 +1,23 @@
+---
+mock_repos:
+  - repoid: "baseos"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/8/BaseOS/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+  - repoid: "appstream"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/8/AppStream/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+  - repoid: "powertools"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/8/PowerTools/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+  - repoid: "devel"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/8/Devel/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+...

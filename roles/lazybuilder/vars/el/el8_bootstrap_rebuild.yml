@@ -1,0 +1,6 @@
+---
+bootstrap_repos:
+  - repoid: "{{ mock_bootstrap_name }}"
+    baseurl: "{{ mock_bs_full_path }}"
+    priority: "10"
+...

@@ -1,0 +1,6 @@
+---
+solo_repos:
+  - repoid: "{{ mock_solo_name }}"
+    baseurl: "{{ mock_solo_full_path }}"
+    priority: 5
+...

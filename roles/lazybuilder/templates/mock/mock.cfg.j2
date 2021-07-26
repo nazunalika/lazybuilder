@@ -1,0 +1,104 @@
+config_opts['root'] = '{{ mock_build_root }}'
+config_opts['target_arch'] = '{{ mock_arch }}'
+config_opts['legal_host_arches'] = {{ mock_host_arches }}
+config_opts['chroot_setup_cmd'] = '{{ mock_chroot_setup_cmd }} {{ mock_chroot_additional | default("") }}'
+config_opts['dist'] = '{{ mock_dist | default(dist) }}{{ mock_dist_append | default("") }}'
+config_opts['releasever'] = '{{ major }}'
+config_opts['package_manager'] = 'dnf'
+config_opts['extra_chroot_dirs'] = [ '/run/lock', ]
+
+################################################################################
+# Mimicking some build options
+config_opts['plugin_conf']['ccache_enable'] = False
+config_opts['plugin_conf']['root_cache_enable'] = False
+config_opts['plugin_conf']['yum_cache_enable'] = False
+config_opts['rpmbuild_networking'] = {{ mock_rpmbuild_networking | default('False') }}
+config_opts['use_host_resolv'] = {{ mock_use_host_resolv | default('False') }}
+config_opts['macros']['%_rpmfilename'] = '%%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm'
+config_opts['macros']['%_host'] = '{{ mock_host }}'
+config_opts['macros']['%_host_cpu'] = '{{ mock_arch }}'
+config_opts['macros']['%_vendor'] = "redhat"
+config_opts['macros']['%_vendor_host'] = "redhat"
+
+################################################################################
+# Start specific macros for builds
+config_opts['%vendor'] = "{{ mock_vendor | default('Rocky') }}"
+config_opts['%packager'] = "{{ mock_packager | default('Lazy Builder <releng@rockylinux.org>') }}"
+
+################################################################################
+# Modules, if required
+{% if module_mode %}
+config_opts['files']['/etc/rpm/macros.zz-modules'] = """
+%dist {{ module_dist }}{{ mock_dist_append | default("") }}
+%modularitylabel {{ module_modularitylabel }}
+%_module_build 1
+%_module_name {{ source_name }}
+%_module_stream {{ module_stream }}
+%_module_version {{ module_version }}
+%_module_context {{ module_context }}
+
+{{ module_data.data.buildopts.rpms.macros }}
+"""
+{% endif %}
+
+config_opts['dnf.conf'] = """
+[main]
+cachedir=/var/cache/yum
+keepcache=1
+debuglevel=2
+reposdir=/dev/null
+logfile=/var/log/yum.log
+retries=20
+obsoletes=1
+gpgcheck=0
+assumeyes=1
+syslog_ident=mock
+syslog_device=
+metadata_expire=0
+mdpolicy=group:primary
+best=1
+protected_packages=
+module_platform_id=platform:el{{ major }}
+
+exclude={{ mock_excludes | default('') }}
+
+{% if mock_repos is defined %}
+{% for repo in mock_repos %}
+[{{ repo.repoid }}]
+name={{ repo.repoid }}
+baseurl={{ repo.baseurl }}
+gpgcheck={{ repo.gpgcheck }}
+enabled={{ repo.enabled }}
+gpgkey={{ repo.gpgkey }}
+priority={{ repo.priority|default("99") }}
+
+{% endfor %}
+{% endif %}
+
+{% if bootstrap_repos is defined %}
+# The idea is that if we have a bootstrap repo, regardless of where it's at, it
+# will need to be placed here with gpg check off. The packages don't get signed
+# during a bootstrap anyway
+
+{% for repo in bootstrap_repos %}
+[bootstrap-{{ repo.repoid }}]
+name=bootstrap-{{ repo.repoid }}
+baseurl={{ repo.baseurl }}
+enabled=1
+gpgcheck=0
+priority={{ repo.priority|default("99") }}
+
+{% endfor %}
+{% endif %}
+
+{% if module_mode %}
+[{{ module_format }}-{{ module_githash | default('01010100') }}]
+name={{ module_format }}-{{ module_githash | default('01010100') }}
+baseurl={{ module_repo_url }}
+enabled=1
+gpgcheck=0
+priority=5
+
+{% endif %}
+
+"""

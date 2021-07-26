@@ -1,0 +1,54 @@
+---
+# set up the mock environment
+- name: Ensure mock is installed
+  package:
+    state: present
+    name:
+      - mock
+      - rpm-build
+  become: true
+  become_user: root
+  tags:
+    - mock
+
+################################################################################
+# The user that builds the RPMs that should be part of the mock group
+- name: "Ensure the {{ mock_builder }} user is created"
+  user:
+    name: "{{ mock_builder }}"
+    state: present
+    groups:
+      - mock
+  tags:
+    - mock
+
+################################################################################
+# Set up the rpmbuild environment, specifically for unpacking source RPM's or
+# copying git source data and building the SRPM in the first place
+- name: "Setup the {{ mock_builder }} rpmbuild environment"
+  file:
+    path: '{{ item }}'
+    owner: '{{ mock_builder }}'
+    group: '{{ mock_builder }}'
+    mode: '0755'
+    state: directory
+  loop:
+    - "/home/{{ mock_builder }}/rpmbuild"
+    - "/home/{{ mock_builder }}/rpmbuild/SRPMS"
+    - "/home/{{ mock_builder }}/rpmbuild/SOURCES"
+    - "/home/{{ mock_builder }}/rpmbuild/SPECS"
+  tags:
+    - mock
+
+################################################################################
+# Mock config file that will control the build
+- name: Deploy mock config file
+  template:
+    src: "mock/mock.cfg.j2"
+    dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
+    owner: "{{ mock_builder }}"
+    group: "{{ mock_builder }}"
+    mode: "0644"
+  tags:
+    - mock
+...

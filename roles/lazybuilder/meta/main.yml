@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Louis Abel
+  description: Lazily builds RPMs
+  company: Rocky Enterprise Software Foundation
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: EL
+      versions:
+        - 8
+        - 9
+  galaxy_tags: []
+dependencies: []

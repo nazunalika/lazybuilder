@@ -1,0 +1,26 @@
+---
+mock_repos:
+  - repoid: "baseos"
+    baseurl: "https://vault.centos.org/{{ major }}.{{ minor }}.{{ year_month }}/BaseOS/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-8
+    priority: "50"
+  - repoid: "appstream"
+    baseurl: "https://vault.centos.org/{{ major }}.{{ minor }}.{{ year_month }}/AppStream/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-8
+    priority: "50"
+  - repoid: "powertools"
+    baseurl: "https://vault.centos.org/{{ major }}.{{ minor }}.{{ year_month }}/PowerTools/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-8
+    priority: "50"
+
+bootstrap_repos:
+  - repoid: "{{ mock_bootstrap_name }}"
+    baseurl: "{{ mock_bs_full_path }}"
+    priority: "10"
+...

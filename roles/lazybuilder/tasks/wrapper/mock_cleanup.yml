@@ -1,0 +1,15 @@
+---
+# cleanup mock remains
+- name: Remove deployed scripts and configs
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
+    - "/home/{{ mock_builder }}/mock-wrapper.sh"
+    - "/home/{{ mock_builder }}/{{ source_name }}"
+    - "/home/{{ mock_builder }}/rpmbuild"
+  tags:
+    - mock
+    - cleanup
+...

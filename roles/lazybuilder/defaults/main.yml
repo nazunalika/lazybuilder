@@ -1,0 +1,127 @@
+---
+# defaults file for lazybuilder
+major: 8
+minor: 4
+# only needed if using centos as a bootstrap
+year_month: 2105
+full: "{{ major }}.{{ minor }}"
+# this can be a source rpm name or a module name
+source_name: name
+# Override this with a mock_dist var
+dist: "el{{ major }}"
+distro: "rocky"
+# This needs to be set explicitly and the right build host will need to be
+# picked from the inventory. There is logic in the tasks that will actually
+# stop everything if the mock_arch and the architecture fact do falset match.
+# Current valid arches: x86_64 | i686 | ppc64le | aarch64
+mock_arch: "x86_64"
+mock_vendor: "Rocky"
+mock_packager: "Lazy Builder <releng@rockylinux.org>"
+mock_multilib: false
+# This is the user that will be configured to run mock builds
+mock_builder: "rpmbuild"
+mock_rpmbuild_networking: "False"
+mock_use_host_resolv: "False"
+mock_build_root: "{{ distro }}-{{ major }}-{{ mock_arch }}"
+mock_chain: false
+mock_quiet: false
+# If a special piece needs to be added to a release tag, use this var by
+# defining it in a playbook. Examples below (commented)
+#mock_dist_append: ".{{ distro }}.0"
+#mock_dist_append: ".0"
+#mock_dist_append: ".sig.0"
+# If you need extra rpmbuild options, make a list.
+# mock_rpmbuild_opts
+# If you need a timeout on rpmbuilds, set it (in seconds)
+# mock_rpmbuild_timeout
+
+# modes
+# mock|koji are accepted (koji is not part of the current public release)
+build_mode: mock
+module_mode: false
+transfer_mode: false
+
+# transfer mode settings
+repo_host: localhost
+# nfs|sync|copy
+transfer_type: copy
+# this has no effect if we are bootstrapping - bootstraps automatically make
+# repos
+generate_repo: "false"
+
+# module mode settings
+module_tracker: file
+
+# Generally, the MBS service will auto-generate a macros rpm (annoying or not,
+# this is what it does). We don't want to do that, so some of our stuff will be
+# here, other stuff will be in other vars or templates. Note that in the case of
+# koji, we *will* do so to mimic what MBS actually does.
+module_stream: "1.0"
+module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
+module_module_name: "{{ source_name }}"
+
+# build mode settings
+# isolation modes are auto|nspawn|simple
+# it is recommended to use simple when building kernels for EL (as of 8)
+mock_isolation: auto
+bootstrap: false
+bootstrap_only: false
+sig_or_constraint: false
+# This tells us where the repos (relative to the filesystem on the repo box) is
+# located. Repos will be in subdirectories under here (including for modules).
+# Expect that it will look sort of like: /opt/repo/lazystrap
+repo_path: "/opt/repo"
+# This is the file URL to the repo store if the builder is using repos locally.
+# It will combined to look sort of like: file:///opt/repo/lazystrap
+mock_file_repo_path: "file://{{ repo_path }}"
+# This is the http URL to the repo store if the builder is using a remote repo.
+# Note that you have to be precise, because the repo_path and the path on the
+# remote machine (as presented by the web service) can be different. In the
+# tasks, there are pieces that combine this (or the file one) together to make
+# a full repo path. For example, http://repo.example.com/repo/solostrap
+mock_http_repo_path: "http://repo.example.com/repo"
+# Below are names that'd be names of repos. However, do NOT expect that to be
+# the actual name. Expect this format: 8-name-arch
+# This is just a repo name - This is used if bootstrap or contstraint is false
+mock_default_name: "default"
+# This just names the bootstrap repo and directory. Nothing special.
+mock_bootstrap_name: "lazystrap"
+# This just names the solo repo and directory. Nothing special. Used for sigs
+# or specialty builds.
+mock_solo_name: "solostrap"
+mock_bootstrap_path: "{{ repo_path }}/{{ mock_bootstrap_name }}"
+mock_solo_path: "{{ repo_path }}/{{ mock_solo_name }}"
+
+# These control some of the above
+mock_use_http_path: false
+mock_use_file_path: true
+
+# source settings
+# This tells the mock builder to use git mode when pulling down sources
+# Accepted answers: git|srpm
+source_mode: "git"
+################################################################################
+# git mode
+#
+# git_use_metadata -> Set this to true to use the metadata files. It is currently
+#                     recommended that this ALWAYS be set to true.
+# git_url -> Set this to the URL of the git repo. Example expected format:
+#            https://git.example.com/rpms/something.git
+# git_source_url -> Set this to the lookaside cache that is generally a web URL
+#                   This place where the archives sit should be named of the 
+#                   sha*sum of the file. Original archive name is NOT supported.
+# git_commit -> The full commit hash, otherwise the branch "main" will be used
+#               Note that if the git_url is in a format that has the git commit
+#               hash in it, it will be split properly and git_commit will be
+#               overridden automatically in the play.
+#               Eg: http://git/rpms/name.git?HASH
+#               Eg: git+https://git/rpms/name.git?HASH
+#               Eg: git+https://git/rpms/name.git#?HASH
+git_use_metadata: "true"
+#git_url: ...
+#git_source_url: ...
+#git_commit: ...
+# Source RPM url - This is a simple URL to where an SRPM is located. Must be
+# http or https
+# srpm_url: ...
+...

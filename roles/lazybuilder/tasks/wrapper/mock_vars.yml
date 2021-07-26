@@ -1,0 +1,84 @@
+---
+################################################################################
+# Verify certain things are not default
+- name: "Verify that our source_name is not defaulted as name"
+  assert:
+    that:
+      - '"source_name" == "name"'
+    fail_msg: "You cannot use the default source_name: {{ source_name }}"
+    success_msg: "Our source_name is defined as: {{ source_name }}"
+
+- name: "Verify that build mode is mock"
+  assert:
+    that:
+      - '"build_mode" == "mock"'
+    fail_msg: "Build mode is not set to mock."
+    success_msg: "We are in mock mode."
+
+################################################################################
+# Setting base line facts for mock
+
+- name: "Make our mock dir for http"
+  set_fact:
+    mock_repo_path: "{{ mock_http_repo_path }}"
+  when:
+    - mock_use_http_path
+  tags:
+    - mock
+
+- name: "Make our mock dir for file"
+  set_fact:
+    mock_repo_path: "{{ mock_file_repo_path }}"
+  when:
+    - mock_use_file_path
+  tags:
+    - mock
+
+- name: "Set all relevant mock repo path facts even if some aren't used"
+  set_fact:
+    mock_solo_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_solo_name }}-{{ mock_arch }}"
+    mock_bs_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_bootstrap_name }}-{{ mock_arch }}"
+    mock_default_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_default_name }}-{{ mock_arch }}"
+  tags:
+    - mock
+
+# End
+################################################################################
+
+################################################################################
+# Start imports
+- name: "Import el{{ major }} repos"
+  include_vars: "el/el{{ major }}.yml"
+  when:
+    - "not bootstrap"
+  tags:
+    - mock
+
+- name: "Import el{{ major }} sig or req constraint repos"
+  include_vars: "el/el{{ major }}_solo.yml"
+  when:
+    - "not bootstrap"
+    - "sig_or_constraint"
+  tags:
+    - mock
+
+- name: "Import el{{ major }} bootstrap repos"
+  include_vars: "el/el{{ major }}_bootstrap.yml"
+  when:
+    - "bootstrap"
+  tags:
+    - mock
+
+- name: "Import el{{ major }} bootstrap repos"
+  include_vars: "el/el{{ major }}_bootstrap_rebuild.yml"
+  when:
+    - "bootstrap"
+    - "bootstrap_only"
+  tags:
+    - mock
+
+- name: "Import arch data"
+  include_vars: "arch/{{ mock_arch }}.yml"
+  tags:
+    - mock
+...

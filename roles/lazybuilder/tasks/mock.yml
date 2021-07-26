@@ -1,0 +1,37 @@
+---
+# tasks for a mock build - only run under the mock tag
+- name: "Import el{{ major }} bootstrap repos"
+  include_tasks: wrapper/mock_vars.yml
+  tags:
+    - mock
+
+- name: "Ensure that {{ mock_builder }} is setup properly"
+  include_tasks: wrapper/mock_setup.yml
+  tags:
+    - mock
+
+- name: "Pull the source RPM data"
+  include_tasks: wrapper/mock_srpmpull.yml
+  tags:
+    - mock
+    - git_pull
+    - srpm_pull
+
+- name: "Perform the build tasks"
+  include_tasks: wrapper/mock_build.yml
+  tags:
+    - mock
+
+- name: "Transfer RPMs"
+  include_tasks: wrapper/transfer.yml
+  when: 'transfer_mode|bool'
+  tags:
+    - mock
+    - transfer
+
+- name: "Cleanup"
+  include_tasks: wrapper/mock_cleanup.yml
+  tags:
+    - mock
+    - cleanup
+...

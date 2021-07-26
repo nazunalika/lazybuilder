@@ -1,0 +1,6 @@
+---
+# optionally we can do some lazy imports just in case someone decides to use
+# this as a role instead of just the hybrid it was meant to be.
+- debug:
+    msg: "No tasks are provided here. Please import the task as needed in your playbook."
+...
