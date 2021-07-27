@@ -7,6 +7,8 @@
       - '"source_name" == "name"'
     fail_msg: "You cannot use the default source_name: {{ source_name }}"
     success_msg: "Our source_name is defined as: {{ source_name }}"
+  tags:
+    - mock
 
 - name: "Verify that build mode is mock"
   assert:
@@ -14,6 +16,28 @@
       - '"build_mode" == "mock"'
     fail_msg: "Build mode is not set to mock."
     success_msg: "We are in mock mode."
+  tags:
+    - mock
+
+################################################################################
+# Are we able to run on this builder? Is it busy?
+
+- name: Check for metadata file
+  stat:
+    path: "/var/tmp/.build_in_progress"
+  register: in_progress_check
+  check_mode: false
+  changed_when: "1 != 1"
+  tags:
+    - mock
+
+- name: "Verify that a build is not already in process"
+  assert:
+    that:
+      - not in_progress_check.stat.exists
+    fail_msg: "A build is likely already in progress on this host."
+  tags:
+    - mock
 
 ################################################################################
 # Setting base line facts for mock

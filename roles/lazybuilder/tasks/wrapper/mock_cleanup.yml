@@ -9,6 +9,7 @@
     - "/home/{{ mock_builder }}/mock-wrapper.sh"
     - "/home/{{ mock_builder }}/{{ source_name }}"
     - "/home/{{ mock_builder }}/rpmbuild"
+    - "/var/tmp/.build_in_progress"
   tags:
     - mock
     - cleanup

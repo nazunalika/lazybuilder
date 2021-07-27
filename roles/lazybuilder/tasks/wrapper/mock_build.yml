@@ -42,6 +42,13 @@
 
     ############################################################################
     # Runs the mock build
+    - name: Mark system as in use
+      file:
+        path: "/var/tmp/.build_in_progress"
+        state: touch
+      tags:
+        - mock
+
     - name: Run the mock build
       command:
         cmd: "/home/{{ mock_builder }}/mock-wrapper.sh"
@@ -49,6 +56,8 @@
       register: mock_finish
       changed_when: "1 != 1"
       ignore_errors: true
+      tags:
+        - mock
 
     ############################################################################
     # Verify that mock exited cleanly.
@@ -66,6 +75,8 @@
           - "Results: /var/lib/mock/{{ distro }}-{{ major }}-{{ mock_arch }}/result"
           - "!! NOTE !!"
           - "If transfer mode is enabled, these RPMs will be copied appropriately."
+      tags:
+        - mock
   rescue:
     - name: We failed, display the error.
       debug:
@@ -80,6 +91,7 @@
         - '/home/{{ mock_builder }}/{{ source_name }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '/var/tmp/.build_in_progress'
 
     - name: Fail when there's an error in the block
       fail:
