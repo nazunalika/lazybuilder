@@ -78,7 +78,7 @@
 - name: "Set relevant dropbox path - Default"
   set_fact:
     repo_drop_path: "{{ repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
-    repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}"
+    repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool
@@ -100,7 +100,7 @@
 - name: "Set relevant dropbox path - Constraint"
   set_fact:
     repo_drop_path: "{{ mock_solo_path }}"
-    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
+    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool
