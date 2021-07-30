@@ -46,6 +46,7 @@
       file:
         path: "/var/tmp/.build_in_progress"
         state: touch
+        mode: "0644"
       tags:
         - mock
 
@@ -72,7 +73,7 @@
           - "/var/lib/mock/{{ mock_build_root }}/result"
         success_msg:
           - "Mock build succeeded"
-          - "Results: /var/lib/mock/{{ distro }}-{{ major }}-{{ mock_arch }}/result"
+          - "Results: /var/lib/mock/{{ mock_build_root }}/result"
           - "!! NOTE !!"
           - "If transfer mode is enabled, these RPMs will be copied appropriately."
       tags:

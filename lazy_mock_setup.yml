@@ -2,11 +2,8 @@
 # Calls a lazy mock build
 - hosts: "{{ host | default('localhost') }}"
   become: true
-  become_user: "{{ mock_builder | default('rpmbuild') }}"
+  become_user: root
   gather_facts: true
-  vars:
-    build_mode: false
-    transfer_mode: true
 
   pre_tasks:
     - name: Check if ansible cannot be run here
@@ -21,9 +18,13 @@
         success_msg: "Builder is available"
         fail_msg: "Builder is unavailable"
 
-  # We should assert here if the proper vars are provided
+    - name: Reset mock_builder fact
+      set_fact:
+        mock_builder: "{{ mock_builder | default('rpmbuild') }}"
+
   tasks:
-    - name: Include lazybuilder transfer tasks
+    - name: Include lazybuilder mock tasks
       include_role:
         name: lazybuilder
-        tasks_from: "mock.yml"
+        tasks_from: "wrapper/mock_setup_only.yml"
+...

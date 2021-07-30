@@ -1,3 +1,5 @@
+################################################################################
+# Mock defaults
 config_opts['root'] = '{{ mock_build_root }}'
 config_opts['target_arch'] = '{{ mock_arch }}'
 config_opts['legal_host_arches'] = {{ mock_host_arches }}
@@ -22,8 +24,19 @@ config_opts['macros']['%_vendor_host'] = "redhat"
 
 ################################################################################
 # Start specific macros for builds
-config_opts['%vendor'] = "{{ mock_vendor | default('Rocky') }}"
-config_opts['%packager'] = "{{ mock_packager | default('Lazy Builder <releng@rockylinux.org>') }}"
+config_opts['macros']['%vendor'] = "{{ mock_vendor | default('Rocky') }}"
+config_opts['macros']['%packager'] = "{{ mock_packager | default('Lazy Builder <releng@rockylinux.org>') }}"
+
+################################################################################
+# Start options for detailed information in results
+config_opts['plugin_conf']['showrc_enable'] = True
+config_opts['plugin_conf']['package_state_enable'] = True
+config_opts['plugin_conf']['package_state_opts'] = {}
+config_opts['plugin_conf']['package_state_opts']['available_pkgs'] = False
+config_opts['plugin_conf']['package_state_opts']['installed_pkgs'] = True
+
+################################################################################
+# Planned section for extra options
 
 ################################################################################
 # Modules, if required

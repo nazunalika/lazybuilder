@@ -62,7 +62,8 @@ module_module_name: "{{ source_name }}"
 
 # build mode settings
 # isolation modes are auto|nspawn|simple
-# it is recommended to use simple when building kernels for EL (as of 8)
+# it is recommended to use simple when building kernels for EL or when building
+# in a container
 mock_isolation: auto
 bootstrap: false
 bootstrap_only: false
@@ -82,8 +83,8 @@ mock_file_repo_path: "file://{{ repo_path }}"
 mock_http_repo_path: "http://repo.example.com/repo"
 # Below are names that'd be names of repos. However, do NOT expect that to be
 # the actual name. Expect this format: 8-name-arch
-# This is just a repo name - This is used if bootstrap or contstraint is false
-mock_default_name: "default"
+# This is just a repo name - This is used if bootstrap or constraint is false, and mock_repo_name is undefined
+mock_repo_name: "default"
 # This just names the bootstrap repo and directory. Nothing special.
 mock_bootstrap_name: "lazystrap"
 # This just names the solo repo and directory. Nothing special. Used for sigs

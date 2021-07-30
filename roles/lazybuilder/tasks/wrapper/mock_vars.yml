@@ -4,7 +4,7 @@
 - name: "Verify that our source_name is not defaulted as name"
   assert:
     that:
-      - '"source_name" == "name"'
+      - source_name != "name"
     fail_msg: "You cannot use the default source_name: {{ source_name }}"
     success_msg: "Our source_name is defined as: {{ source_name }}"
   tags:
@@ -13,11 +13,20 @@
 - name: "Verify that build mode is mock"
   assert:
     that:
-      - '"build_mode" == "mock"'
+      - build_mode == "mock"
     fail_msg: "Build mode is not set to mock."
     success_msg: "We are in mock mode."
   tags:
     - mock
+
+################################################################################
+# Verify invalid configurations
+- name: "Fail if module_mode and constraint is on"
+  fail:
+    msg: "You cannot have module mode and constraint on at the same time"
+  when:
+    - module_mode|bool
+    - sig_or_constraint|bool
 
 ################################################################################
 # Are we able to run on this builder? Is it busy?
@@ -40,7 +49,7 @@
     - mock
 
 ################################################################################
-# Setting base line facts for mock
+# Setting base line facts for mock and transfer directories
 
 - name: "Make our mock dir for http"
   set_fact:
@@ -62,7 +71,51 @@
   set_fact:
     mock_solo_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_solo_name }}-{{ mock_arch }}"
     mock_bs_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_bootstrap_name }}-{{ mock_arch }}"
-    mock_default_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_default_name }}-{{ mock_arch }}"
+    mock_default_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
+  tags:
+    - mock
+
+- name: "Set relevant dropbox path - Default"
+  set_fact:
+    repo_drop_path: "{{ repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
+    repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}"
+  when:
+    - not module_mode|bool
+    - not bootstrap|bool
+    - not sig_or_constraint|bool
+  tags:
+    - mock
+
+- name: "Set relevant dropbox path - Bootstrap"
+  set_fact:
+    repo_drop_path: "{{ mock_bootstrap_path }}"
+    repo_drop_path_results: "{{ repo_path }}/bootstrap-results/{{ source_name }}"
+  when:
+    - not module_mode|bool
+    - bootstrap|bool
+    - not sig_or_constraint|bool
+  tags:
+    - mock
+
+- name: "Set relevant dropbox path - Constraint"
+  set_fact:
+    repo_drop_path: "{{ mock_solo_path }}"
+    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
+  when:
+    - not module_mode|bool
+    - not bootstrap|bool
+    - sig_or_constraint|bool
+  tags:
+    - mock
+
+- name: "Set relevant dropbox path - Module"
+  set_fact:
+    repo_drop_path: "{{ repo_path }}/{{ module_format }}-{{ module_githash }}"
+    repo_drop_path_results: "{{ repo_path }}/module-results/{{ source_name }}"
+  when:
+    - module_mode|bool
+    - not bootstrap|bool
+    - not sig_or_constraint|bool
   tags:
     - mock
 
@@ -74,30 +127,31 @@
 - name: "Import el{{ major }} repos"
   include_vars: "el/el{{ major }}.yml"
   when:
-    - "not bootstrap"
+    - not bootstrap|bool
   tags:
     - mock
 
 - name: "Import el{{ major }} sig or req constraint repos"
   include_vars: "el/el{{ major }}_solo.yml"
   when:
-    - "not bootstrap"
-    - "sig_or_constraint"
+    - not bootstrap|bool
+    - sig_or_constraint|bool
   tags:
     - mock
 
 - name: "Import el{{ major }} bootstrap repos"
   include_vars: "el/el{{ major }}_bootstrap.yml"
   when:
-    - "bootstrap"
+    - bootstrap|bool
+    - not bootstrap_only|bool
   tags:
     - mock
 
-- name: "Import el{{ major }} bootstrap repos"
+- name: "Import only el{{ major }} bootstrap repos"
   include_vars: "el/el{{ major }}_bootstrap_rebuild.yml"
   when:
-    - "bootstrap"
-    - "bootstrap_only"
+    - bootstrap|bool
+    - bootstrap_only|bool
   tags:
     - mock
 

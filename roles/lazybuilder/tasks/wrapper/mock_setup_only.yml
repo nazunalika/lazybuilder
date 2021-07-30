@@ -1,0 +1,25 @@
+---
+################################################################################
+# Install rpm and mock packages
+- name: Ensure mock is installed
+  package:
+    state: present
+    name:
+      - mock
+      - rpm-build
+  tags:
+    - mock_setup
+
+################################################################################
+# The user that builds the RPMs that should be part of the mock group
+- name: "Ensure the {{ mock_builder }} user exists and is part of the mock group"
+  user:
+    name: "{{ mock_builder }}"
+    state: present
+    uid: '11011'
+    system: true
+    groups:
+      - mock
+  tags:
+    - mock_setup
+...

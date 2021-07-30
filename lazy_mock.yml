@@ -2,7 +2,7 @@
 # Calls a lazy mock build
 - hosts: "{{ host | default('localhost') }}"
   become: true
-  become_user: "{{ mock_builder | default('rpmbuild') }}"
+  become_user: root
   gather_facts: true
 
   pre_tasks:
@@ -21,13 +21,34 @@
     - name: Verify that source_name is not name
       assert:
         that:
-          - '"source_name" == "name"'
+          - source_name is defined
+          - '"source_name" != "name"'
+        fail_msg: "You did not set a source package name"
+        success_msg: "Source package name is set"
 
-    # We should assert here if the proper vars are provided
+    - name: Reset mock_builder fact
+      set_fact:
+        mock_builder: "{{ mock_builder | default('rpmbuild') }}"
+
+    - name: Verifying user information
+      getent:
+        key: "{{ mock_builder }}"
+        database: passwd
+      ignore_errors: true
+
+    - name: "Check that {{ mock_builder }} exists"
+      assert:
+        that:
+          - getent_passwd[mock_builder] is defined
+        fail_msg: "Please run the lazy_mock_setup playbook"
+        success_msg: "User exists"
 
   tasks:
     - name: Include lazybuilder mock tasks
       include_role:
         name: lazybuilder
         tasks_from: "mock.yml"
+        apply:
+          become: true
+          become_user: "{{ mock_builder }}"
 ...

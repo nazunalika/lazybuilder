@@ -1,12 +1,19 @@
 ---
 # tasks for a mock build - only run under the mock tag
-- name: "Import el{{ major }} bootstrap repos"
+- name: "Import el{{ major }} vars and perform checks"
   include_tasks: wrapper/mock_vars.yml
   tags:
     - mock
 
 - name: "Ensure that {{ mock_builder }} is setup properly"
   include_tasks: wrapper/mock_setup.yml
+  tags:
+    - mock
+
+- name: "Ensure that the constraint or bootstrap repo is setup"
+  include_tasks: wrapper/mock_setup_solo_bootstrap.yml
+  when:
+    - (bootstrap|bool) or (sig_or_constraint|bool)
   tags:
     - mock
 
@@ -28,6 +35,13 @@
   tags:
     - mock
     - transfer
+
+- name: "Import createrepo tasks"
+  include_tasks: wrapper/createrepo.yml
+  when: generate_repo|bool or bootstrap|bool
+  tags:
+    - mock
+    - createrepo
 
 - name: "Cleanup"
   include_tasks: wrapper/mock_cleanup.yml

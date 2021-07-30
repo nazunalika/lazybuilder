@@ -6,21 +6,28 @@
     name:
       - mock
       - rpm-build
+      - createrepo_c
   become: true
   become_user: root
   tags:
     - mock
+    - mock_setup
 
 ################################################################################
 # The user that builds the RPMs that should be part of the mock group
-- name: "Ensure the {{ mock_builder }} user is created"
+- name: "Ensure the {{ mock_builder }} user exists and is part of the mock group"
   user:
     name: "{{ mock_builder }}"
     state: present
+    uid: '11011'
+    system: true
     groups:
       - mock
+  become: true
+  become_user: root
   tags:
     - mock
+    - mock_setup
 
 ################################################################################
 # Set up the rpmbuild environment, specifically for unpacking source RPM's or

@@ -1,5 +1,110 @@
 ---
 ################################################################################
-# transfer wrapper, copy the files to where they need to be and optionally
-# generate the repo data for said repo
+# transfer wrapper, copy the files to where they need to be. another task will
+# take care of the repo generation if it's required.
+- name: Perform a local transfer
+  block:
+    - name: Identify all built RPMs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns: '*.noarch.rpm,*.{{ mock_arch }}.rpm'
+      register: result_build_rpms
+      tags:
+        - transfer
+
+    - name: Identify the source RPMs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns: '*.src.rpm'
+      register: result_src_rpms
+      tags:
+        - transfer
+
+    - name: Identify all build logs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns: '*.log'
+      register: result_build_logs
+      tags:
+        - transfer
+
+    - name: Ensure all directories are setup for drop
+      file:
+        path: '{{ item }}'
+        owner: '{{ mock_builder }}'
+        group: '{{ mock_builder }}'
+        mode: '0755'
+        state: directory
+      loop:
+        - "{{ repo_drop_path }}"
+        - "{{ repo_drop_path_results }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
+      become: true
+      become_user: root
+      tags:
+        - transfer
+
+    - name: Copy compiled RPMs into their proper spot
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ repo_drop_path }}/"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ result_build_rpms.files }}"
+
+    - name: Copy source RPMs into the results area
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ repo_drop_path_results }}/"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ result_src_rpms.files }}"
+
+    - name: Copy build logs into the results area
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ repo_drop_path_results }}/"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ result_build_logs.files }}"
+
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to copy or setup dropbox: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '/home/{{ mock_builder }}/rpmbuild'
+        - '/home/{{ mock_builder }}/{{ source_name }}'
+        - '/home/{{ mock_builder }}/mock-wrapper.sh'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '/var/tmp/.build_in_progress'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+
+  when:
+    - (repo_host == "localhost") or (transfer_type == "nfs")
+  tags:
+    - transfer
+
+- name: Perform a remote transfer
+  block:
+    - name: copy
+      debug:
+        msg: copy
+  when:
+    - (not repo_host == "localhost") and (not transfer_type == "nfs")
+  tags:
+    - transfer
 ...
