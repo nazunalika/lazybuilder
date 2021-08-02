@@ -101,4 +101,4 @@ MIT
 Author Information
 ------------------
 
-Louis Abel @nazunalika <label@rockylinux.org>
+Louis Abel @nazunalika <tucklesepk@gmail.com>
