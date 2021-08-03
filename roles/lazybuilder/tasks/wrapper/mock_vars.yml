@@ -49,6 +49,55 @@
     - mock
 
 ################################################################################
+# Start imports
+- name: "Import el{{ major }} repos"
+  include_vars: "el/el{{ major }}.yml"
+  when:
+    - not bootstrap|bool
+  tags:
+    - mock
+
+- name: "Import el{{ major }} sig or req constraint repos"
+  include_vars: "el/el{{ major }}_solo.yml"
+  when:
+    - not bootstrap|bool
+    - sig_or_constraint|bool
+  tags:
+    - mock
+
+- name: "Import el{{ major }} bootstrap repos"
+  include_vars: "el/el{{ major }}_bootstrap.yml"
+  when:
+    - bootstrap|bool
+    - not bootstrap_only|bool
+  tags:
+    - mock
+
+- name: "Import only el{{ major }} bootstrap repos"
+  include_vars: "el/el{{ major }}_bootstrap_rebuild.yml"
+  when:
+    - bootstrap|bool
+    - bootstrap_only|bool
+  tags:
+    - mock
+
+- name: "Import module data for el{{ major }}"
+  include_tasks: "wrapper/module_data_import.yml"
+  when:
+    - module_mode|bool
+  tags:
+    - mock
+    - module
+
+- name: "Import arch data"
+  include_vars: "arch/{{ mock_arch }}.yml"
+  tags:
+    - mock
+
+# End
+################################################################################
+
+################################################################################
 # Setting base line facts for mock and transfer directories
 
 - name: "Make our mock dir for http"
@@ -77,7 +126,7 @@
 
 - name: "Set relevant dropbox path - Default"
   set_fact:
-    repo_drop_path: "{{ repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
+    repo_drop_path: "{{ mock_default_path }}"
     repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
   when:
     - not module_mode|bool
@@ -114,49 +163,10 @@
     repo_drop_path_results: "{{ repo_path }}/module-results/{{ source_name }}"
   when:
     - module_mode|bool
-    - not bootstrap|bool
     - not sig_or_constraint|bool
   tags:
     - mock
 
 # End
 ################################################################################
-
-################################################################################
-# Start imports
-- name: "Import el{{ major }} repos"
-  include_vars: "el/el{{ major }}.yml"
-  when:
-    - not bootstrap|bool
-  tags:
-    - mock
-
-- name: "Import el{{ major }} sig or req constraint repos"
-  include_vars: "el/el{{ major }}_solo.yml"
-  when:
-    - not bootstrap|bool
-    - sig_or_constraint|bool
-  tags:
-    - mock
-
-- name: "Import el{{ major }} bootstrap repos"
-  include_vars: "el/el{{ major }}_bootstrap.yml"
-  when:
-    - bootstrap|bool
-    - not bootstrap_only|bool
-  tags:
-    - mock
-
-- name: "Import only el{{ major }} bootstrap repos"
-  include_vars: "el/el{{ major }}_bootstrap_rebuild.yml"
-  when:
-    - bootstrap|bool
-    - bootstrap_only|bool
-  tags:
-    - mock
-
-- name: "Import arch data"
-  include_vars: "arch/{{ mock_arch }}.yml"
-  tags:
-    - mock
 ...

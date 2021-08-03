@@ -89,15 +89,17 @@ mock_file_repo_path: "file://{{ repo_path }}"
 mock_http_repo_path: "http://repo.example.com/repo"
 # Below are names that'd be names of repos. However, do NOT expect that to be
 # the actual name. Expect this format: 8-name-arch
-# This is just a repo name - This is used if bootstrap or constraint is false, and mock_repo_name is undefined
+# This is just a repo name - This is used if bootstrap or constraint is false,
+# and mock_repo_name is undefined
 mock_repo_name: "default"
 # This just names the bootstrap repo and directory. Nothing special.
 mock_bootstrap_name: "lazystrap"
 # This just names the solo repo and directory. Nothing special. Used for sigs
 # or specialty builds.
 mock_solo_name: "solostrap"
-mock_bootstrap_path: "{{ repo_path }}/{{ mock_bootstrap_name }}"
-mock_solo_path: "{{ repo_path }}/{{ mock_solo_name }}"
+mock_default_path: "{{ repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
+mock_bootstrap_path: "{{ repo_path }}/{{ major }}-{{ mock_bootstrap_name }}-{{ mock_arch }}"
+mock_solo_path: "{{ repo_path }}/{{ major }}-{{ mock_solo_name }}-{{ mock_arch }}"
 
 # These control some of the above
 mock_use_http_path: false
