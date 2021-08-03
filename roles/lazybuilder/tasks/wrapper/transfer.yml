@@ -73,6 +73,17 @@
         remote_src: true
       with_items: "{{ result_build_logs.files }}"
 
+    - name: Copy mock configs
+      copy:
+        src: "{{ item }}"
+        dest: "{{ repo_drop_path_results }}/"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      loop:
+        - '/home/{{ mock_builder }}/mock-wrapper.sh'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+
   rescue:
     - name: We failed, display the error.
       debug:

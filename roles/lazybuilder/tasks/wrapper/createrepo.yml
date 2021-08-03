@@ -20,7 +20,7 @@
   rescue:
     - name: We failed, display the error.
       debug:
-        msg: "Failed to copy or setup dropbox: {{ ansible_failed_result }}"
+        msg: "Failed to setup repo: {{ ansible_failed_result }}"
 
     - name: Perform full cleanup
       file:
