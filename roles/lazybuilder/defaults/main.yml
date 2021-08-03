@@ -60,6 +60,12 @@ module_stream: "1.0"
 module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
 module_module_name: "{{ source_name }}"
 
+# There are some cases where we need to ask for a module to be enabled in the
+# first place. You will need to create a list, sort of like this:
+# module_setup_commands:
+#   - ('disable', 'idm')
+#   - ('enable', 'idm:DL1')
+
 # build mode settings
 # isolation modes are auto|nspawn|simple
 # it is recommended to use simple when building kernels for EL or when building

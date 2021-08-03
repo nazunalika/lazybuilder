@@ -38,6 +38,18 @@ config_opts['plugin_conf']['package_state_opts']['installed_pkgs'] = True
 ################################################################################
 # Planned section for extra options
 
+{% if module_setup_commands is defined %}
+# If a build requires non-default modules or a module needs another module
+# enabled, this can be used for that. At the time of this writing, koji doesn't
+# support this. The format is ('action', 'name'), where action is enable or
+# disable, and name is the module name.
+config_opts['module_setup_commands'] = [
+{% for modder in module_setup_commands %}
+{{ modder }},
+{% endfor %}
+]
+{% endif %}
+
 ################################################################################
 # Modules, if required
 {% if module_mode %}
