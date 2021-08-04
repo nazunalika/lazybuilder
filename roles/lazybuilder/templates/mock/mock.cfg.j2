@@ -37,7 +37,6 @@ config_opts['plugin_conf']['package_state_opts']['installed_pkgs'] = True
 
 ################################################################################
 # Planned section for extra options
-
 {% if module_setup_commands is defined %}
 # If a build requires non-default modules or a module needs another module
 # enabled, this can be used for that. At the time of this writing, koji doesn't
@@ -49,9 +48,11 @@ config_opts['module_setup_commands'] = [
 {% endfor %}
 ]
 {% endif %}
+# End
+################################################################################
 
 ################################################################################
-# Modules, if required
+# Modules, if required will be in this section
 {% if module_mode %}
 config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 %dist {{ module_dist }}{{ mock_dist_append | default("") }}
@@ -65,6 +66,8 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 {{ module_data.data.buildopts.rpms.macros }}
 """
 {% endif %}
+# End
+################################################################################
 
 config_opts['dnf.conf'] = """
 [main]

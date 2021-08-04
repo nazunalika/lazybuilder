@@ -50,6 +50,12 @@
       tags:
         - mock
 
+    - name: Notification of build start
+      debug:
+        msg: "Starting the build for {{ source_name }}"
+      tags:
+        - mock
+
     - name: Run the mock build
       command:
         cmd: "/home/{{ mock_builder }}/mock-wrapper.sh"

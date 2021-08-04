@@ -106,8 +106,10 @@ mock_use_http_path: false
 mock_use_file_path: true
 
 # source settings
-# This tells the mock builder to use git mode when pulling down sources
-# Accepted answers: git|srpm
+# This tells the mock builder how to pull together the source rpm, whether from
+# a srpm, a git repo, in combination of rpkg, a lookaside repo, among other
+# things. Note that rpkg and scm use mock options directly.
+# Accepted answers: git|srpm|rpkg|scm
 source_mode: "git"
 ################################################################################
 # git mode
@@ -116,6 +118,9 @@ source_mode: "git"
 #                     recommended that this ALWAYS be set to true.
 # git_url -> Set this to the URL of the git repo. Example expected format:
 #            https://git.example.com/rpms/something.git
+#            When using module mode, it is better to provide it a just the group
+#            name where it can reasonably find the next package to build. It will
+#            autofill, eg git.example.com/rpms/package_a.git
 # git_source_url -> Set this to the lookaside cache that is generally a web URL
 #                   This place where the archives sit should be named of the 
 #                   sha*sum of the file. Original archive name is NOT supported.
@@ -126,6 +131,11 @@ source_mode: "git"
 #               Eg: http://git/rpms/name.git?HASH
 #               Eg: git+https://git/rpms/name.git?HASH
 #               Eg: git+https://git/rpms/name.git#?HASH
+#               When using module mode, it is better that this is a branch name
+#               that identifies what is being used. Some packages have a normal
+#               branch for non-module builds and also module branches. It should
+#               be guaranteed that module packages (and the module repo itself)
+#               all share the same branch name.
 git_use_metadata: "true"
 #git_url: ...
 #git_source_url: ...
@@ -133,4 +143,10 @@ git_use_metadata: "true"
 # Source RPM url - This is a simple URL to where an SRPM is located. Must be
 # http or https
 # srpm_url: ...
+################################################################################
+# rpkg mode
+# (No options yet)
+################################################################################
+# scm mode
+# (No options yet)
 ...
