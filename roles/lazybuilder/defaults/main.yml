@@ -109,7 +109,7 @@ mock_use_file_path: true
 # This tells the mock builder how to pull together the source rpm, whether from
 # a srpm, a git repo, in combination of rpkg, a lookaside repo, among other
 # things. Note that rpkg and scm use mock options directly.
-# Accepted answers: git|srpm|rpkg|scm
+# Accepted answers: git|srpm|scm
 source_mode: "git"
 ################################################################################
 # git mode
@@ -144,9 +144,9 @@ git_use_metadata: "true"
 # http or https
 # srpm_url: ...
 ################################################################################
-# rpkg mode
+# scm mode
 # (No options yet)
 ################################################################################
-# scm mode
+# rpkg settings
 # (No options yet)
 ...
