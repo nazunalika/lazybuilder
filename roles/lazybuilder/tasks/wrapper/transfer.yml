@@ -98,6 +98,7 @@
         - '/home/{{ mock_builder }}/{{ source_name }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '/home/{{ mock_builder }}/module'
         - '{{ repo_drop_path_results }}'
         - '/var/tmp/.build_in_progress'
 

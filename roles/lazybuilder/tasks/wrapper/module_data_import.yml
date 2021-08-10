@@ -1,3 +1,18 @@
 ---
 # Module vars and data import
+- name: "Setup the {{ mock_builder }} module directories"
+  file:
+    path: '{{ item }}'
+    owner: '{{ mock_builder }}'
+    group: '{{ mock_builder }}'
+    mode: '0755'
+    state: directory
+  loop:
+    - "/home/{{ mock_builder }}/module"
+  tags:
+    - module
+
+# Import the module yaml from somewhere? From git.
+
+# Import the module vars?
 ...

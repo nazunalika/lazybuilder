@@ -59,6 +59,13 @@ module_tracker: file
 module_stream: "1.0"
 module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
 module_module_name: "{{ source_name }}"
+# This needs to be a URL to a git project that will be cloned. The commit can be a
+# hash or branch name - If main is used, play will end. This will override the
+# git mode section's commit hash.
+# module_git_repo: https://git.rockylinux.org/staging/modules/{{ source_name }}.git
+# module_defaults_git_repo: https://git.rockylinux.org/rocky/rocky-module-defaults.git
+# module_git_branch: ...
+# module_defaults_git_branch: "r{{ full }}"
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
@@ -136,6 +143,7 @@ source_mode: "git"
 #               branch for non-module builds and also module branches. It should
 #               be guaranteed that module packages (and the module repo itself)
 #               all share the same branch name.
+#               Even though you may set this, it will be overriden.
 git_use_metadata: "true"
 #git_url: ...
 #git_source_url: ...

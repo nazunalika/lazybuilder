@@ -82,7 +82,7 @@
     - mock
 
 - name: "Import module data for el{{ major }}"
-  include_tasks: "wrapper/module_data_import.yml"
+  include_tasks: "module_data_import.yml"
   when:
     - module_mode|bool
   tags:
