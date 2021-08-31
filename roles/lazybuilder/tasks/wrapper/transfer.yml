@@ -108,6 +108,7 @@
 
   when:
     - (repo_host == "localhost") or (transfer_type == "nfs")
+    - not module_mode|bool
   tags:
     - transfer
 

@@ -139,6 +139,25 @@
       tags:
         - module
 
+    # generate fake xmd data
+    - name: "Generating fake (and limited) xmd data"
+      set_fact:
+        module_xmd_data:
+          commit: "{{ module_git_info.after }}"
+          mse: "TRUE"
+          scmurl: "{{ module_git_repo }}?#{{ module_git_info.after }}"
+          ursine_rpms: []
+          buildrequires:
+            platform:
+              context: "00000000"
+              filtered_rpms: []
+              koji_tag: "module-{{ distro }}-{{ full }}.0-build"
+              ref: virtual
+              stream: "el{{ full }}.0"
+              stream_collection_modules: ""
+              ursine_rpms: ""
+              version: "2"
+
     # generate necessary vars - the contexts in MBS land are an odd combination
     # of different things. The module context itself is a combination of a
     # runtime and a build context. it's unclear where the runtime context comes
@@ -159,7 +178,7 @@
     - name: "Generate necessary vars"
       set_fact:
         module_stream: "{{ module_data.data.stream }}"
-        module_build_context_full: "{{ module_data.data.dependencies[0]['buildrequires'] | hash('sha1') }}"
+        module_build_context_full: "{{ module_xmd_data | hash('sha1') }}"
         module_runtime_context_full: "{{ module_data.data.dependencies[0]['requires'] | hash('sha1') }}"
         module_build_context: "{{ module_build_context_full[:8] }}"
         module_runtime_context: "{{ module_runtime_context_full[:8] }}"

@@ -76,7 +76,7 @@
           get_url:
             url: "{{ git_source_url }}/{{ item.key }}"
             dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/{{ item.value }}"
-            checksum: "sha256:{{ item.key }}"
+            checksum: "{{ git_sources_checksum }}:{{ item.key }}"
           loop: "{{ metadata_ds | dict2items }}"
           tags:
             - git_pull
@@ -164,6 +164,7 @@
 
       when:
         - "git_use_metadata|bool"
+        - git_source_url is defined
         - source_metadata_check.stat.exists
         - source_metadata_check.stat.size > 0
       tags:
