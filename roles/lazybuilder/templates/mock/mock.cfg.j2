@@ -65,6 +65,14 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 
 {{ module_data.data.buildopts.rpms.macros }}
 """
+# If a module requires other modules, they'll be setup below.
+{% if module_needs_modules %}
+config_opts['module_setup_commands'] = [
+{% for modder in module_setup_commands %}
+{{ modder }},
+{% endfor %}
+]
+{% endif %}
 {% endif %}
 # End
 ################################################################################
@@ -120,8 +128,8 @@ priority={{ repo.priority|default("99") }}
 {% endif %}
 
 {% if module_mode %}
-[{{ module_format }}-{{ module_githash | default('01010100') }}]
-name={{ module_format }}-{{ module_githash | default('01010100') }}
+[{{ module_format }}-{{ module_context | default('01010100') }}]
+name={{ module_format }}-{{ module_context | default('01010100') }}
 baseurl={{ module_repo_url }}
 enabled=1
 gpgcheck=0

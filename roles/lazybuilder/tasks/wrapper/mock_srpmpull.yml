@@ -13,7 +13,7 @@
     - name: Clone the repository
       git:
         repo: "{{ git_url }}"
-        dest: "/home/{{ mock_builder }}/{{ source_name }}"
+        dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
         version: "{{ git_commit_hash }}"
       tags:
         - mock
@@ -21,7 +21,7 @@
 
     - name: Check for metadata file
       stat:
-        path: "/home/{{ mock_builder }}/{{ source_name }}/.{{ source_name }}.metadata"
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/.{{ source_package_name }}.metadata"
       register: metadata_check
       check_mode: false
       changed_when: "1 != 1"
@@ -31,7 +31,7 @@
 
     - name: Check for sources file
       stat:
-        path: "/home/{{ mock_builder }}/{{ source_name }}/sources"
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/sources"
       register: source_metadata_check
       check_mode: false
       changed_when: "1 != 1"
@@ -49,7 +49,7 @@
       block:
         - name: Lookup the metadata file
           set_fact:
-            metadata_ls: "{{ lookup('file', '/home/{{ mock_builder }}/{{ source_name }}/.{{ source_name }}.metadata') }}"
+            metadata_ls: "{{ lookup('file', '{{ mock_builder_source_dir }}/{{ source_package_name }}/.{{ source_package_name }}.metadata') }}"
           tags:
             - git_pull
             - metadata
@@ -65,7 +65,7 @@
 
         - name: Ensure SOURCES directory exists
           file:
-            path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
             state: directory
             mode: '0755'
           tags:
@@ -75,7 +75,7 @@
         - name: Pull down sources
           get_url:
             url: "{{ git_source_url }}/{{ item.key }}"
-            dest: "/home/{{ mock_builder }}/{{ source_name }}/{{ item.value }}"
+            dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/{{ item.value }}"
             checksum: "sha256:{{ item.key }}"
           loop: "{{ metadata_ds | dict2items }}"
           tags:
@@ -102,7 +102,7 @@
       block:
         - name: Ensure SOURCES directory exists
           file:
-            path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
             state: directory
             mode: '0755'
           tags:
@@ -111,7 +111,7 @@
 
         - name: Ensure SPECS directory exists
           file:
-            path: "/home/{{ mock_builder }}/{{ source_name }}/SPECS"
+            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SPECS"
             state: directory
             mode: '0755'
           tags:
@@ -120,7 +120,7 @@
 
         - name: Lookup the metadata file
           set_fact:
-            metadata_ls: "{{ lookup('file', '/home/{{ mock_builder }}/{{ source_name }}/sources') }}"
+            metadata_ls: "{{ lookup('file', '{{ mock_builder_source_dir }}/{{ source_package_name }}/sources') }}"
           when:
             - git_source_url is defined
           tags:
@@ -141,7 +141,7 @@
         - name: Pull down sources
           get_url:
             url: "{{ git_source_url }}/{{ item.key }}"
-            dest: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES/{{ item.value.name | regex_replace('\\((.*)\\)','\\1') }}"
+            dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES/{{ item.value.name | regex_replace('\\((.*)\\)','\\1') }}"
             checksum: "{{ item.value.sum | lower }}:{{ item.key }}"
           loop: "{{ metadata_ds | dict2items }}"
           when:
@@ -156,7 +156,7 @@
               shopt -s extglob
               mv !(*.spec) SOURCES/
               mv *.spec SPECS/
-            chdir: "/home/{{ mock_builder }}/{{ source_name }}"
+            chdir: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
           changed_when: "1 != 1"
           check_mode: false
           register: git_pull_source_ret
@@ -182,7 +182,7 @@
 
     - name: Verifying SPECS directory
       stat:
-        path: "/home/{{ mock_builder }}/{{ source_name }}/SPECS"
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SPECS"
       register: git_specs_dir
       check_mode: false
       changed_when: "1 != 1"
@@ -192,7 +192,7 @@
 
     - name: Verifying SOURCES directory
       stat:
-        path: "/home/{{ mock_builder }}/{{ source_name }}/SOURCES"
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
       register: git_sources_dir
       check_mode: false
       changed_when: "1 != 1"
@@ -220,8 +220,8 @@
 
     - name: Get spec name
       find:
-        paths: "/home/{{ mock_builder }}/{{ source_name }}"
-        patterns: "{{ source_name }}*.spec"
+        paths: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
+        patterns: "{{ source_package_name }}*.spec"
         recurse: true
       register: srpm_find
 
@@ -231,24 +231,24 @@
 
     - name: Copy the relevant sources into rpmbuild
       synchronize:
-        src: "/home/{{ mock_builder }}/{{ source_name }}/"
-        dest: "/home/{{ mock_builder }}/rpmbuild"
+        src: "{{ mock_builder_source_dir }}/{{ source_package_name }}/"
+        dest: "{{ mock_builder_rpmbuild_dir }}"
         rsync_opts:
           - "--exclude=.git"
-          - "--exclude=.{{ source_name }}.metadata"
+          - "--exclude=.{{ source_package_name }}.metadata"
       tags:
         - git_pull
         - metadata
 
     - name: Clean up the git clone
       file:
-        path: "/home/{{ mock_builder }}/{{ source_name }}"
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
         state: absent
       tags:
         - git_pull
 
     - name: Generate srpm
-      command: "/usr/bin/rpmbuild -bs /home/{{ mock_builder }}/rpmbuild/SPECS/{{ srpm_spec }}"
+      command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }}"
       changed_when: '"Wrote:" in srpm_build_ret.stdout'
       failed_when: "srpm_build_ret.rc != 0"
       register: srpm_build_ret
@@ -269,9 +269,9 @@
         path: '{{ item }}'
         state: absent
       loop:
-        - '/home/{{ mock_builder }}/{{ source_name }}'
-        - '/home/{{ mock_builder }}/rpmbuild'
-        - '/home/{{ mock_builder }}/module'
+        - '{{ mock_builder_source_dir }}/{{ source_package_name }}'
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_module_dir }}'
 
     - name: Fail when there's an error in the block
       fail:
@@ -298,7 +298,7 @@
     - name: Pull down the source rpm and place in SRPMS (web)
       get_url:
         url: "{{ srpm_url }}"
-        dest: "/home/{{ mock_builder }}/rpmbuild/SRPMS/"
+        dest: "{{ mock_builder_rpmbuild_dir }}/SRPMS/"
       register: srpm_pull
       tags:
         - srpm_pull
@@ -319,8 +319,8 @@
         path: '{{ item }}'
         state: absent
       loop:
-        - '/home/{{ mock_builder }}/rpmbuild'
-        - '/home/{{ mock_builder }}/module'
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_module_dir }}'
 
     - name: Fail when there's an error in the block
       fail:

@@ -18,35 +18,58 @@
     - mock
     - module
 
-- name: "Pull the source RPM data"
-  include_tasks: wrapper/mock_srpmpull.yml
-  tags:
-    - mock
-    - git_pull
-    - srpm_pull
+- name: Regular Build Block
+  block:
+    - name: "Set a new var for the source name"
+      set_fact:
+        source_package_name: "{{ source_name }}"
 
-- name: "Perform the build tasks"
-  include_tasks: wrapper/mock_build.yml
-  tags:
-    - mock
+    - name: "Pull the source RPM data"
+      include_tasks: wrapper/mock_srpmpull.yml
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
 
-- name: "Transfer RPMs"
-  include_tasks: wrapper/transfer.yml
-  when: 'transfer_mode|bool'
-  tags:
-    - mock
-    - transfer
+    - name: "Perform the build tasks"
+      include_tasks: wrapper/mock_build.yml
+      tags:
+        - mock
 
-- name: "Import createrepo tasks"
-  include_tasks: wrapper/createrepo.yml
-  when: generate_repo|bool or bootstrap|bool
-  tags:
-    - mock
-    - createrepo
+    - name: "Transfer RPMs"
+      include_tasks: wrapper/transfer.yml
+      when: 'transfer_mode|bool'
+      tags:
+        - mock
+        - transfer
 
-- name: "Cleanup"
-  include_tasks: wrapper/mock_cleanup.yml
-  tags:
-    - mock
-    - cleanup
+    - name: "Import createrepo tasks"
+      include_tasks: wrapper/createrepo.yml
+      when: generate_repo|bool or bootstrap|bool
+      tags:
+        - mock
+        - createrepo
+
+    - name: "Cleanup"
+      include_tasks: wrapper/mock_cleanup.yml
+      tags:
+        - mock
+        - cleanup
+  when:
+    - not module_mode|bool
+
+# This will need to be a loop - I basically want to avoid having to have an
+# entirely different set of tasks (eg mock.yml vs module.yml) - This should
+# make things a bit more compact at the tasks root.
+# TODO: Some module tasks should be done locally to be able to do multi-arch
+#       builds. The basic idea is that if a build is being done, all applicable
+#       arches should be done at the same time, if at all possible. There should
+#       be a var that defines this and some other magic.
+- name: Module Build Block
+  block:
+    - name: Debug
+      debug:
+        msg: debug
+  when:
+    - module_mode|bool
 ...

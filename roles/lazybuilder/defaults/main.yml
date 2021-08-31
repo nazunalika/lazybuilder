@@ -55,23 +55,40 @@ module_tracker: file
 # Generally, the MBS service will auto-generate a macros rpm (annoying or not,
 # this is what it does). We don't want to do that, so some of our stuff will be
 # here, other stuff will be in other vars or templates. Note that in the case of
-# koji, we *will* do so to mimic what MBS actually does.
-module_stream: "1.0"
+# koji, we *will* do so to mimic what MBS actually does. That's if we add full
+# koji support.
+# module_stream: "1.0"
 module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
-module_module_name: "{{ source_name }}"
+# module_module_name: "{{ source_name }}"
 # This needs to be a URL to a git project that will be cloned. The commit can be a
 # hash or branch name - If main is used, play will end. This will override the
 # git mode section's commit hash.
+# There are two places a module yaml could be located, directly from a web URL
+# or from git. We want to provide both options. Default is git and the module
+# yaml is expected to be at the root of the repo with the same name as
+# source_name.
+#
+# The commented vars are examples.
+#
+module_yaml_location_type: git
+module_has_defaults: false
 # module_git_repo: https://git.rockylinux.org/staging/modules/{{ source_name }}.git
+# module_git_branch: "r{{ major }}-stream-version"
 # module_defaults_git_repo: https://git.rockylinux.org/rocky/rocky-module-defaults.git
-# module_git_branch: ...
 # module_defaults_git_branch: "r{{ full }}"
+# module_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
+# module_defaults_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
 # module_setup_commands:
 #   - ('disable', 'idm')
 #   - ('enable', 'idm:DL1')
+#
+# However, there are module builds that will need the above no matter what. So
+# instead of defining the above manually for a module build, keep the below set
+# to true, so that way the buildrequires are properly determined.
+module_needs_modules: true
 
 # build mode settings
 # isolation modes are auto|nspawn|simple

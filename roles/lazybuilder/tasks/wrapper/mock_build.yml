@@ -21,7 +21,7 @@
           - "Name: {{ mock_vendor }}"
           - "Version: {{ full }}"
           - "Dist tag: {{ mock_dist | default(dist) }}"
-          - "Source: {{ source_name }} {{ mock_srpm_path }}"
+          - "Source: {{ source_package_name }} {{ mock_srpm_path }}"
           - "Architecture: {{ mock_arch }}"
           - "Module: {{ module_mode }}"
       tags:
@@ -52,7 +52,7 @@
 
     - name: Notification of build start
       debug:
-        msg: "Starting the build for {{ source_name }}"
+        msg: "Starting the build for {{ source_package_name }}"
       tags:
         - mock
 
@@ -94,8 +94,8 @@
         path: '{{ item }}'
         state: absent
       loop:
-        - '/home/{{ mock_builder }}/rpmbuild'
-        - '/home/{{ mock_builder }}/{{ source_name }}'
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
         - '/home/{{ mock_builder }}/module'

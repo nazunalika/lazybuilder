@@ -5,8 +5,8 @@ data:
   name: {{ module_data.data.name | default("source") }}
   stream: "{{ module_data.data.stream }}"
   version: {{ module_version | default(8040) }}
-  context: {{ module_context | default('deadb33f') }}
-  arch: {{ build_arch | default(ansible_architecture) }}
+  context: {{ module_context | default('01010110') }}
+  arch: {{ mock_arch | default(ansible_architecture) }}
   summary: {{ module_data.data.summary | wordwrap(width=79) | indent(width=4) }}
   description: {{ module_data.data.description | wordwrap(width=79) | indent(width=4) }}
   license:

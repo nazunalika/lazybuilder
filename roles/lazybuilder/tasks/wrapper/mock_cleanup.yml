@@ -7,9 +7,9 @@
   loop:
     - "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
     - "/home/{{ mock_builder }}/mock-wrapper.sh"
-    - "/home/{{ mock_builder }}/{{ source_name }}"
-    - "/home/{{ mock_builder }}/rpmbuild"
-    - "/home/{{ mock_builder }}/module"
+    - "{{ mock_builder_source_dir }}"
+    - "{{ mock_builder_rpmbuild_dir }}"
+    - "{{ mock_builder_module_dir }}"
     - "/var/tmp/.build_in_progress"
   tags:
     - mock

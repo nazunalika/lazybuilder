@@ -32,7 +32,7 @@
 ################################################################################
 # Set up the rpmbuild environment, specifically for unpacking source RPM's or
 # copying git source data and building the SRPM in the first place
-- name: "Setup the {{ mock_builder }} rpmbuild environment"
+- name: "Setup the {{ mock_builder }} rpmbuild and git environment"
   file:
     path: '{{ item }}'
     owner: '{{ mock_builder }}'
@@ -40,16 +40,17 @@
     mode: '0755'
     state: directory
   loop:
-    - "/home/{{ mock_builder }}/rpmbuild"
-    - "/home/{{ mock_builder }}/rpmbuild/SRPMS"
-    - "/home/{{ mock_builder }}/rpmbuild/SOURCES"
-    - "/home/{{ mock_builder }}/rpmbuild/SPECS"
+    - "{{ mock_builder_rpmbuild_dir }}"
+    - "{{ mock_builder_rpmbuild_dir }}/SRPMS"
+    - "{{ mock_builder_rpmbuild_dir }}/SOURCES"
+    - "{{ mock_builder_rpmbuild_dir }}/SPECS"
+    - "{{ mock_builder_source_dir }}"
   tags:
     - mock
 
 ################################################################################
 # Mock config file that will control the build
-- name: Deploy mock config file
+- name: "Deploy mock config file"
   template:
     src: "mock/mock.cfg.j2"
     dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"

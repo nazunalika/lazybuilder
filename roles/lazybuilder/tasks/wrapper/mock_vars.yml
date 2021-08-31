@@ -159,11 +159,19 @@
 
 - name: "Set relevant dropbox path - Module"
   set_fact:
-    repo_drop_path: "{{ repo_path }}/{{ module_format }}-{{ module_githash }}"
+    repo_drop_path: "{{ repo_path }}/{{ module_format }}-{{ module_context }}"
     repo_drop_path_results: "{{ repo_path }}/module-results/{{ source_name }}"
   when:
     - module_mode|bool
     - not sig_or_constraint|bool
+  tags:
+    - mock
+
+- name: "Set simplification vars"
+  set_fact:
+    mock_builder_rpmbuild_dir: "/home/{{ mock_builder }}/rpmbuild"
+    mock_builder_source_dir: "/home/{{ mock_builder }}/{{ source_name }}"
+    mock_builder_module_dir: "/home/{{ mock_builder }}/module"
   tags:
     - mock
 
