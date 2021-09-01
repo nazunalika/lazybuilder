@@ -1,3 +1,11 @@
 ---
+# General vars that are usable across all modes
 # These vars should NOT be overridden
+sum_lengths:
+  sum_length_32: "md5"
+  sum_length_40: "sha1"
+  sum_length_57: "sha224"
+  sum_length_64: "sha256"
+  sum_length_97: "sha384"
+  sum_length_128: "sha512"
 ...

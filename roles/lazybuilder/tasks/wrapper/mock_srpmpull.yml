@@ -39,6 +39,15 @@
         - mock
         - git_pull
 
+    - name: Verify that git_source_url is defined when metadata is non-zero
+      assert:
+        that:
+          - git_source_url is defined
+        success_msg: "Source URL is defined"
+        fail_msg: "!! Source URL is not defined. Good bye."
+      when: (metadata_check.stat.exists and metadata_check.stat.size > 0)
+            or (source_metadata_check.stat.exists and source_metadata_check.stat.size > 0)
+
     ############################################################################
     # This runs if a .metadata file was found and has a size > 0
     # Format is expected to be "SUM  SOURCES/name", which is the output of any
@@ -56,7 +65,7 @@
 
         - name: Generate dictionary for the metadata
           set_fact:
-            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[0]: item.split()[1]}) }}"
+            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[0]: {'length': 'sum_length_{{ item.split()[0]|length }}', 'name': item.split()[1]}}) }}"
           with_items:
             - "{{ metadata_ls.strip().split('\n') }}"
           tags:
@@ -75,8 +84,8 @@
         - name: Pull down sources
           get_url:
             url: "{{ git_source_url }}/{{ item.key }}"
-            dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/{{ item.value }}"
-            checksum: "{{ git_sources_checksum }}:{{ item.key }}"
+            dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/{{ item.value.name }}"
+            checksum: "{{ sum_lengths[item.value.length] }}:{{ item.key }}"
           loop: "{{ metadata_ds | dict2items }}"
           tags:
             - git_pull
@@ -132,8 +141,6 @@
             metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[3]: {'sum': item.split()[0], 'name': item.split()[1]}}) }}"
           with_items:
             - "{{ metadata_ls.strip().split('\n') }}"
-          when:
-            - git_source_url is defined
           tags:
             - git_pull
             - metadata
@@ -144,8 +151,6 @@
             dest: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES/{{ item.value.name | regex_replace('\\((.*)\\)','\\1') }}"
             checksum: "{{ item.value.sum | lower }}:{{ item.key }}"
           loop: "{{ metadata_ds | dict2items }}"
-          when:
-            - git_source_url is defined
           tags:
             - git_pull
             - metadata
