@@ -65,7 +65,7 @@
 
         - name: Generate dictionary for the metadata
           set_fact:
-            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[0]: {'length': 'sum_length_{{ item.split()[0]|length }}', 'name': item.split()[1]}}) }}"
+            metadata_ds: "{{ metadata_ds|default({}) | combine({item.split()[0]: {'length': 'sum_length_' + item.split()[0]|length|string, 'name': item.split()[1]}}) }}"
           with_items:
             - "{{ metadata_ls.strip().split('\n') }}"
           tags:
