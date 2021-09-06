@@ -1,0 +1,19 @@
+---
+# Included by wrapper/module_data_import.yml
+# Generates initial fake (but limited) xmd data
+module_xmd_data:
+  commit: "{{ module_git_info.after }}"
+  mse: "TRUE"
+  scmurl: "{{ module_git_repo }}?#{{ module_git_info.after }}"
+  ursine_rpms: []
+  buildrequires:
+    platform:
+      context: "00000000"
+      filtered_rpms: []
+      koji_tag: "module-{{ distro }}-{{ full }}.0-build"
+      ref: "virtual"
+      stream: "el{{ full }}.0"
+      stream_collection_modules: ""
+      ursine_rpms: ""
+      version: "2"
+...

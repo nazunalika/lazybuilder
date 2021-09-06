@@ -9,13 +9,6 @@
   include_tasks: wrapper/mock_setup.yml
   tags:
     - mock
-
-- name: "Ensure that the constraint/bootstrap/module repo is setup"
-  include_tasks: wrapper/mock_setup_solo_bootstrap.yml
-  when:
-    - (bootstrap|bool) or (sig_or_constraint|bool) or (module_mode|bool)
-  tags:
-    - mock
     - module
 
 - name: Regular Build Block
@@ -67,9 +60,12 @@
 #       be a var that defines this and some other magic.
 - name: Module Build Block
   block:
-    - name: Debug
-      debug:
-        msg: debug
+    - name: Set mock_srpm_path list
+      set_fact:
+        mock_srpm_path: []
+      tags:
+        - mock
+        - module
   when:
     - module_mode|bool
 ...

@@ -1,12 +1,13 @@
 ---
 # set up the mock environment
-- name: Ensure mock is installed
+- name: "Ensure mock and git is installed"
   package:
     state: present
     name:
       - mock
       - rpm-build
       - createrepo_c
+      - git
   become: true
   become_user: root
   tags:
@@ -48,15 +49,57 @@
   tags:
     - mock
 
-################################################################################
-# Mock config file that will control the build
-- name: "Deploy mock config file"
-  template:
-    src: "mock/mock.cfg.j2"
-    dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
-    owner: "{{ mock_builder }}"
-    group: "{{ mock_builder }}"
-    mode: "0644"
-  tags:
-    - mock
+- name: "Bootstrap, module, or solo builds"
+  block:
+    ###########################################################################
+    # Set up the local repo - the mock builder user should have ownership
+    - name: "Ensure the bootstrap repos for {{ mock_builder }} exit"
+      file:
+        path: '{{ item }}'
+        owner: '{{ mock_builder }}'
+        group: '{{ mock_builder }}'
+        mode: '0755'
+        state: directory
+      loop:
+        - "{{ repo_drop_path }}"
+        - "{{ repo_drop_path_results }}"
+      become: true
+      become_user: root
+      tags:
+        - mock
+        - module
+        - solo
+        - sig
+
+    ##########################################################################
+    # Create the repos if it isn't ready
+    - name: "Stat the repo drop path repodata"
+      stat:
+        path: "{{ repo_drop_path }}/repodata"
+      register: repodata_dir
+      tags:
+        - mock
+        - module
+        - solo
+        - sig
+
+    - name: "Run a createrepo if necessary"
+      command:
+        argv:
+          - '/usr/bin/createrepo_c'
+          - '--xz'
+          - '--checksum=sha256'
+          - '--revision={{ full }}'
+          - '--workers=8'
+          - '--distro=cpe:/o:{{ distro }}:{{ distro }}:{{ major }},{{ mock_vendor }} {{ major }}'
+          - '{{ repo_drop_path }}'
+      when:
+        - not repodata_dir.stat.exists
+      tags:
+        - mock
+        - module
+        - solo
+        - sig
+  when:
+    - (bootstrap|bool) or (sig_or_constraint|bool) or (module_mode|bool)
 ...

@@ -68,8 +68,9 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 # If a module requires other modules, they'll be setup below.
 {% if module_needs_modules %}
 config_opts['module_setup_commands'] = [
-{% for modder in module_setup_commands %}
-{{ modder }},
+# ('enable', 'idm:DL1')
+{% for x in module_data.data.dependencies.buildrequires if x != 'platform' %}
+('enable','{{ x }}:{{ module_data.data.dependencies.buildrequires[x][0] }}'){% if not loop.last %}{{','}}{% endif %}
 {% endfor %}
 ]
 {% endif %}

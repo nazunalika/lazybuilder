@@ -10,6 +10,9 @@
       - "The path to the srpm was not defined."
       - "Did you properly pull it or build it from source?"
     success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
+  tags:
+    - mock
+    - build_phase
 
 ################################################################################
 # perform the build - the RPMs made will be put into a var
@@ -21,9 +24,22 @@
           - "Name: {{ mock_vendor }}"
           - "Version: {{ full }}"
           - "Dist tag: {{ mock_dist | default(dist) }}"
-          - "Source: {{ source_package_name }} {{ mock_srpm_path }}"
+          - "Source: {{ source_name }} {{ mock_srpm_path }}"
           - "Architecture: {{ mock_arch }}"
           - "Module: {{ module_mode }}"
+      tags:
+        - mock
+        - build_phase
+
+    ############################################################################
+    # Mock config file that will control the build
+    - name: "Deploy mock config file"
+      template:
+        src: "mock/mock.cfg.j2"
+        dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
+        owner: "{{ mock_builder }}"
+        group: "{{ mock_builder }}"
+        mode: "0644"
       tags:
         - mock
         - build_phase
@@ -39,6 +55,7 @@
         mode: "0755"
       tags:
         - mock
+        - build_phase
 
     ############################################################################
     # Runs the mock build
@@ -49,12 +66,14 @@
         mode: "0644"
       tags:
         - mock
+        - build_phase
 
     - name: Notification of build start
       debug:
-        msg: "Starting the build for {{ source_package_name }}"
+        msg: "Starting the build for {{ source_name }}"
       tags:
         - mock
+        - build_phase
 
     - name: Run the mock build
       command:
@@ -65,6 +84,7 @@
       ignore_errors: true
       tags:
         - mock
+        - build_phase
 
     ############################################################################
     # Verify that mock exited cleanly.
@@ -84,6 +104,7 @@
           - "If transfer mode is enabled, these RPMs will be copied appropriately."
       tags:
         - mock
+        - build_phase
   rescue:
     - name: We failed, display the error.
       debug:

@@ -23,7 +23,8 @@
   --rpmbuild-timeout="{{ mock_rpmbuild_timeout | string }}" \
 {% endif %}
   --root /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg \
-{% if mock_srpm_path is iterable and (var is not string and var is not mapping) and mock_chain %}
+{% if mock_srpm_path is iterable and (mock_srpm_path is not string and mock_srpm_path is not mapping) and mock_chain %}
+  --localrepo /var/lib/mock/{{ source_name }}
 {% for source in mock_srpm_path %}
   {{ source }} \
 {% endfor %}

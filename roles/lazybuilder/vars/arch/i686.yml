@@ -8,3 +8,13 @@ mock_host_arches: "('i386', 'i486', 'i586', 'i686', 'x86_64',)"
 # called "mock_chroot_additional" and put in the package(s) that you will need
 # for your build.
 mock_chroot_setup_cmd: "install tar gcc-c++ redhat-rpm-config redhat-release which xz sed make bzip2 gzip gcc coreutils unzip shadow-utils diffutils cpio bash gawk rpm-build info patch util-linux findutils grep"
+
+# There currently isn't a clean way of composing for i686, the repo data
+# gets all messy.
+mock_repos:
+  - repoid: "koji i686"
+    baseurl: "https://kojidev.rockylinux.org/kojifiles/repos/dist-rocky8-updates-build/latest/i386"
+    gpgcheck: 0
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+...

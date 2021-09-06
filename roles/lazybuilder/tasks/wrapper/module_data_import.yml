@@ -138,63 +138,6 @@
         name: module_data
       tags:
         - module
-
-    # generate fake xmd data
-    - name: "Generating fake (and limited) xmd data"
-      set_fact:
-        module_xmd_data:
-          commit: "{{ module_git_info.after }}"
-          mse: "TRUE"
-          scmurl: "{{ module_git_repo }}?#{{ module_git_info.after }}"
-          ursine_rpms: []
-          buildrequires:
-            platform:
-              context: "00000000"
-              filtered_rpms: []
-              koji_tag: "module-{{ distro }}-{{ full }}.0-build"
-              ref: virtual
-              stream: "el{{ full }}.0"
-              stream_collection_modules: ""
-              ursine_rpms: ""
-              version: "2"
-
-    # generate necessary vars - the contexts in MBS land are an odd combination
-    # of different things. The module context itself is a combination of a
-    # runtime and a build context. it's unclear where the runtime context comes
-    # from. there also appears to be "xmd" related calls, but since we're not
-    # using mbs + koji directly, it'll always be empty and basically unused.
-    # so instead, we're coming up with a different method of generating
-    # contexts for now to get around it. it's not ideal, but it's just one way
-    # of doing it until I can figure out what's actually going on to a fuller
-    # extent. As a result, between minor releases, it's highly likely that the
-    # module_context will be the same for some time. On the flipside, the
-    # dist_hash should (in theory) always be different.
-    #
-    # Note that if you need a module to be built for another architecture, but
-    # you want to keep the current timestamp (recommended), set module_version
-    # in your playbook.
-    #
-    # TODO: Allow contexts or hashes to be manually defined in playbooks
-    - name: "Generate necessary vars"
-      set_fact:
-        module_stream: "{{ module_data.data.stream }}"
-        module_build_context_full: "{{ module_xmd_data | hash('sha1') }}"
-        module_runtime_context_full: "{{ module_data.data.dependencies[0]['requires'] | hash('sha1') }}"
-        module_build_context: "{{ module_build_context_full[:8] }}"
-        module_runtime_context: "{{ module_runtime_context_full[:8] }}"
-        module_context: "{{ ([module_build_context_full, module_runtime_context_full]|join(':') | hash('sha1'))[:8] }}"
-        module_dist_hash: "{{ ([source_name, module_stream, module_version, module_context]|join('.') | hash('sha1'))[:8] }}"
-        artifacts:
-          rpms: []
-      tags:
-        - module
-
-    # import vars/module/main.yml to fulfill other pieces
-    - name: "Importing final required vars"
-      include_vars:
-        file: "module/main.yml"
-      tags:
-        - module
   when:
     - module_yaml_location_type == 'git'
 
@@ -207,6 +150,50 @@
     - meta: end_play
   when:
     - module_yaml_location_type == 'http'
+
+# generate necessary vars
+# the contexts in MBS land are an odd combination of different things. The
+# module context itself is a combination of a runtime and a build context.
+# it's unclear where the runtime context comes from. there also appears to
+# be "xmd" related calls, but since we're not using mbs + koji directly,
+# it'll always be empty and basically unused. so instead, we're coming up
+# with a different method of generating contexts for now to get around it.
+# it's not ideal, but it's just one way of doing it until I can figure out
+# what's actually going on to a fuller extent. As a result, between minor
+# releases, it's highly likely that the module_context will be the same for
+# some time. On the flipside, the dist_hash should (in theory) always be
+# different.
+#
+# Note that if you need a module to be built for another architecture, but
+# you want to keep the current timestamp (recommended), set module_version
+# in your playbook.
+#
+# TODO: Allow contexts or hashes to be manually defined in playbooks
+# generate fake xmd data
+- name: "Generating initial fake (and limited) xmd data"
+  include_vars:
+    file: "module/module_data_xmd.yml"
+  tags:
+    - module
+
+- name: "Generate necessary vars"
+  include_vars:
+    file: "module/module_data_init.yml"
+  tags:
+    - module
+
+- name: "Stretch out contexts and filters"
+  include_vars:
+    file: "module/module_data_contexts.yml"
+  tags:
+    - module
+
+# import vars/module/main.yml to fulfill other pieces
+- name: "Importing final required vars"
+  include_vars:
+    file: "module/main.yml"
+  tags:
+    - module
 # End
 ################################################################################
 ...

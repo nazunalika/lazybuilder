@@ -1,0 +1,10 @@
+---
+# Included by wrapper/module_data_import.yml
+# This inits the required vars needed to produce modular data
+module_stream: "{{ module_data.data.stream }}"
+module_build_context_full: "{{ module_xmd_data | hash('sha1') }}"
+module_runtime_context_full: "{{ module_data.data.dependencies[0]['requires'] | hash('sha1') }}"
+module_interim_filter: "{% for x in module_data.data.filter.rpms %}{{x}}* {% endfor %}"
+artifacts:
+  rpms: []
+...

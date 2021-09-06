@@ -1,12 +1,13 @@
 ---
 ################################################################################
 # Install rpm and mock packages
-- name: Ensure mock is installed
+- name: Ensure mock and git is installed
   package:
     state: present
     name:
       - mock
       - rpm-build
+      - git
   tags:
     - mock_setup
 

@@ -3,14 +3,18 @@
 # module transfer wrapper
 - name: Perform a local transfer
   block:
-    - name: Identify all built RPMs
+    - name: Identify all built RPMs and filter out as necessary
       find:
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
-        patterns: '*.noarch.rpm,*.{{ mock_arch }}.rpm'
+        patterns:
+          - '*.noarch.rpm'
+          - '*.{{ mock_arch }}.rpm'
+        excludes: "{{ module_filtered_rpms }}"
       register: result_build_rpms
       tags:
         - transfer
+        - module
 
     - name: Identify the source RPMs
       find:
@@ -20,6 +24,7 @@
       register: result_src_rpms
       tags:
         - transfer
+        - module
 
     - name: Identify all build logs
       find:
@@ -29,6 +34,7 @@
       register: result_build_logs
       tags:
         - transfer
+        - module
 
     - name: Ensure all directories are setup for drop
       file:
@@ -45,6 +51,7 @@
       become_user: root
       tags:
         - transfer
+        - module
 
     - name: Copy compiled RPMs into their proper spot
       copy:
@@ -54,6 +61,9 @@
         mode: "0644"
         remote_src: true
       with_items: "{{ result_build_rpms.files }}"
+      tags:
+        - transfer
+        - module
 
     - name: Copy source RPMs into the results area
       copy:
@@ -63,6 +73,9 @@
         mode: "0644"
         remote_src: true
       with_items: "{{ result_src_rpms.files }}"
+      tags:
+        - transfer
+        - module
 
     - name: Copy build logs into the results area
       copy:
@@ -72,6 +85,9 @@
         mode: "0644"
         remote_src: true
       with_items: "{{ result_build_logs.files }}"
+      tags:
+        - transfer
+        - module
 
     - name: Copy mock configs
       copy:
@@ -83,6 +99,9 @@
       loop:
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+      tags:
+        - transfer
+        - module
 
   rescue:
     - name: We failed, display the error.
