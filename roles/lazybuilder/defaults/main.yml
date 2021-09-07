@@ -71,7 +71,6 @@ module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_d
 # The commented vars are examples.
 #
 module_yaml_location_type: git
-module_has_defaults: false
 # module_git_repo: https://git.rockylinux.org/staging/modules/{{ source_name }}.git
 # module_git_branch: "r{{ major }}-stream-version"
 # module_defaults_git_repo: https://git.rockylinux.org/rocky/rocky-module-defaults.git

@@ -13,5 +13,6 @@
     - "/var/tmp/.build_in_progress"
   tags:
     - mock
+    - module
     - cleanup
 ...

@@ -70,7 +70,7 @@
 
     - name: Notification of build start
       debug:
-        msg: "Starting the build for {{ source_name }}"
+        msg: "Starting/continuing build for {{ source_name }}"
       tags:
         - mock
         - build_phase

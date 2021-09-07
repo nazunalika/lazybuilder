@@ -42,12 +42,6 @@
       tags:
         - mock
         - createrepo
-
-    - name: "Cleanup"
-      include_tasks: wrapper/mock_cleanup.yml
-      tags:
-        - mock
-        - cleanup
   when:
     - not module_mode|bool
 
@@ -60,12 +54,87 @@
 #       be a var that defines this and some other magic.
 - name: Module Build Block
   block:
-    - name: Set mock_srpm_path list
+    - name: "Set preliminary vars"
       set_fact:
         mock_srpm_path: []
+        mock_rpm_build_order: []
+        module_git_url: "{{ git_url }}"
+        git_commit_hash: "{{ module_git_branch }}"
+        artifacts:
+          rpms: []
       tags:
         - mock
         - module
+
+    - name: "Assign initial list of rpms that are implicit group 0"
+      set_fact:
+        mock_rpm_build_group_zero: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'undefined') | list }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Assign initial list of rpms with sorted groups"
+      set_fact:
+        mock_rpm_build_groups: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'defined') | sort(attribute='1.buildorder') | list }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Combine build order for module list"
+      set_fact:
+        mock_rpm_build_order: "{{ mock_rpm_build_group_zero + mock_rpm_build_groups }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Loop through the RPM list for the module"
+      block:
+        - name: "Set looped vars"
+          set_fact:
+            git_url: "{{ module_git_url }}/{{ item[0] }}.git"
+          tags:
+            - mock
+            - module
+
+        - name: "Pull the source RPM data"
+          include_tasks: wrapper/mock_srpmpull.yml
+          tags:
+            - mock
+            - module
+            - git_pull
+      loop: "{{ mock_rpm_build_order }}"
+
+    - name: "Perform the build tasks"
+      include_tasks: wrapper/mock_build.yml
+      tags:
+        - mock
+        - module
+
+    - name: "Generate module documents"
+      include_tasks: wrapper/module.yml
+      tags:
+        - module
+
+    - name: "Transfer module RPMs"
+      include_tasks: wrapper/module_transfer.yml
+      tags:
+        - mock
+        - module
+        - transfer
+
+    - name: "Import createrepo tasks"
+      include_tasks: wrapper/createrepo.yml
+      tags:
+        - mock
+        - module
+        - createrepo
   when:
     - module_mode|bool
+
+- name: "Cleanup"
+  include_tasks: wrapper/mock_cleanup.yml
+  tags:
+    - mock
+    - module
+    - cleanup
 ...

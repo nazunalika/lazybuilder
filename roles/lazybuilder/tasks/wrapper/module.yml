@@ -1,3 +1,81 @@
 ---
-# subtasks for module builds
+################################################################################
+# Module subtasks that do not fit anywhere else
+
+# Generates the list of RPM artifacts
+- name: "Artifact generation"
+  block:
+    - name: "Identify all built RPMs and filter out as necessary for artifact list"
+      find:
+        paths: "/var/lib/mock/{{ source_name }}/results/{{ mock_build_root }}"
+        recurse: true
+        patterns:
+          - '*.noarch.rpm'
+          - '*.{{ mock_arch }}.rpm'
+        excludes: "{{ module_filtered_rpms }}"
+        register: finds
+      tags:
+        - module
+
+    - name: "Identify all source RPMs and filter out as necessary for artifact list"
+      find:
+        paths: "/var/lib/mock/{{ source_name }}/results/{{ mock_build_root }}"
+        recurse: true
+        patterns:
+          - '*.src.rpm'
+        register: finds_src
+      tags:
+        - module
+
+    - name: "Generate NEVRA for RPM artifacts"
+      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\n' {% for x in finds.files %}{{ x.path }} {% endfor %}"
+      register: result_artifact_rpms
+      tags:
+        - module
+
+    - name: "Generate NEVRA for source RPM artifacts"
+      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.src\n' {% for x in finds_src.files %}{{ x.path }} {% endfor %}"
+      register: result_artifact_src_rpms
+      tags:
+        - module
+
+    - name: "Combine all artifact lists"
+      set_fact:
+        artifacts:
+          rpms: "{{ artifacts.rpms + result_artifact_src_rpms.stdout_lines + result_artifact_rpms.stdout_lines }}"
+      tags:
+        - module
+
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to setup repo: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_source_dir }}'
+        - '/home/{{ mock_builder }}/mock-wrapper.sh'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '{{ mock_builder_module_dir }}'
+        - '/var/tmp/.build_in_progress'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+  tags:
+    - module
+
+# Creates module document for the current arch
+- name: "Generate {{ mock_arch }} module document"
+  template:
+    src: "module/module.yaml.j2"
+    dest: "{{ repo_drop_path_results }}/module.{{ mock_arch }}.yaml"
+    owner: "{{ mock_builder }}"
+    mode: "0644"
+  tags:
+    - module
 ...

@@ -1,3 +1,16 @@
+{% if module_default_data is defined %}
+---
+document: modulemd-defaults
+version: 1
+data:
+  module: {{ module_default_data.data.module }}
+  stream: {{ module_default_data.data.stream }}
+  profiles:
+{% for k in module_default_data.data.profiles %}
+    {{ k }}: [{{ module_default_data.data.profiles[k]|join(', ') }}]
+{% endfor %}
+...
+{% endif %}
 ---
 document: {{ module_data.document }}
 version: {{ module_data.version }}
@@ -16,7 +29,7 @@ data:
       - {{ l | indent(width=4) }}
 {% endfor %}
 {% endfor %}
-  xmd: {{ xmd_data | default({}) }}
+  xmd: {}
 {% if module_data.data.dependencies is defined %}
   dependencies:
 {% for l in module_data.data.dependencies %}

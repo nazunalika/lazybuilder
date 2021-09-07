@@ -17,6 +17,21 @@
       ignore_errors: true
       tags:
         - createrepo
+
+    - name: "Run modifyrepo for module at {{ repo_drop_path }}"
+      command:
+        argv:
+          - '/usr/bin/modifyrepo_c'
+          - '--mdtype=modules'
+          - '{{ repo_drop_path_results }}/module.{{ mock_arch }}.yaml'
+          - '{{ repo_drop_path }}/repodata'
+          - '--compress'
+          - '--compress-type=xz'
+      register: modifyrepo_finish
+      ignore_errors: true
+      when: module_mode|bool
+      tags:
+        - createrepo
   rescue:
     - name: We failed, display the error.
       debug:

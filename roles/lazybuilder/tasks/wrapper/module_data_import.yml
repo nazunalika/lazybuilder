@@ -62,16 +62,6 @@
       tags:
         - module
 
-    - name: "Verify that our required vars are set for defaults"
-      assert:
-        that:
-          - module_defaults_git_repo is defined
-          - module_defaults_git_branch is defined
-        success_msg: "git defaults repo is set"
-        fail_msg: "git defaults repo is not set"
-      tags:
-        - module
-
     # checkout the git repo with the module data
     - name: "Check out the module git repo"
       git:
@@ -89,7 +79,9 @@
         dest: "{{ mock_builder_source_dir }}/module/defaults"
         version: "{{ module_defaults_git_branch }}"
       register: module_defaults_git_info
-      when: module_has_defaults|bool
+      when:
+        - module_defaults_git_repo is defined
+        - module_defaults_git_branch is defined
       tags:
         - module
 
@@ -102,13 +94,15 @@
       tags:
         - module
 
-    - name: "Check that the yaml exists for a module"
+    - name: "Check that a default yaml exists for a module"
       stat:
         path: "{{ mock_builder_source_dir }}/module/defaults/{{ source_name }}.yaml"
       register: module_data_defaults_yaml
       check_mode: false
       changed_when: "1 != 1"
-      when: module_has_defaults|bool
+      when:
+        - module_defaults_git_repo is defined
+        - module_defaults_git_branch is defined
       tags:
         - module
 
@@ -121,16 +115,6 @@
       tags:
         - module
 
-    - name: "Verify that the defaults yaml exists for a module"
-      assert:
-        that:
-          - module_data_defaults_yaml.stat.exists
-        fail_msg: "{{ source_name }}.yaml does NOT exist in this repo"
-        success_msg: "{{ source_name }}.yaml was found"
-      when: module_has_defaults|bool
-      tags:
-        - module
-
     # import the yaml associated
     - name: "Importing module vars from file"
       include_vars:
@@ -138,6 +122,26 @@
         name: module_data
       tags:
         - module
+
+    # import the default yaml associated if available
+    - name: "Importing default module vars from file"
+      include_vars:
+        file: "{{ mock_builder_source_dir }}/module/defaults/{{ source_name }}.yaml"
+        name: module_default_data
+      when:
+        - module_defaults_git_repo is defined
+        - module_defaults_git_branch is defined
+        - module_data_defaults_yaml.stat.exists|bool
+      tags:
+        - module
+
+    # generate the filter list if it exists
+    - name: "Generate the RPM filter list"
+      set_fact:
+        module_filtered_rpms: "{{ module_filtered_rpms|default([]) + [item ~ '*'] }}"
+      loop: "{{ module_data.data.filter.rpms }}"
+      when: module_data.data.filter.rpms is defined
+
   when:
     - module_yaml_location_type == 'git'
 
@@ -145,7 +149,7 @@
   block:
     - name: debug
       debug:
-        msg: "Not available yet."
+        msg: "Not supported."
 
     - meta: end_play
   when:
