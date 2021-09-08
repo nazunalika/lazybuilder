@@ -1,18 +1,55 @@
 ---
 ################################################################################
 # Check that mock_srpm_path is defined
-- name: Verify that that the srpm path is defined
-  assert:
-    that:
-      - mock_srpm_path is defined
-      - '"src.rpm" in mock_srpm_path'
-    fail_msg: |
-      - "The path to the srpm was not defined."
-      - "Did you properly pull it or build it from source?"
-    success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
-  tags:
-    - mock
-    - build_phase
+- name: Check mock_srpm_path
+  block:
+    - name: Verify that that the srpm path is defined and is a src file
+      assert:
+        that:
+          - mock_srpm_path is defined
+          - '"src.rpm" in mock_srpm_path'
+        fail_msg: |
+          - "The path to the srpm was not defined."
+          - "Did you properly pull it or build it from source?"
+        success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
+      when: not module_mode|bool
+      tags:
+        - mock
+        - build_phase
+
+    - name: Verify that that the srpm path is defined and is a list
+      assert:
+        that:
+          - mock_srpm_path is defined
+          - mock_srpm_path is iterable and (mock_srpm_path is not string and mock_srpm_path is not mapping)
+        fail_msg: |
+          - "mock_srpm_path is not a list"
+        success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
+      when: module_mode|bool
+      tags:
+        - mock
+        - module
+        - build_phase
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to build our RPM: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_source_dir }}'
+        - '/home/{{ mock_builder }}/mock-wrapper.sh'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '/home/{{ mock_builder }}/module'
+        - '/var/tmp/.build_in_progress'
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
 
 ################################################################################
 # perform the build - the RPMs made will be put into a var

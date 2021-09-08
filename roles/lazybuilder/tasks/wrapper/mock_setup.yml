@@ -8,6 +8,7 @@
       - rpm-build
       - createrepo_c
       - git
+      - rsync
   become: true
   become_user: root
   tags:
