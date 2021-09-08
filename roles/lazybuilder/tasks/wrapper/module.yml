@@ -12,7 +12,7 @@
         patterns:
           - '*.noarch.rpm'
           - '*.{{ mock_arch }}.rpm'
-        excludes: "{{ module_filtered_rpms }}"
+        excludes: "{{ module_filtered_rpms | default(omit) }}"
       register: finds
       tags:
         - module

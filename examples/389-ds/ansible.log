@@ -1,0 +1,548 @@
+2021-09-08 00:46:21,454 p=1079415 u=root n=ansible | PLAY [localhost] ***********************************************************************************************************************************************
+2021-09-08 00:46:23,116 p=1079415 u=root n=ansible | TASK [Gathering Facts] *****************************************************************************************************************************************
+2021-09-08 00:46:23,117 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:23,491 p=1079415 u=root n=ansible | TASK [Check if ansible cannot be run here] *********************************************************************************************************************
+2021-09-08 00:46:23,491 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:23,535 p=1079415 u=root n=ansible | TASK [Verify if we can run ansible] ****************************************************************************************************************************
+2021-09-08 00:46:23,536 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Builder is available"
+}
+2021-09-08 00:46:23,581 p=1079415 u=root n=ansible | TASK [Verify that source_name is not name] *********************************************************************************************************************
+2021-09-08 00:46:23,582 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Source package name is set"
+}
+2021-09-08 00:46:23,635 p=1079415 u=root n=ansible | TASK [Reset mock_builder fact] *********************************************************************************************************************************
+2021-09-08 00:46:23,635 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:24,047 p=1079415 u=root n=ansible | TASK [Verifying user information] ******************************************************************************************************************************
+2021-09-08 00:46:24,047 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:24,091 p=1079415 u=root n=ansible | TASK [Check that rpmbuild exists] ******************************************************************************************************************************
+2021-09-08 00:46:24,092 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "User exists"
+}
+2021-09-08 00:46:24,295 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_vars.yml for localhost
+2021-09-08 00:46:24,349 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that our source_name is not defaulted as name] **************************************************************************************
+2021-09-08 00:46:24,350 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Our source_name is defined as: 389-ds"
+}
+2021-09-08 00:46:24,394 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that build mode is mock] ************************************************************************************************************
+2021-09-08 00:46:24,394 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "We are in mock mode."
+}
+2021-09-08 00:46:24,766 p=1079415 u=root n=ansible | TASK [lazybuilder : Check for metadata file] *******************************************************************************************************************
+2021-09-08 00:46:24,767 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:24,816 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that a build is not already in process] *********************************************************************************************
+2021-09-08 00:46:24,816 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+2021-09-08 00:46:24,868 p=1079415 u=root n=ansible | TASK [lazybuilder : Set simplification vars] *******************************************************************************************************************
+2021-09-08 00:46:24,868 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:24,922 p=1079415 u=root n=ansible | TASK [lazybuilder : Import el8 repos] **************************************************************************************************************************
+2021-09-08 00:46:24,923 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:25,139 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_data_import.yml for localhost
+2021-09-08 00:46:25,672 p=1079415 u=root n=ansible | TASK [lazybuilder : Setup the rpmbuild module directories] *****************************************************************************************************
+2021-09-08 00:46:25,672 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/module)
+2021-09-08 00:46:25,725 p=1079415 u=root n=ansible | TASK [lazybuilder : Placeholder for future mechanism] **********************************************************************************************************
+2021-09-08 00:46:25,725 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:25,854 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that our required vars are set] *****************************************************************************************************
+2021-09-08 00:46:25,854 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "git repo is set"
+}
+2021-09-08 00:46:27,534 p=1079415 u=root n=ansible | TASK [lazybuilder : Check out the module git repo] *************************************************************************************************************
+2021-09-08 00:46:27,534 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:27,954 p=1079415 u=root n=ansible | TASK [lazybuilder : Check that the yaml exists for a module] ***************************************************************************************************
+2021-09-08 00:46:27,954 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,049 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that the yaml exists for a module] **************************************************************************************************
+2021-09-08 00:46:28,050 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "389-ds.yaml was found"
+}
+2021-09-08 00:46:28,103 p=1079415 u=root n=ansible | TASK [lazybuilder : Importing module vars from file] ***********************************************************************************************************
+2021-09-08 00:46:28,103 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,210 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate the RPM filter list] **************************************************************************************************************
+2021-09-08 00:46:28,211 p=1079415 u=root n=ansible | ok: [localhost] => (item=cockpit-389-ds)
+2021-09-08 00:46:28,330 p=1079415 u=root n=ansible | TASK [lazybuilder : Generating initial fake (and limited) xmd data] ********************************************************************************************
+2021-09-08 00:46:28,330 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,375 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate necessary vars] *******************************************************************************************************************
+2021-09-08 00:46:28,376 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,423 p=1079415 u=root n=ansible | TASK [lazybuilder : Stretch out contexts and filters] **********************************************************************************************************
+2021-09-08 00:46:28,424 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,475 p=1079415 u=root n=ansible | TASK [lazybuilder : Importing final required vars] *************************************************************************************************************
+2021-09-08 00:46:28,476 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,528 p=1079415 u=root n=ansible | TASK [lazybuilder : Import arch data] **************************************************************************************************************************
+2021-09-08 00:46:28,528 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,614 p=1079415 u=root n=ansible | TASK [lazybuilder : Make our mock dir for file] ****************************************************************************************************************
+2021-09-08 00:46:28,615 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,664 p=1079415 u=root n=ansible | TASK [lazybuilder : Set all relevant mock repo path facts even if some aren't used] ****************************************************************************
+2021-09-08 00:46:28,664 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,863 p=1079415 u=root n=ansible | TASK [lazybuilder : Set relevant dropbox path - Module] ********************************************************************************************************
+2021-09-08 00:46:28,863 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:28,928 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_setup.yml for localhost
+2021-09-08 00:46:33,545 p=1079415 u=root n=ansible | TASK [lazybuilder : Ensure mock and git is installed] **********************************************************************************************************
+2021-09-08 00:46:33,546 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:34,140 p=1079415 u=root n=ansible | TASK [lazybuilder : Ensure the rpmbuild user exists and is part of the mock group] *****************************************************************************
+2021-09-08 00:46:34,141 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:34,507 p=1079415 u=root n=ansible | TASK [lazybuilder : Setup the rpmbuild rpmbuild and git environment] *******************************************************************************************
+2021-09-08 00:46:34,507 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild)
+2021-09-08 00:46:34,809 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SRPMS)
+2021-09-08 00:46:35,107 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SOURCES)
+2021-09-08 00:46:35,412 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SPECS)
+2021-09-08 00:46:35,704 p=1079415 u=root n=ansible | ok: [localhost] => (item=/home/rpmbuild/389-ds)
+2021-09-08 00:46:36,034 p=1079415 u=root n=ansible | TASK [lazybuilder : Ensure the bootstrap repos for rpmbuild exit] **********************************************************************************************
+2021-09-08 00:46:36,035 p=1079415 u=root n=ansible | changed: [localhost] => (item=/opt/repo/module-389-ds-1.4-8040020210908004623-fa0bfd5d)
+2021-09-08 00:46:36,288 p=1079415 u=root n=ansible | changed: [localhost] => (item=/opt/repo/module-results/389-ds)
+2021-09-08 00:46:36,624 p=1079415 u=root n=ansible | TASK [lazybuilder : Stat the repo drop path repodata] **********************************************************************************************************
+2021-09-08 00:46:36,624 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:37,236 p=1079415 u=root n=ansible | TASK [lazybuilder : Run a createrepo if necessary] *************************************************************************************************************
+2021-09-08 00:46:37,237 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:37,494 p=1079415 u=root n=ansible | TASK [lazybuilder : Set preliminary vars] **********************************************************************************************************************
+2021-09-08 00:46:37,494 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:37,548 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that the platform for the module matches] *******************************************************************************************
+2021-09-08 00:46:37,548 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Platform matches"
+}
+2021-09-08 00:46:37,601 p=1079415 u=root n=ansible | TASK [lazybuilder : Assign initial list of rpms that are implicit group 0] *************************************************************************************
+2021-09-08 00:46:37,601 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:37,654 p=1079415 u=root n=ansible | TASK [lazybuilder : Assign initial list of rpms with sorted groups] ********************************************************************************************
+2021-09-08 00:46:37,654 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:37,705 p=1079415 u=root n=ansible | TASK [lazybuilder : Combine build order for module list] *******************************************************************************************************
+2021-09-08 00:46:37,705 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:37,805 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_source_rpm.yml for localhost
+2021-09-08 00:46:38,039 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_srpmpull.yml for localhost
+2021-09-08 00:46:38,112 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that at most git_url is set] ********************************************************************************************************
+2021-09-08 00:46:38,112 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "git_url is defined, continuing..."
+}
+2021-09-08 00:46:41,063 p=1079415 u=root n=ansible | TASK [lazybuilder : Clone the repository] **********************************************************************************************************************
+2021-09-08 00:46:41,063 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:41,420 p=1079415 u=root n=ansible | TASK [lazybuilder : Check for metadata file] *******************************************************************************************************************
+2021-09-08 00:46:41,420 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:41,757 p=1079415 u=root n=ansible | TASK [lazybuilder : Check for sources file] ********************************************************************************************************************
+2021-09-08 00:46:41,757 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:41,816 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that git_source_url is defined when metadata is non-zero] ***************************************************************************
+2021-09-08 00:46:41,817 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Source URL is defined"
+}
+2021-09-08 00:46:41,883 p=1079415 u=root n=ansible | TASK [lazybuilder : Lookup the metadata file] ******************************************************************************************************************
+2021-09-08 00:46:41,883 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:42,008 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate dictionary for the metadata] ******************************************************************************************************
+2021-09-08 00:46:42,008 p=1079415 u=root n=ansible | ok: [localhost] => (item=90cda7aea8d8644eea5a2af28c72350dd915db34 SOURCES/389-ds-base-1.4.3.16.tar.bz2)
+2021-09-08 00:46:42,016 p=1079415 u=root n=ansible | ok: [localhost] => (item=9e06b5cc57fd185379d007696da153893cf73e30 SOURCES/jemalloc-5.2.1.tar.bz2)
+2021-09-08 00:46:42,382 p=1079415 u=root n=ansible | TASK [lazybuilder : Ensure SOURCES directory exists] ***********************************************************************************************************
+2021-09-08 00:46:42,383 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:43,596 p=1079415 u=root n=ansible | TASK [lazybuilder : Pull down sources] *************************************************************************************************************************
+2021-09-08 00:46:43,597 p=1079415 u=root n=ansible | changed: [localhost] => (item={'key': '90cda7aea8d8644eea5a2af28c72350dd915db34', 'value': {'length': 'sum_length_40', 'name': 'SOURCES/389-ds-base-1.4.3.16.tar.bz2'}})
+2021-09-08 00:46:44,315 p=1079415 u=root n=ansible | changed: [localhost] => (item={'key': '9e06b5cc57fd185379d007696da153893cf73e30', 'value': {'length': 'sum_length_40', 'name': 'SOURCES/jemalloc-5.2.1.tar.bz2'}})
+2021-09-08 00:46:44,748 p=1079415 u=root n=ansible | TASK [lazybuilder : Notify user of possible playbook end] ******************************************************************************************************
+2021-09-08 00:46:44,749 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "msg": [
+        "!! Warning !!",
+        "This role will exit if:",
+        "  * git_use_metadata is true",
+        "  * metadata or sources file was not found",
+        "  * SPECS/SOURCES directories are missing"
+    ]
+}
+2021-09-08 00:46:45,100 p=1079415 u=root n=ansible | TASK [lazybuilder : Verifying SPECS directory] *****************************************************************************************************************
+2021-09-08 00:46:45,101 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:45,454 p=1079415 u=root n=ansible | TASK [lazybuilder : Verifying SOURCES directory] ***************************************************************************************************************
+2021-09-08 00:46:45,455 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:46,055 p=1079415 u=root n=ansible | TASK [lazybuilder : Get spec name] *****************************************************************************************************************************
+2021-09-08 00:46:46,055 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:46,109 p=1079415 u=root n=ansible | TASK [lazybuilder : Set spec filename] *************************************************************************************************************************
+2021-09-08 00:46:46,110 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:47,168 p=1079415 u=root n=ansible | TASK [lazybuilder : Copy the relevant sources into rpmbuild] ***************************************************************************************************
+2021-09-08 00:46:47,169 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:47,595 p=1079415 u=root n=ansible | TASK [lazybuilder : Clean up the git clone] ********************************************************************************************************************
+2021-09-08 00:46:47,595 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:48,604 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate srpm] *****************************************************************************************************************************
+2021-09-08 00:46:48,604 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:48,710 p=1079415 u=root n=ansible | TASK [lazybuilder : Append to srpm path list] ******************************************************************************************************************
+2021-09-08 00:46:48,710 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:48,911 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_build.yml for localhost
+2021-09-08 00:46:49,029 p=1079415 u=root n=ansible | TASK [lazybuilder : Verify that that the srpm path is defined and is a list] ***********************************************************************************
+2021-09-08 00:46:49,030 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "mock_srpm_path is properly defined as ['/home/rpmbuild/rpmbuild/SRPMS/389-ds-base-1.4.3.16-19.el8.src.rpm']"
+}
+2021-09-08 00:46:49,109 p=1079415 u=root n=ansible | TASK [lazybuilder : Display vars] ******************************************************************************************************************************
+2021-09-08 00:46:49,110 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "msg": [
+        "Name: Rocky",
+        "Version: 8.4",
+        "Dist tag: el8 .module_el8.4.0+000+6c71922e",
+        "Source: 389-ds ['/home/rpmbuild/rpmbuild/SRPMS/389-ds-base-1.4.3.16-19.el8.src.rpm']",
+        "Architecture: x86_64",
+        "Module: true"
+    ]
+}
+2021-09-08 00:46:50,003 p=1079415 u=root n=ansible | TASK [lazybuilder : Deploy mock config file] *******************************************************************************************************************
+2021-09-08 00:46:50,003 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:50,632 p=1079415 u=root n=ansible | TASK [lazybuilder : Deploy mock build script] ******************************************************************************************************************
+2021-09-08 00:46:50,633 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:50,983 p=1079415 u=root n=ansible | TASK [lazybuilder : Mark system as in use] *********************************************************************************************************************
+2021-09-08 00:46:50,984 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:51,036 p=1079415 u=root n=ansible | TASK [lazybuilder : Notification of build start] ***************************************************************************************************************
+2021-09-08 00:46:51,037 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "msg": "Starting/continuing build for 389-ds"
+}
+2021-09-08 00:46:54,869 p=1079415 u=root n=ansible | TASK [lazybuilder : Run the mock build] ************************************************************************************************************************
+2021-09-08 00:46:54,869 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:54,927 p=1079415 u=root n=ansible | TASK [lazybuilder : Check that mock exited cleanly] ************************************************************************************************************
+2021-09-08 00:46:54,928 p=1079415 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": [
+        "Mock build succeeded",
+        "Results: /var/lib/mock/rocky-8-x86_64/result",
+        "!! NOTE !!",
+        "If transfer mode is enabled, these RPMs will be copied appropriately."
+    ]
+}
+2021-09-08 00:46:54,995 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module.yml for localhost
+2021-09-08 00:46:55,378 p=1079415 u=root n=ansible | TASK [lazybuilder : Identify all built RPMs and filter out as necessary for artifact list] *********************************************************************
+2021-09-08 00:46:55,378 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:55,717 p=1079415 u=root n=ansible | TASK [lazybuilder : Identify all source RPMs and filter out as necessary for artifact list] ********************************************************************
+2021-09-08 00:46:55,718 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:56,077 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate NEVRA for RPM artifacts] **********************************************************************************************************
+2021-09-08 00:46:56,077 p=1079415 u=root n=ansible | [WARNING]: Consider using the yum, dnf or zypper module rather than running 'rpm'.  If you need to use command because yum, dnf or zypper is insufficient you
+can add 'warn: false' to this command task or set 'command_warnings=False' in ansible.cfg to get rid of this message.
+
+2021-09-08 00:46:56,077 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:56,429 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate NEVRA for source RPM artifacts] ***************************************************************************************************
+2021-09-08 00:46:56,430 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:56,484 p=1079415 u=root n=ansible | TASK [lazybuilder : Combine all artifact lists] ****************************************************************************************************************
+2021-09-08 00:46:56,485 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:57,190 p=1079415 u=root n=ansible | TASK [lazybuilder : Generate x86_64 module document] ***********************************************************************************************************
+2021-09-08 00:46:57,190 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:46:57,260 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_transfer.yml for localhost
+2021-09-08 00:46:57,651 p=1079415 u=root n=ansible | TASK [lazybuilder : Identify all built RPMs and filter out as necessary] ***************************************************************************************
+2021-09-08 00:46:57,651 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:57,992 p=1079415 u=root n=ansible | TASK [lazybuilder : Identify the source RPMs] ******************************************************************************************************************
+2021-09-08 00:46:57,993 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:58,339 p=1079415 u=root n=ansible | TASK [lazybuilder : Identify all build logs] *******************************************************************************************************************
+2021-09-08 00:46:58,339 p=1079415 u=root n=ansible | ok: [localhost]
+2021-09-08 00:46:58,667 p=1079415 u=root n=ansible | TASK [lazybuilder : Ensure all directories are setup for drop] *************************************************************************************************
+2021-09-08 00:46:58,668 p=1079415 u=root n=ansible | ok: [localhost] => (item=/opt/repo/module-389-ds-1.4-8040020210908004623-fa0bfd5d)
+2021-09-08 00:46:58,922 p=1079415 u=root n=ansible | ok: [localhost] => (item=/opt/repo/module-results/389-ds)
+2021-09-08 00:46:59,340 p=1079415 u=root n=ansible | TASK [lazybuilder : Copy compiled RPMs into their proper spot] *************************************************************************************************
+2021-09-08 00:46:59,340 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1872652, 'inode': 7720302, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0041685, 'mtime': 1631086291.0090663, 'ctime': 1631086298.560163, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:46:59,658 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-libs-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 871896, 'inode': 7720303, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0411692, 'mtime': 1631086291.4360716, 'ctime': 1631086298.561163, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:46:59,974 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-legacy-tools-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 292524, 'inode': 7720304, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.038169, 'mtime': 1631086291.5560732, 'ctime': 1631086298.7041647, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:00,287 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-devel-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 136712, 'inode': 7720305, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.037169, 'mtime': 1631086291.610074, 'ctime': 1631086298.7051647, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:00,602 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-snmp-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 47892, 'inode': 7720306, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0481691, 'mtime': 1631086291.620074, 'ctime': 1631086298.7051647, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:00,923 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/python3-lib389-1.4.3.16-19.module+el8.4.0+000+98257220.noarch.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 918868, 'inode': 7720307, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0571692, 'mtime': 1631086292.1690812, 'ctime': 1631086298.7071648, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:01,258 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-debugsource-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2642676, 'inode': 7720309, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0261688, 'mtime': 1631086294.830115, 'ctime': 1631086298.7121649, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:01,598 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-debuginfo-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 4034504, 'inode': 7720310, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0151687, 'mtime': 1631086296.8871415, 'ctime': 1631086298.720165, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:01,931 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-libs-debuginfo-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2770244, 'inode': 7720311, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.045169, 'mtime': 1631086298.3401601, 'ctime': 1631086298.723165, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:02,286 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-legacy-tools-debuginfo-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 109116, 'inode': 7720312, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.040169, 'mtime': 1631086298.3741605, 'ctime': 1631086298.724165, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:02,603 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-snmp-debuginfo-1.4.3.16-19.module+el8.4.0+000+98257220.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 50984, 'inode': 7720313, 'dev': 64773, 'nlink': 1, 'atime': 1631086299.0481691, 'mtime': 1631086298.3861606, 'ctime': 1631086298.724165, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:03,022 p=1079415 u=root n=ansible | TASK [lazybuilder : Copy source RPMs into the results area] ****************************************************************************************************
+2021-09-08 00:47:03,023 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-1.4.3.16-19.module+el8.4.0+000+98257220.src.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 6760616, 'inode': 7720314, 'dev': 64773, 'nlink': 1, 'atime': 1631086301.392199, 'mtime': 1631085531.353334, 'ctime': 1631086298.7671657, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:03,419 p=1079415 u=root n=ansible | TASK [lazybuilder : Copy build logs into the results area] *****************************************************************************************************
+2021-09-08 00:47:03,419 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/state.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1196, 'inode': 7109093, 'dev': 64773, 'nlink': 1, 'atime': 1631086308.5542908, 'mtime': 1631087214.655887, 'ctime': 1631087214.655887, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:03,750 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/build.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2301344, 'inode': 7109094, 'dev': 64773, 'nlink': 1, 'atime': 1631086308.880295, 'mtime': 1631087214.6378865, 'ctime': 1631087214.6378865, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:04,074 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/root.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 457316, 'inode': 7109095, 'dev': 64773, 'nlink': 1, 'atime': 1631086309.2202992, 'mtime': 1631087214.7738883, 'ctime': 1631087214.7738883, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:04,393 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/hw_info.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1406, 'inode': 7109056, 'dev': 64773, 'nlink': 1, 'atime': 1631086309.5383034, 'mtime': 1631085432.477067, 'ctime': 1631085432.477067, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:04,760 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/installed_pkgs.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 35617, 'inode': 7370534, 'dev': 64773, 'nlink': 1, 'atime': 1631086309.8543074, 'mtime': 1631085568.3768084, 'ctime': 1631085568.3768084, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:05,068 p=1079415 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/showrc.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 70130, 'inode': 7594894, 'dev': 64773, 'nlink': 1, 'atime': 1631086310.2223122, 'mtime': 1631085568.6968124, 'ctime': 1631085568.7008126, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 00:47:05,452 p=1079415 u=root n=ansible | TASK [lazybuilder : Copy mock configs] *************************************************************************************************************************
+2021-09-08 00:47:05,453 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/mock-wrapper.sh)
+2021-09-08 00:47:05,799 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rocky-8-x86_64.cfg)
+2021-09-08 00:47:05,868 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/createrepo.yml for localhost
+2021-09-08 00:47:06,562 p=1079415 u=root n=ansible | TASK [lazybuilder : Run createrepo for /opt/repo/module-389-ds-1.4-8040020210908004623-fa0bfd5d] ***************************************************************
+2021-09-08 00:47:06,562 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:06,929 p=1079415 u=root n=ansible | TASK [lazybuilder : Run modifyrepo for module at /opt/repo/module-389-ds-1.4-8040020210908004623-fa0bfd5d] *****************************************************
+2021-09-08 00:47:06,929 p=1079415 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:07,034 p=1079415 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_cleanup.yml for localhost
+2021-09-08 00:47:07,391 p=1079415 u=root n=ansible | TASK [lazybuilder : Remove deployed scripts and configs] *******************************************************************************************************
+2021-09-08 00:47:07,392 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rocky-8-x86_64.cfg)
+2021-09-08 00:47:07,687 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/mock-wrapper.sh)
+2021-09-08 00:47:08,019 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/389-ds)
+2021-09-08 00:47:08,356 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild)
+2021-09-08 00:47:08,655 p=1079415 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/module)
+2021-09-08 00:47:08,944 p=1079415 u=root n=ansible | changed: [localhost] => (item=/var/tmp/.build_in_progress)
+2021-09-08 00:47:08,980 p=1079415 u=root n=ansible | PLAY RECAP *****************************************************************************************************************************************************
+2021-09-08 00:47:08,980 p=1079415 u=root n=ansible | localhost                  : ok=93   changed=23   unreachable=0    failed=0    skipped=32   rescued=0    ignored=0   
+2021-09-08 00:47:28,744 p=1081226 u=root n=ansible | PLAY [localhost] ***********************************************************************************************************************************************
+2021-09-08 00:47:29,863 p=1081226 u=root n=ansible | TASK [Gathering Facts] *****************************************************************************************************************************************
+2021-09-08 00:47:29,864 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:30,239 p=1081226 u=root n=ansible | TASK [Check if ansible cannot be run here] *********************************************************************************************************************
+2021-09-08 00:47:30,240 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:30,284 p=1081226 u=root n=ansible | TASK [Verify if we can run ansible] ****************************************************************************************************************************
+2021-09-08 00:47:30,285 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Builder is available"
+}
+2021-09-08 00:47:30,332 p=1081226 u=root n=ansible | TASK [Verify that source_name is not name] *********************************************************************************************************************
+2021-09-08 00:47:30,333 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Source package name is set"
+}
+2021-09-08 00:47:30,376 p=1081226 u=root n=ansible | TASK [Reset mock_builder fact] *********************************************************************************************************************************
+2021-09-08 00:47:30,377 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:30,760 p=1081226 u=root n=ansible | TASK [Verifying user information] ******************************************************************************************************************************
+2021-09-08 00:47:30,761 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:30,805 p=1081226 u=root n=ansible | TASK [Check that rpmbuild exists] ******************************************************************************************************************************
+2021-09-08 00:47:30,806 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "User exists"
+}
+2021-09-08 00:47:30,978 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_vars.yml for localhost
+2021-09-08 00:47:31,032 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that our source_name is not defaulted as name] **************************************************************************************
+2021-09-08 00:47:31,033 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Our source_name is defined as: 389-ds"
+}
+2021-09-08 00:47:31,080 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that build mode is mock] ************************************************************************************************************
+2021-09-08 00:47:31,081 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "We are in mock mode."
+}
+2021-09-08 00:47:31,454 p=1081226 u=root n=ansible | TASK [lazybuilder : Check for metadata file] *******************************************************************************************************************
+2021-09-08 00:47:31,454 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:31,501 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that a build is not already in process] *********************************************************************************************
+2021-09-08 00:47:31,502 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "All assertions passed"
+}
+2021-09-08 00:47:31,550 p=1081226 u=root n=ansible | TASK [lazybuilder : Set simplification vars] *******************************************************************************************************************
+2021-09-08 00:47:31,551 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:31,605 p=1081226 u=root n=ansible | TASK [lazybuilder : Import el8 repos] **************************************************************************************************************************
+2021-09-08 00:47:31,605 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:31,821 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_data_import.yml for localhost
+2021-09-08 00:47:32,355 p=1081226 u=root n=ansible | TASK [lazybuilder : Setup the rpmbuild module directories] *****************************************************************************************************
+2021-09-08 00:47:32,355 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/module)
+2021-09-08 00:47:32,403 p=1081226 u=root n=ansible | TASK [lazybuilder : Placeholder for future mechanism] **********************************************************************************************************
+2021-09-08 00:47:32,404 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:32,531 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that our required vars are set] *****************************************************************************************************
+2021-09-08 00:47:32,532 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "git repo is set"
+}
+2021-09-08 00:47:34,095 p=1081226 u=root n=ansible | TASK [lazybuilder : Check out the module git repo] *************************************************************************************************************
+2021-09-08 00:47:34,096 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:34,496 p=1081226 u=root n=ansible | TASK [lazybuilder : Check that the yaml exists for a module] ***************************************************************************************************
+2021-09-08 00:47:34,496 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:34,593 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that the yaml exists for a module] **************************************************************************************************
+2021-09-08 00:47:34,594 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "389-ds.yaml was found"
+}
+2021-09-08 00:47:34,647 p=1081226 u=root n=ansible | TASK [lazybuilder : Importing module vars from file] ***********************************************************************************************************
+2021-09-08 00:47:34,647 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:34,751 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate the RPM filter list] **************************************************************************************************************
+2021-09-08 00:47:34,752 p=1081226 u=root n=ansible | ok: [localhost] => (item=cockpit-389-ds)
+2021-09-08 00:47:34,876 p=1081226 u=root n=ansible | TASK [lazybuilder : Generating initial fake (and limited) xmd data] ********************************************************************************************
+2021-09-08 00:47:34,877 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:34,921 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate necessary vars] *******************************************************************************************************************
+2021-09-08 00:47:34,921 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:34,971 p=1081226 u=root n=ansible | TASK [lazybuilder : Stretch out contexts and filters] **********************************************************************************************************
+2021-09-08 00:47:34,971 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,016 p=1081226 u=root n=ansible | TASK [lazybuilder : Importing final required vars] *************************************************************************************************************
+2021-09-08 00:47:35,017 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,067 p=1081226 u=root n=ansible | TASK [lazybuilder : Import arch data] **************************************************************************************************************************
+2021-09-08 00:47:35,067 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,152 p=1081226 u=root n=ansible | TASK [lazybuilder : Make our mock dir for file] ****************************************************************************************************************
+2021-09-08 00:47:35,152 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,201 p=1081226 u=root n=ansible | TASK [lazybuilder : Set all relevant mock repo path facts even if some aren't used] ****************************************************************************
+2021-09-08 00:47:35,202 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,400 p=1081226 u=root n=ansible | TASK [lazybuilder : Set relevant dropbox path - Module] ********************************************************************************************************
+2021-09-08 00:47:35,401 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:35,463 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_setup.yml for localhost
+2021-09-08 00:47:37,994 p=1081226 u=root n=ansible | TASK [lazybuilder : Ensure mock and git is installed] **********************************************************************************************************
+2021-09-08 00:47:37,995 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:38,521 p=1081226 u=root n=ansible | TASK [lazybuilder : Ensure the rpmbuild user exists and is part of the mock group] *****************************************************************************
+2021-09-08 00:47:38,522 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:38,882 p=1081226 u=root n=ansible | TASK [lazybuilder : Setup the rpmbuild rpmbuild and git environment] *******************************************************************************************
+2021-09-08 00:47:38,882 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild)
+2021-09-08 00:47:39,192 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SRPMS)
+2021-09-08 00:47:39,494 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SOURCES)
+2021-09-08 00:47:39,806 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild/SPECS)
+2021-09-08 00:47:40,094 p=1081226 u=root n=ansible | ok: [localhost] => (item=/home/rpmbuild/389-ds)
+2021-09-08 00:47:40,424 p=1081226 u=root n=ansible | TASK [lazybuilder : Ensure the bootstrap repos for rpmbuild exit] **********************************************************************************************
+2021-09-08 00:47:40,425 p=1081226 u=root n=ansible | changed: [localhost] => (item=/opt/repo/module-389-ds-1.4-8040020210908004729-fa0bfd5d)
+2021-09-08 00:47:40,681 p=1081226 u=root n=ansible | changed: [localhost] => (item=/opt/repo/module-results/389-ds)
+2021-09-08 00:47:41,016 p=1081226 u=root n=ansible | TASK [lazybuilder : Stat the repo drop path repodata] **********************************************************************************************************
+2021-09-08 00:47:41,017 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:41,609 p=1081226 u=root n=ansible | TASK [lazybuilder : Run a createrepo if necessary] *************************************************************************************************************
+2021-09-08 00:47:41,609 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:41,867 p=1081226 u=root n=ansible | TASK [lazybuilder : Set preliminary vars] **********************************************************************************************************************
+2021-09-08 00:47:41,868 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:41,924 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that the platform for the module matches] *******************************************************************************************
+2021-09-08 00:47:41,925 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Platform matches"
+}
+2021-09-08 00:47:41,978 p=1081226 u=root n=ansible | TASK [lazybuilder : Assign initial list of rpms that are implicit group 0] *************************************************************************************
+2021-09-08 00:47:41,978 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:42,065 p=1081226 u=root n=ansible | TASK [lazybuilder : Assign initial list of rpms with sorted groups] ********************************************************************************************
+2021-09-08 00:47:42,066 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:42,116 p=1081226 u=root n=ansible | TASK [lazybuilder : Combine build order for module list] *******************************************************************************************************
+2021-09-08 00:47:42,117 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:42,185 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_source_rpm.yml for localhost
+2021-09-08 00:47:42,387 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_srpmpull.yml for localhost
+2021-09-08 00:47:42,460 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that at most git_url is set] ********************************************************************************************************
+2021-09-08 00:47:42,461 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "git_url is defined, continuing..."
+}
+2021-09-08 00:47:45,381 p=1081226 u=root n=ansible | TASK [lazybuilder : Clone the repository] **********************************************************************************************************************
+2021-09-08 00:47:45,381 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:45,741 p=1081226 u=root n=ansible | TASK [lazybuilder : Check for metadata file] *******************************************************************************************************************
+2021-09-08 00:47:45,742 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:46,080 p=1081226 u=root n=ansible | TASK [lazybuilder : Check for sources file] ********************************************************************************************************************
+2021-09-08 00:47:46,081 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:46,144 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that git_source_url is defined when metadata is non-zero] ***************************************************************************
+2021-09-08 00:47:46,145 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "Source URL is defined"
+}
+2021-09-08 00:47:46,215 p=1081226 u=root n=ansible | TASK [lazybuilder : Lookup the metadata file] ******************************************************************************************************************
+2021-09-08 00:47:46,216 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:46,337 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate dictionary for the metadata] ******************************************************************************************************
+2021-09-08 00:47:46,337 p=1081226 u=root n=ansible | ok: [localhost] => (item=90cda7aea8d8644eea5a2af28c72350dd915db34 SOURCES/389-ds-base-1.4.3.16.tar.bz2)
+2021-09-08 00:47:46,346 p=1081226 u=root n=ansible | ok: [localhost] => (item=9e06b5cc57fd185379d007696da153893cf73e30 SOURCES/jemalloc-5.2.1.tar.bz2)
+2021-09-08 00:47:46,709 p=1081226 u=root n=ansible | TASK [lazybuilder : Ensure SOURCES directory exists] ***********************************************************************************************************
+2021-09-08 00:47:46,709 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:47,872 p=1081226 u=root n=ansible | TASK [lazybuilder : Pull down sources] *************************************************************************************************************************
+2021-09-08 00:47:47,872 p=1081226 u=root n=ansible | changed: [localhost] => (item={'key': '90cda7aea8d8644eea5a2af28c72350dd915db34', 'value': {'length': 'sum_length_40', 'name': 'SOURCES/389-ds-base-1.4.3.16.tar.bz2'}})
+2021-09-08 00:47:48,605 p=1081226 u=root n=ansible | changed: [localhost] => (item={'key': '9e06b5cc57fd185379d007696da153893cf73e30', 'value': {'length': 'sum_length_40', 'name': 'SOURCES/jemalloc-5.2.1.tar.bz2'}})
+2021-09-08 00:47:49,034 p=1081226 u=root n=ansible | TASK [lazybuilder : Notify user of possible playbook end] ******************************************************************************************************
+2021-09-08 00:47:49,034 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "msg": [
+        "!! Warning !!",
+        "This role will exit if:",
+        "  * git_use_metadata is true",
+        "  * metadata or sources file was not found",
+        "  * SPECS/SOURCES directories are missing"
+    ]
+}
+2021-09-08 00:47:49,390 p=1081226 u=root n=ansible | TASK [lazybuilder : Verifying SPECS directory] *****************************************************************************************************************
+2021-09-08 00:47:49,391 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:49,744 p=1081226 u=root n=ansible | TASK [lazybuilder : Verifying SOURCES directory] ***************************************************************************************************************
+2021-09-08 00:47:49,744 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:50,341 p=1081226 u=root n=ansible | TASK [lazybuilder : Get spec name] *****************************************************************************************************************************
+2021-09-08 00:47:50,342 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:50,396 p=1081226 u=root n=ansible | TASK [lazybuilder : Set spec filename] *************************************************************************************************************************
+2021-09-08 00:47:50,396 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:51,436 p=1081226 u=root n=ansible | TASK [lazybuilder : Copy the relevant sources into rpmbuild] ***************************************************************************************************
+2021-09-08 00:47:51,437 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:51,852 p=1081226 u=root n=ansible | TASK [lazybuilder : Clean up the git clone] ********************************************************************************************************************
+2021-09-08 00:47:51,852 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:52,679 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate srpm] *****************************************************************************************************************************
+2021-09-08 00:47:52,679 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:52,790 p=1081226 u=root n=ansible | TASK [lazybuilder : Append to srpm path list] ******************************************************************************************************************
+2021-09-08 00:47:52,791 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 00:47:53,008 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_build.yml for localhost
+2021-09-08 00:47:53,118 p=1081226 u=root n=ansible | TASK [lazybuilder : Verify that that the srpm path is defined and is a list] ***********************************************************************************
+2021-09-08 00:47:53,119 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": "mock_srpm_path is properly defined as ['/home/rpmbuild/rpmbuild/SRPMS/389-ds-base-1.4.3.16-19.el8.src.rpm']"
+}
+2021-09-08 00:47:53,198 p=1081226 u=root n=ansible | TASK [lazybuilder : Display vars] ******************************************************************************************************************************
+2021-09-08 00:47:53,199 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "msg": [
+        "Name: Rocky",
+        "Version: 8.4",
+        "Dist tag: el8 .module_el8.4.0+000+620b9cd9",
+        "Source: 389-ds ['/home/rpmbuild/rpmbuild/SRPMS/389-ds-base-1.4.3.16-19.el8.src.rpm']",
+        "Architecture: x86_64",
+        "Module: true"
+    ]
+}
+2021-09-08 00:47:54,086 p=1081226 u=root n=ansible | TASK [lazybuilder : Deploy mock config file] *******************************************************************************************************************
+2021-09-08 00:47:54,087 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:54,785 p=1081226 u=root n=ansible | TASK [lazybuilder : Deploy mock build script] ******************************************************************************************************************
+2021-09-08 00:47:54,785 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:55,153 p=1081226 u=root n=ansible | TASK [lazybuilder : Mark system as in use] *********************************************************************************************************************
+2021-09-08 00:47:55,153 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 00:47:55,205 p=1081226 u=root n=ansible | TASK [lazybuilder : Notification of build start] ***************************************************************************************************************
+2021-09-08 00:47:55,206 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "msg": "Starting/continuing build for 389-ds"
+}
+2021-09-08 01:02:50,189 p=1081226 u=root n=ansible | TASK [lazybuilder : Run the mock build] ************************************************************************************************************************
+2021-09-08 01:02:50,201 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:50,284 p=1081226 u=root n=ansible | TASK [lazybuilder : Check that mock exited cleanly] ************************************************************************************************************
+2021-09-08 01:02:50,285 p=1081226 u=root n=ansible | ok: [localhost] => {
+    "changed": false,
+    "msg": [
+        "Mock build succeeded",
+        "Results: /var/lib/mock/rocky-8-x86_64/result",
+        "!! NOTE !!",
+        "If transfer mode is enabled, these RPMs will be copied appropriately."
+    ]
+}
+2021-09-08 01:02:50,354 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module.yml for localhost
+2021-09-08 01:02:51,466 p=1081226 u=root n=ansible | TASK [lazybuilder : Identify all built RPMs and filter out as necessary for artifact list] *********************************************************************
+2021-09-08 01:02:51,466 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:51,798 p=1081226 u=root n=ansible | TASK [lazybuilder : Identify all source RPMs and filter out as necessary for artifact list] ********************************************************************
+2021-09-08 01:02:51,799 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:52,171 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate NEVRA for RPM artifacts] **********************************************************************************************************
+2021-09-08 01:02:52,172 p=1081226 u=root n=ansible | [WARNING]: Consider using the yum, dnf or zypper module rather than running 'rpm'.  If you need to use command because yum, dnf or zypper is insufficient you
+can add 'warn: false' to this command task or set 'command_warnings=False' in ansible.cfg to get rid of this message.
+
+2021-09-08 01:02:52,173 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 01:02:52,518 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate NEVRA for source RPM artifacts] ***************************************************************************************************
+2021-09-08 01:02:52,519 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 01:02:52,572 p=1081226 u=root n=ansible | TASK [lazybuilder : Combine all artifact lists] ****************************************************************************************************************
+2021-09-08 01:02:52,573 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:53,313 p=1081226 u=root n=ansible | TASK [lazybuilder : Generate x86_64 module document] ***********************************************************************************************************
+2021-09-08 01:02:53,313 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 01:02:53,382 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/module_transfer.yml for localhost
+2021-09-08 01:02:53,770 p=1081226 u=root n=ansible | TASK [lazybuilder : Identify all built RPMs and filter out as necessary] ***************************************************************************************
+2021-09-08 01:02:53,770 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:54,109 p=1081226 u=root n=ansible | TASK [lazybuilder : Identify the source RPMs] ******************************************************************************************************************
+2021-09-08 01:02:54,110 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:54,457 p=1081226 u=root n=ansible | TASK [lazybuilder : Identify all build logs] *******************************************************************************************************************
+2021-09-08 01:02:54,457 p=1081226 u=root n=ansible | ok: [localhost]
+2021-09-08 01:02:54,839 p=1081226 u=root n=ansible | TASK [lazybuilder : Ensure all directories are setup for drop] *************************************************************************************************
+2021-09-08 01:02:54,839 p=1081226 u=root n=ansible | ok: [localhost] => (item=/opt/repo/module-389-ds-1.4-8040020210908004729-fa0bfd5d)
+2021-09-08 01:02:55,101 p=1081226 u=root n=ansible | ok: [localhost] => (item=/opt/repo/module-results/389-ds)
+2021-09-08 01:02:55,521 p=1081226 u=root n=ansible | TASK [lazybuilder : Copy compiled RPMs into their proper spot] *************************************************************************************************
+2021-09-08 01:02:55,522 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1872080, 'inode': 7712558, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5070016, 'mtime': 1631088161.6419017, 'ctime': 1631088169.057996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:55,840 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-libs-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 871740, 'inode': 7712559, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.544002, 'mtime': 1631088162.0569072, 'ctime': 1631088169.058996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:56,159 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-legacy-tools-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 292404, 'inode': 7712560, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.541002, 'mtime': 1631088162.1679084, 'ctime': 1631088169.059996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:56,475 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-devel-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 136712, 'inode': 7712561, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.540002, 'mtime': 1631088162.2219093, 'ctime': 1631088169.060996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:56,789 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-snmp-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 47888, 'inode': 7712562, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5510023, 'mtime': 1631088162.2319093, 'ctime': 1631088169.060996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:57,106 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/python3-lib389-1.4.3.16-19.module_el8.4.0+000+620b9cd9.noarch.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 918872, 'inode': 7712563, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5600023, 'mtime': 1631088162.7749162, 'ctime': 1631088169.062996, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:57,434 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-debugsource-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2642680, 'inode': 7712565, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.529002, 'mtime': 1631088165.3889494, 'ctime': 1631088169.1059966, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:57,771 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-debuginfo-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 4034596, 'inode': 7712566, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5190017, 'mtime': 1631088167.4589756, 'ctime': 1631088169.1119967, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:58,102 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-libs-debuginfo-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2770120, 'inode': 7712567, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5490022, 'mtime': 1631088168.8609934, 'ctime': 1631088169.1189966, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:58,428 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-legacy-tools-debuginfo-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 108968, 'inode': 7712568, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5430021, 'mtime': 1631088168.8949938, 'ctime': 1631088169.1199968, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:58,733 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-snmp-debuginfo-1.4.3.16-19.module_el8.4.0+000+620b9cd9.x86_64.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 50988, 'inode': 7712569, 'dev': 64773, 'nlink': 1, 'atime': 1631088169.5510023, 'mtime': 1631088168.906994, 'ctime': 1631088169.1199968, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:59,140 p=1081226 u=root n=ansible | TASK [lazybuilder : Copy source RPMs into the results area] ****************************************************************************************************
+2021-09-08 01:02:59,140 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/389-ds-base-1.4.3.16-19.module_el8.4.0+000+620b9cd9.src.rpm', 'mode': '0644', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 6760613, 'inode': 7712570, 'dev': 64773, 'nlink': 1, 'atime': 1631088172.4720392, 'mtime': 1631087398.6612215, 'ctime': 1631088169.1619973, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': False, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:59,526 p=1081226 u=root n=ansible | TASK [lazybuilder : Copy build logs into the results area] *****************************************************************************************************
+2021-09-08 01:02:59,527 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/state.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1113, 'inode': 7109095, 'dev': 64773, 'nlink': 1, 'atime': 1631087277.9226894, 'mtime': 1631088169.851006, 'ctime': 1631088169.851006, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:02:59,870 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/build.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 2301325, 'inode': 7233010, 'dev': 64773, 'nlink': 1, 'atime': 1631087277.9236896, 'mtime': 1631088169.0239954, 'ctime': 1631088169.0239954, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:03:00,197 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/root.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 454680, 'inode': 7351576, 'dev': 64773, 'nlink': 1, 'atime': 1631087277.9246895, 'mtime': 1631088170.0210083, 'ctime': 1631088170.0210083, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:03:00,514 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/hw_info.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 1406, 'inode': 7109056, 'dev': 64773, 'nlink': 1, 'atime': 1631087302.2079976, 'mtime': 1631087302.2679985, 'ctime': 1631087302.2679985, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:03:00,830 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/installed_pkgs.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 35617, 'inode': 7363302, 'dev': 64773, 'nlink': 1, 'atime': 1631087436.8977065, 'mtime': 1631087436.8977065, 'ctime': 1631087436.8977065, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:03:01,136 p=1081226 u=root n=ansible | changed: [localhost] => (item={'path': '/var/lib/mock/389-ds/results/rocky-8-x86_64/389-ds-base-1.4.3.16-19.el8/showrc.log', 'mode': '0664', 'isdir': False, 'ischr': False, 'isblk': False, 'isreg': True, 'isfifo': False, 'islnk': False, 'issock': False, 'uid': 11011, 'gid': 135, 'size': 70130, 'inode': 7588046, 'dev': 64773, 'nlink': 1, 'atime': 1631087436.9097066, 'mtime': 1631087437.1137092, 'ctime': 1631087437.1177094, 'gr_name': 'mock', 'pw_name': 'rpmbuild', 'wusr': True, 'rusr': True, 'xusr': False, 'wgrp': True, 'rgrp': True, 'xgrp': False, 'woth': False, 'roth': True, 'xoth': False, 'isuid': False, 'isgid': False})
+2021-09-08 01:03:01,543 p=1081226 u=root n=ansible | TASK [lazybuilder : Copy mock configs] *************************************************************************************************************************
+2021-09-08 01:03:01,544 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/mock-wrapper.sh)
+2021-09-08 01:03:01,844 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rocky-8-x86_64.cfg)
+2021-09-08 01:03:01,912 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/createrepo.yml for localhost
+2021-09-08 01:03:02,562 p=1081226 u=root n=ansible | TASK [lazybuilder : Run createrepo for /opt/repo/module-389-ds-1.4-8040020210908004729-fa0bfd5d] ***************************************************************
+2021-09-08 01:03:02,562 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 01:03:02,942 p=1081226 u=root n=ansible | TASK [lazybuilder : Run modifyrepo for module at /opt/repo/module-389-ds-1.4-8040020210908004729-fa0bfd5d] *****************************************************
+2021-09-08 01:03:02,943 p=1081226 u=root n=ansible | changed: [localhost]
+2021-09-08 01:03:03,046 p=1081226 u=root n=ansible | included: /tmp/lazybuilder/roles/lazybuilder/tasks/wrapper/mock_cleanup.yml for localhost
+2021-09-08 01:03:03,403 p=1081226 u=root n=ansible | TASK [lazybuilder : Remove deployed scripts and configs] *******************************************************************************************************
+2021-09-08 01:03:03,404 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rocky-8-x86_64.cfg)
+2021-09-08 01:03:03,706 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/mock-wrapper.sh)
+2021-09-08 01:03:04,035 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/389-ds)
+2021-09-08 01:03:04,379 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/rpmbuild)
+2021-09-08 01:03:04,685 p=1081226 u=root n=ansible | changed: [localhost] => (item=/home/rpmbuild/module)
+2021-09-08 01:03:04,970 p=1081226 u=root n=ansible | changed: [localhost] => (item=/var/tmp/.build_in_progress)
+2021-09-08 01:03:05,005 p=1081226 u=root n=ansible | PLAY RECAP *****************************************************************************************************************************************************
+2021-09-08 01:03:05,006 p=1081226 u=root n=ansible | localhost                  : ok=93   changed=23   unreachable=0    failed=0    skipped=32   rescued=0    ignored=0   

@@ -10,7 +10,7 @@
         patterns:
           - '*.noarch.rpm'
           - '*.{{ mock_arch }}.rpm'
-        excludes: "{{ module_filtered_rpms }}"
+        excludes: "{{ module_filtered_rpms | default(omit) }}"
       register: result_build_rpms
       tags:
         - transfer
