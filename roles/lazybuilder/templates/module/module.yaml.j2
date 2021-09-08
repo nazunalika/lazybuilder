@@ -23,7 +23,7 @@ data:
   summary: {{ module_data.data.summary | wordwrap(width=79) | indent(width=4) }}
   description: {{ module_data.data.description | wordwrap(width=79) | indent(width=4) }}
   license:
-{% for (key, value) in module_data.data.license.iteritems() %}
+{% for (key, value) in module_data.data.license.items() %}
     {{ key }}:
 {% for l in value %}
       - {{ l | indent(width=4) }}
@@ -39,7 +39,7 @@ data:
 {% else %}
     {{ r }}:
 {% endif %}
-{% for (m, n) in l[r].iteritems() %}
+{% for (m, n) in l[r].items() %}
       {{ m }}: [{{ n | join(', ') }}]
 {% endfor %}
 {% endfor %}
@@ -47,7 +47,7 @@ data:
 {% endif %}
 {% if module_data.data.filter is defined %}
   filter:
-{% for (key, value) in module_data.data.filter.iteritems() %}
+{% for (key, value) in module_data.data.filter.items() %}
     {{ key }}:
 {% for l in value %}
     - {{ l }}
@@ -56,9 +56,9 @@ data:
 {% endif %}
 {% if module_data.data.profiles is defined %}
   profiles:
-{% for (key, value) in module_data.data.profiles.iteritems() %}
+{% for (key, value) in module_data.data.profiles.items() %}
     {{ key }}:
-{% for (key, value) in value.iteritems() %}
+{% for (key, value) in value.items() %}
 {% if value is iterable and (value is not string and value is not mapping) %}
       {{ key | indent(width=6) }}: [{{ value | join(', ') }}]
 {% else %}
@@ -69,7 +69,7 @@ data:
 {% endif %}
 {% if module_data.data.api is defined %}
   api:
-{% for (key, value) in module_data.data.api.iteritems() %}
+{% for (key, value) in module_data.data.api.items() %}
     {{ key }}:
 {% for l in value %}
     - {{ l }}
@@ -78,9 +78,9 @@ data:
 {% endif %}
 {% if module_data.data.buildopts is defined %}
   buildopts:
-{% for (key, value) in module_data.data.buildopts.iteritems() %}
+{% for (key, value) in module_data.data.buildopts.items() %}
     {{ key }}:
-{% for (key, value) in value.iteritems() %}
+{% for (key, value) in value.items() %}
       {{ key }}: |
         {{ value | indent(width=8) }}
 {% endfor %}
@@ -88,17 +88,17 @@ data:
 {% endif %}
 {% if module_data.data.references is defined %}
   references:
-{% for (key, value) in module_data.data.references.iteritems() %}
+{% for (key, value) in module_data.data.references.items() %}
     {{ key }}: {{ value }}
 {% endfor %}
 {% endif %}
 {% if module_data.data.components is defined %}
   components:
-{% for (key, value) in module_data.data.components.iteritems() %}
+{% for (key, value) in module_data.data.components.items() %}
     {{ key }}:
-{% for (key, value) in value.iteritems() %}
+{% for (key, value) in value.items() %}
       {{ key }}:
-{% for (key, value) in value.iteritems() %}
+{% for (key, value) in value.items() %}
 {% if value is iterable and (value is not string and value is not mapping) %}
         {{ key | indent(width=8) }}: [{{ value | join(', ') }}]
 {% else %}
@@ -110,7 +110,7 @@ data:
 {% endif %}
 {% if artifacts is defined %}
   artifacts:
-{% for (key, value) in artifacts.iteritems() %}
+{% for (key, value) in artifacts.items() %}
     {{ key }}:
 {% for l in value %}
     - {{ l }}
