@@ -30,7 +30,6 @@
     - name: "Generate NEVRA for RPM artifacts"
       command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\n' {% for x in finds.files %}{{ x.path }} {% endfor %}"
       register: result_artifact_rpms
-      warn: false
       tags:
         - module
 
