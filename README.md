@@ -16,6 +16,12 @@ This will require your systems to have the appropriate packages installed or at 
 * koji
 * pungi
 
+Note that there are recommended version requirements for mock build hosts.
+
+* `mock` -> `2.10`
+* `rpm` -> `4.14` (`4.13` may work on EL7, but is **not** recommended)
+* `createrepo_c` -> `0.16`
+
 Dependencies
 ------------
 
@@ -55,12 +61,13 @@ It is *highly* recommended that you set vars for the lazy builder. There are som
 major          -> Major release version (eg, 8, 9...)
 minor          -> Minor point release version
 dist           -> defaults to el{{major}}
-distro         -> defaults ro rocky
+distro         -> defaults to rocky
 
 # modes
 build_mode     -> defaults to mock
 module_mode    -> defaults to false, set to true for module streams
 transfer_mode  -> defaults to false, assumes the builder also has the repo
+               -> does nothing when module_mode is true
 
 # mock settings
 mock_arch      -> defaults to x86_64
@@ -72,12 +79,18 @@ mock_isolation -> defaults to auto, nspawn and simple are supported
                   simple is recommended for kernels for EL (as of 8)
 
 # module settings
+module_git_url -> URL slug to group/projects where RPM repos exist
+                  eg. https://git.rockylinux.org/staging/rpms
+module_git_repo -> git url to where the module data exists
+module_git_branch -> set branch name to the stream name, eg r8-stream-1.4
 module_tracker -> defaults to file (this tracks the +XXX+ code)
-module_stream  -> defaults to 1.0, HIGHLY RECOMMENDED that this is set properly
-module_version -> defaults to A0B00YYYYMMDDHHMMSS (major, 0, minor, 0, timestamp)
-                  you generally don't need to touch this
 
 # build mode settings
+source_name    -> defaults to "name" which will cause play to end. this should
+                  be set to the rpm or module name you plan on building.
+                  eg. bash for rpm or 389-ds for module
+git_commit_hash -> Full hash or branch name to the RPM that you plan on building
+git_source_url -> URL to where sources will be located in hashed form
 bootstrap      -> defaults to false, use this when bootstrapping a major release
                   or bootstrapping for a new architecture
 repo_path      -> defaults to /opt/repo on a given repo system. if the path is
@@ -91,6 +104,10 @@ mock_repo_path -> defaults to file://{{ repo_path }} - if the repos are on a
                   this to reflect it as such. only used when bootstrapping.
                   note that module repos stay local first and then are later
                   transferred.
+
+# repo settings
+generate_repo  -> defaults to false, set to true to generate repo data after a
+                  transfer
 ```
 
 License
@@ -101,4 +118,4 @@ MIT
 Author Information
 ------------------
 
-Louis Abel @nazunalika <tucklesepk@gmail.com>
+Louis Abel @nazunalika <tucklesepk@gmail.com> <label@rockylinux.org>

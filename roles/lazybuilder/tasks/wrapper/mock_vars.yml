@@ -49,6 +49,18 @@
     - mock
 
 ################################################################################
+# Start simple vars
+- name: "Set simplification vars"
+  set_fact:
+    mock_builder_rpmbuild_dir: "/home/{{ mock_builder }}/rpmbuild"
+    mock_builder_source_dir: "/home/{{ mock_builder }}/{{ source_name }}"
+    mock_builder_module_dir: "/home/{{ mock_builder }}/module"
+  tags:
+    - mock
+# End simple vars
+################################################################################
+
+################################################################################
 # Start imports
 - name: "Import el{{ major }} repos"
   include_vars: "el/el{{ major }}.yml"
@@ -166,15 +178,6 @@
     - not sig_or_constraint|bool
   tags:
     - mock
-
-- name: "Set simplification vars"
-  set_fact:
-    mock_builder_rpmbuild_dir: "/home/{{ mock_builder }}/rpmbuild"
-    mock_builder_source_dir: "/home/{{ mock_builder }}/{{ source_name }}"
-    mock_builder_module_dir: "/home/{{ mock_builder }}/module"
-  tags:
-    - mock
-
 # End
 ################################################################################
 ...

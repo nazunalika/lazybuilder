@@ -162,7 +162,7 @@
               mv !(*.spec) SOURCES/
               mv *.spec SPECS/
             chdir: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
-          executable: "/bin/bash"
+            executable: "/bin/bash"
           changed_when: "1 != 1"
           check_mode: false
           register: git_pull_source_ret

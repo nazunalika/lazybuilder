@@ -13,10 +13,14 @@ Requirements
 This will require your systems to have the appropriate packages installed or at the very least the right `/bin`'s to go to perform the work. For example:
 
 * `mock` 
-* `koji`
-* `pungi`
 * `git`
 * `createrepo_c`
+
+Minimum recommended versions:
+
+* `mock` -> `2.10`
+* `rpm` -> `4.14` (`4.13` may work on EL7, but is **not** recommended)
+* `createrepo_c` -> `0.16`
 
 Dependencies
 ------------
@@ -31,4 +35,4 @@ MIT
 Author Information
 ------------------
 
-Louis Abel @nazunalika <label@rockylinux.org>
+Louis Abel @nazunalika <tucklesepk@gmail.com> <label@rockylinux.org>

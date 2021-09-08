@@ -58,7 +58,6 @@
       set_fact:
         mock_srpm_path: []
         mock_rpm_build_order: []
-        module_git_url: "{{ git_url }}"
         git_commit_hash: "{{ module_git_branch }}"
         artifacts:
           rpms: []
@@ -88,21 +87,13 @@
         - module
 
     - name: "Loop through the RPM list for the module"
-      block:
-        - name: "Set looped vars"
-          set_fact:
-            git_url: "{{ module_git_url }}/{{ item[0] }}.git"
-          tags:
-            - mock
-            - module
-
-        - name: "Pull the source RPM data"
-          include_tasks: wrapper/mock_srpmpull.yml
-          tags:
-            - mock
-            - module
-            - git_pull
+      include_tasks: wrapper/module_source_rpm.yml
       loop: "{{ mock_rpm_build_order }}"
+      loop_control:
+        loop_var: "mod_item"
+      tags:
+        - mock
+        - module
 
     - name: "Perform the build tasks"
       include_tasks: wrapper/mock_build.yml

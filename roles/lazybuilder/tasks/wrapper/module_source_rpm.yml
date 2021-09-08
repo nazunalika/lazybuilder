@@ -1,0 +1,12 @@
+---
+# blocks don't support loop
+- name: "Pull the source RPM data"
+  include_tasks: mock_srpmpull.yml
+  vars:
+    git_url: "{{ module_git_url }}/{{ mod_item[0] }}.git"
+    source_package_name: "{{ mod_item[0] }}"
+  tags:
+    - mock
+    - module
+    - git_pull
+...
