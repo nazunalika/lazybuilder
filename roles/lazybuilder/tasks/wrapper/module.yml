@@ -13,7 +13,7 @@
           - '*.noarch.rpm'
           - '*.{{ mock_arch }}.rpm'
         excludes: "{{ module_filtered_rpms }}"
-        register: finds
+      register: finds
       tags:
         - module
 
@@ -23,7 +23,7 @@
         recurse: true
         patterns:
           - '*.src.rpm'
-        register: finds_src
+      register: finds_src
       tags:
         - module
 
