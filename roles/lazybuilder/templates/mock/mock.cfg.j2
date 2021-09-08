@@ -63,7 +63,9 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 %_module_version {{ module_version }}
 %_module_context {{ module_context }}
 
+{% if module_data.data.buildopts.rpms.macros is defined %}
 {{ module_data.data.buildopts.rpms.macros }}
+{% endif %}
 """
 # If a module requires other modules, they'll be setup below.
 {% if module_needs_modules %}
