@@ -15,7 +15,7 @@ data:
 document: {{ module_data.document }}
 version: {{ module_data.version }}
 data:
-  name: {{ module_data.data.name | default("source") }}
+  name: {{ source_name | default("source") }}
   stream: "{{ module_data.data.stream }}"
   version: {{ module_version | default(8040) }}
   context: {{ module_context | default('01010110') }}
