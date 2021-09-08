@@ -65,6 +65,15 @@
         - mock
         - module
 
+    - name: "Verify that the platform for the module matches"
+      assert:
+        that:
+          - module_data.data.dependencies[0].buildrequires.platform[0] == dist
+        fail_msg: "Platform mismatch"
+        success_msg: "Platform matches"
+      tags:
+        - module
+
     - name: "Assign initial list of rpms that are implicit group 0"
       set_fact:
         mock_rpm_build_group_zero: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'undefined') | list }}"

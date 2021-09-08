@@ -7,6 +7,8 @@ Ultimately, this is meant to be run by itself on an ansible box or imported as a
 
 Playbooks will sit in the root.
 
+**Note**: If you are using lazybuilder in module mode, the modules must have simple requirements. Please review the lazybuilder `README.md` for more information.
+
 Requirements
 ------------
 
