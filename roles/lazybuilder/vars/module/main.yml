@@ -5,7 +5,7 @@ module_format: "module-{{ source_name }}-{{ module_stream }}-{{ module_version }
 # This starts off a tag like .module+el8.4.0 and the post should be
 # "+XXX+YYYYYYYY" where X is an obvious starting number of 000 and tracked in
 # some way and Y is a git hash
-module_dist_pre: ".module+el{{ major }}.{{ minor }}.0"
+module_dist_pre: ".module_el{{ major }}.{{ minor }}.0"
 module_dist_increment: "{{ module_dist_increment_track | default('000')}}"
 module_dist: "{{ module_dist_pre }}+{{ module_dist_increment }}+{{ module_dist_hash | default('01010100') }}"
 module_modularitylabel: "{{ source_name }}:{{ module_stream }}:{{ module_version }}:{{ module_context | default('01010100')}}"
