@@ -192,6 +192,20 @@
   tags:
     - module
 
+- name: "Create wildcarded filter list"
+  set_fact:
+    module_interim_filter: "{% for x in module_data.data.filter.rpms %}{{x}}* {% endfor %}"
+  when: module_data.data.filter is defined
+  tags:
+    - module
+
+- name: "Create interim filter list"
+  set_fact:
+    module_filtered_rpms: "{{ module_interim_filter.split() }}"
+  when: module_data.data.filter is defined
+  tags:
+    - module
+
 # import vars/module/main.yml to fulfill other pieces
 - name: "Importing final required vars"
   include_vars:

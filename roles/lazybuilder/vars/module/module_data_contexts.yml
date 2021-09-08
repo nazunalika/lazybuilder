@@ -5,5 +5,4 @@ module_build_context: "{{ module_build_context_full[:8] }}"
 module_runtime_context: "{{ module_runtime_context_full[:8] }}"
 module_context: "{{ ([module_build_context_full, module_runtime_context_full]|join(':') | hash('sha1'))[:8] }}"
 module_dist_hash: "{{ ([source_name, module_stream, module_version, module_context]|join('.') | hash('sha1'))[:8] }}"
-module_filtered_rpms: "{{ module_interim_filter.split() }}"
 ...
