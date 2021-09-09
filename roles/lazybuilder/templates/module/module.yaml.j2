@@ -25,9 +25,7 @@ data:
   license:
 {% for (key, value) in module_data.data.license.items() %}
     {{ key }}:
-{% for l in value %}
-      - {{ l | indent(width=4) }}
-{% endfor %}
+    - {{ value | join('\n    - ') }}
 {% endfor %}
   xmd: {}
 {% if module_data.data.dependencies is defined %}
@@ -49,9 +47,7 @@ data:
   filter:
 {% for (key, value) in module_data.data.filter.items() %}
     {{ key }}:
-{% for l in value %}
-    - {{ l }}
-{% endfor %}
+    - {{ value | join('\n    - ') }}
 {% endfor %}
 {% endif %}
 {% if module_data.data.profiles is defined %}
@@ -60,7 +56,8 @@ data:
     {{ key }}:
 {% for (key, value) in value.items() %}
 {% if value is iterable and (value is not string and value is not mapping) %}
-      {{ key | indent(width=6) }}: [{{ value | join(', ') }}]
+      {{ key | indent(width=6) }}:
+      - {{ value | join('\n      - ') }}
 {% else %}
       {{ key | indent(width=6) }}: {{ value }}
 {% endif %}
@@ -71,9 +68,7 @@ data:
   api:
 {% for (key, value) in module_data.data.api.items() %}
     {{ key }}:
-{% for l in value %}
-    - {{ l }}
-{% endfor %}
+    - {{ value | join('\n    - ') }}
 {% endfor %}
 {% endif %}
 {% if module_data.data.buildopts is defined %}
@@ -112,9 +107,7 @@ data:
   artifacts:
 {% for (key, value) in artifacts.items() %}
     {{ key }}:
-{% for l in value %}
-    - {{ l }}
-{% endfor %}
+    - {{ value | join('\n    - ') }}
 {% endfor %}
 {% endif %}
 ...
