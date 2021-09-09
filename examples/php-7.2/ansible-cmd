@@ -1,0 +1,1 @@
+ansible-playbook lazy_mock.yml --extra-vars="module_git_url=https://git.rockylinux.org/staging/rpms source_name=php transfer_mode=true generate_repo=true git_source_url=https://rocky-linux-sources-staging.a1.rockylinux.org module_mode=true module_git_repo=https://git.rockylinux.org/staging/modules/php.git module_git_branch=r8-stream-7.2"
