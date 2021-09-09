@@ -38,7 +38,8 @@
       debug:
         msg: "Not available yet."
 
-    - meta: end_play
+    - name: "End play"
+      meta: end_play
   when:
     - module_tracker == 'db'
 # End
@@ -151,7 +152,8 @@
       debug:
         msg: "Not supported."
 
-    - meta: end_play
+    - name: "End play"
+      meta: end_play
   when:
     - module_yaml_location_type == 'http'
 
@@ -194,7 +196,7 @@
 
 - name: "Create wildcarded filter list"
   set_fact:
-    module_interim_filter: "{% for x in module_data.data.filter.rpms %}{{x}}* {% endfor %}"
+    module_interim_filter: "{% for x in module_data.data.filter.rpms %}{{ x }}* {% endfor %}"
   when: module_data.data.filter is defined
   tags:
     - module

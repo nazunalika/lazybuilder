@@ -28,13 +28,13 @@
         - module
 
     - name: "Generate NEVRA for RPM artifacts"
-      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\n' {% for x in finds.files %}{{ x.path }} {% endfor %}"
+      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.%{ARCH}\n' {% for x in finds.files %}{{ x.path }} {% endfor %}" # noqa command-instead-of-module
       register: result_artifact_rpms
       tags:
         - module
 
     - name: "Generate NEVRA for source RPM artifacts"
-      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.src\n' {% for x in finds_src.files %}{{ x.path }} {% endfor %}"
+      command: "/usr/bin/rpm -qp --qf '%{NAME}-%{EPOCHNUM}:%{VERSION}-%{RELEASE}.src\n' {% for x in finds_src.files %}{{ x.path }} {% endfor %}" # noqa command-instead-of-module
       register: result_artifact_src_rpms
       tags:
         - module
