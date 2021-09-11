@@ -61,8 +61,32 @@
 ################################################################################
 
 ################################################################################
-# Setting base line facts for mock and transfer directories
+# Start imports
+- name: "Import el{{ major }} repos for {{ distro }} if available"
+  include_vars: "{{ mock_el_repo_config }}"
+  when:
+    - not bootstrap|bool
+    - not internal_buildsys|bool
+  tags:
+    - mock
 
+- name: "Import module data for el{{ major }}"
+  include_tasks: "module_data_import.yml"
+  when:
+    - module_mode|bool
+  tags:
+    - mock
+    - module
+
+- name: "Import arch data"
+  include_vars: "arch/{{ mock_arch }}.yml"
+  tags:
+    - mock
+# End
+################################################################################
+
+################################################################################
+# Setting base line facts for mock and transfer directories
 - name: "Make our mock dir for http"
   set_fact:
     mock_repo_path: "{{ mock_http_repo_path }}"
@@ -98,7 +122,7 @@
   tags:
     - mock
 
-- name: "Set relevant dropbox path - Bootstrap"
+- name: "Set relevant dropbox path - Bootstrap/Buildsys"
   set_fact:
     repo_drop_path: "{{ mock_bootstrap_path }}"
     repo_drop_path_results: "{{ repo_path }}/bootstrap-results/{{ source_name }}"
@@ -134,16 +158,9 @@
 ################################################################################
 
 ################################################################################
-# Start imports
-- name: "Import el{{ major }} repos"
-  include_vars: "el/el{{ major }}.yml"
-  when:
-    - not bootstrap|bool
-  tags:
-    - mock
-
+# Import other repo stuff now that facts are in alignment
 - name: "Import el{{ major }} sig or req constraint repos"
-  include_vars: "el/el{{ major }}_solo.yml"
+  include_vars: "{{ mock_solo_repo_config }}"
   when:
     - not bootstrap|bool
     - sig_or_constraint|bool
@@ -151,30 +168,17 @@
     - mock
 
 - name: "Import el{{ major }} bootstrap repos"
-  include_vars: "el/el{{ major }}_bootstrap.yml"
+  include_vars: "{{ mock_bs_repo_config }}"
   when:
     - bootstrap|bool
-    - not bootstrap_only|bool
+    - not internal_buildsys|bool
   tags:
     - mock
 
-- name: "Import only el{{ major }} bootstrap repos"
-  include_vars: "el/el{{ major }}_bootstrap_rebuild.yml"
+- name: "Import only el{{ major }} bootstrap/buildsys repos"
+  include_vars: "{{ mock_buildsys_repo_config }}"
   when:
-    - (bootstrap|bool and bootstrap_only|bool) or internal_buildsys|bool
-  tags:
-    - mock
-
-- name: "Import module data for el{{ major }}"
-  include_tasks: "module_data_import.yml"
-  when:
-    - module_mode|bool
-  tags:
-    - mock
-    - module
-
-- name: "Import arch data"
-  include_vars: "arch/{{ mock_arch }}.yml"
+    - internal_buildsys|bool
   tags:
     - mock
 # End

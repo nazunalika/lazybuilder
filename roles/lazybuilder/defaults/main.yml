@@ -95,7 +95,6 @@ module_needs_modules: true
 # in a container
 mock_isolation: auto
 bootstrap: false
-bootstrap_only: false
 sig_or_constraint: false
 internal_buildsys: false
 # This tells us where the repos (relative to the filesystem on the repo box) is
@@ -128,6 +127,19 @@ mock_solo_path: "{{ repo_path }}/{{ major }}-{{ mock_solo_name }}-{{ mock_arch }
 # These control some of the above
 mock_use_http_path: false
 mock_use_file_path: true
+
+# This sets default yaml conf files which can be overridden - lazybuilder by
+# default uses rocky repos when doing builds. When buildsys is on or bootstrap
+# modes are on, this isn't typically used. This means that mock_repos can just
+# be overridden or even added in other ways if not turned on.
+#
+# Note: While it is possible to override the other configs, it may just be
+# simpler to import your own vars for the repo types. As of now, it's not at
+# all supported and I won't address issues pertaining to it.
+mock_el_repo_config: "el/el{{ major }}.yml"
+mock_solo_repo_config: "el/el{{ major }}_solo.yml"
+mock_bs_repo_config: "el/el{{ major }}_bootstrap.yml"
+mock_buildsys_repo_config: "el/el{{ major }}_buildsys.yml"
 
 # source settings
 # This tells the mock builder how to pull together the source rpm, whether from

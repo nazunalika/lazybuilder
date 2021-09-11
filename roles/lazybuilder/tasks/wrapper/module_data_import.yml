@@ -18,7 +18,7 @@
   block:
     - name: "Check for the module tracker file"
       stat:
-        path: "{{ repo_drop_path_results_root }}/tracker.yaml"
+        path: "{{ repo_path }}/module-results/tracker.yaml"
       register: module_tracker_check
       changed_when: "1 != 1"
       tags:
@@ -26,7 +26,7 @@
 
     - name: "Import increment tracker"
       include_vars:
-        file: "{{ repo_drop_path_results_root }}/tracker.yaml"
+        file: "{{ repo_path }}/module-results/tracker.yaml"
       when: module_tracker_check.stat.exists
       tags:
         - module
