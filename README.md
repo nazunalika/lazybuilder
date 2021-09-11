@@ -1,25 +1,15 @@
 lazybuilder
 ===========
 
-.. image:: https://img.shields.io/github/last-commit/nazunalika/lazybuilder/main
-   :target: https://github.com/nazunalika/lazybuilder
-   :alt: lazybuilder
+![lazybuilder (main)](https://img.shields.io/github/last-commit/nazunalika/lazybuilder/main)
 
-.. image:: https://img.shields.io/github/last-commit/nazunalika/lazybuilder/development
-   :target: https://github.com/nazunalika/lazybuilder/tree/development
-   :alt: lazybuilder
+![lazybuilder (development)](https://img.shields.io/github/last-commit/nazunalika/lazybuilder/development)
 
-.. image:: https://img.shields.io/github/issues/nazunalika/lazybuilder
-   :target: https://github.com/nazunalika/lazybuilder/issues
-   :alt: lazybuilder issues
+![lazybuilder issues](https://img.shields.io/github/issues/nazunalika/lazybuilder)
 
-.. image:: https://img.shields.io/badge/Discussions-silver.svg
-   :target: https://github.com/nazunalika/lazybuilder/discussions
-   :alt: lazybuilder discussion
+![lazybuilder discussion](https://img.shields.io/badge/Discussions-silver.svg)
 
-.. image:: https://img.shields.io/badge/license-MIT-brightgreen.svg
-   :target: LICENSE
-   :alt: Repository License
+![lazybuilder license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 The lazybuilder lazily builds RPMs whether for bootstrapping purposes or otherwise. This isn't really a role, this isn't really a collection. This thing doesn't really know *what* it is. It's up for you to figure it out.
 
