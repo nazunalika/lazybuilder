@@ -1,6 +1,26 @@
 lazybuilder
 ===========
 
+.. image:: https://img.shields.io/github/last-commit/nazunalika/lazybuilder/main
+   :target: https://github.com/nazunalika/lazybuilder
+   :alt: lazybuilder
+
+.. image:: https://img.shields.io/github/last-commit/nazunalika/lazybuilder/development
+   :target: https://github.com/nazunalika/lazybuilder/tree/development
+   :alt: lazybuilder
+
+.. image:: https://img.shields.io/github/issues/nazunalika/lazybuilder
+   :target: https://github.com/nazunalika/lazybuilder/issues
+   :alt: lazybuilder issues
+
+.. image:: https://img.shields.io/badge/Discussions-silver.svg
+   :target: https://github.com/nazunalika/lazybuilder/discussions
+   :alt: lazybuilder discussion
+
+.. image:: https://img.shields.io/badge/license-MIT-brightgreen.svg
+   :target: LICENSE
+   :alt: Repository License
+
 The lazybuilder lazily builds RPMs whether for bootstrapping purposes or otherwise. This isn't really a role, this isn't really a collection. This thing doesn't really know *what* it is. It's up for you to figure it out.
 
 Ultimately, this is meant to be run by itself on an ansible box or imported as a project into tower (being careful with your tower settings). Right now it is built to be ran on an ansible box that is not tower.
