@@ -54,9 +54,7 @@ module_tracker: file
 
 # Generally, the MBS service will auto-generate a macros rpm (annoying or not,
 # this is what it does). We don't want to do that, so some of our stuff will be
-# here, other stuff will be in other vars or templates. Note that in the case of
-# koji, we *will* do so to mimic what MBS actually does. That's if we add full
-# koji support.
+# here, other stuff will be in other vars or templates.
 # module_stream: "1.0"
 module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
 # module_module_name: "{{ source_name }}"
