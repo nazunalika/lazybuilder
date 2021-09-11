@@ -131,6 +131,18 @@ priority={{ repo.priority|default("99") }}
 {% endfor %}
 {% endif %}
 
+{% if solo_repos is defined %}
+{% for repo in solo_repos %}
+[solo-{{ repo.repoid }}]
+name=solo-{{ repo.repoid }}
+baseurl={{ repo.baseurl }}
+enabled=1
+gpgcheck=0
+priority={{ repo.priority|default("99") }}
+
+{% endfor %}
+{% endif %}
+
 {% if module_mode %}
 [{{ module_format }}-{{ module_context | default('01010100') }}]
 name={{ module_format }}-{{ module_context | default('01010100') }}

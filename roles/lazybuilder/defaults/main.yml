@@ -36,7 +36,7 @@ mock_quiet: false
 # mock_rpmbuild_timeout
 
 # modes
-# mock|koji are accepted (koji is not part of the current public release)
+# mock is the only accepted option as of this public release
 build_mode: mock
 module_mode: false
 transfer_mode: false
@@ -97,6 +97,7 @@ mock_isolation: auto
 bootstrap: false
 bootstrap_only: false
 sig_or_constraint: false
+internal_buildsys: false
 # This tells us where the repos (relative to the filesystem on the repo box) is
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap

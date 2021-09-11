@@ -102,6 +102,14 @@
         - transfer
         - module
 
+    - name: Refresh the tracker file
+      template:
+        src: "module/tracker.yaml.j2"
+        dest: "{{ repo_drop_path_results_root }}/tracker.yaml"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+      tags:
+        - module
   rescue:
     - name: We failed, display the error.
       debug:

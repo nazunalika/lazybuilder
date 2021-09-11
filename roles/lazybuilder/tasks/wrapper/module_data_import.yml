@@ -16,9 +16,34 @@
 # Module tracking data
 - name: "Module tracker data - file data"
   block:
-    - name: "Placeholder for future mechanism"
+    - name: "Check for the module tracker file"
+      stat:
+        path: "{{ repo_drop_path_results_root }}/tracker.yaml"
+      register: module_tracker_check
+      changed_when: "1 != 1"
+      tags:
+        - module
+
+    - name: "Import increment tracker"
+      include_vars:
+        file: "{{ repo_drop_path_results_root }}/tracker.yaml"
+      when: module_tracker_check.stat.exists
+      tags:
+        - module
+
+    - name: "Increment the tracker"
+      set_fact:
+        module_dist_increment_track: "{{ '%03d' % (module_dist_increment_track|int + 1) }}"
+      when: module_tracker_check.stat.exists
+      tags:
+        - module
+
+    # This should only happen if the module tracker doesn't exist, we'll create
+    # it later.
+    - name: "Setting increment to 000 as a starting point"
       set_fact:
         module_dist_increment_track: "000"
+      when: not module_tracker_check.stat.exists
       tags:
         - module
   when:
@@ -132,7 +157,7 @@
       when:
         - module_defaults_git_repo is defined
         - module_defaults_git_branch is defined
-        - module_data_defaults_yaml.stat.exists|bool
+        - module_data_defaults_yaml.stat.exists
       tags:
         - module
 
