@@ -1,0 +1,14 @@
+---
+# in the event epel is needed or requested
+rpmfusion_repos:
+  - repoid: "rpmfusion-free-updates"
+    baseurl: "http://download1.rpmfusion.org/free/el/updates/{{ major }}/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: "file:///usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-free-el-{{ major }}"
+  - repoid: "rpmfusion-nonfree-updates"
+    baseurl: "http://download1.rpmfusion.org/nonfree/el/updates/{{ major }}/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: "{% if enable_rpmfusion_nonfree is defined and enable_rpmfusion_nonfree|bool %}1{% else %}0{% endif %}"
+    gpgkey: "file:///usr/share/distribution-gpg-keys/rpmfusion/RPM-GPG-KEY-rpmfusion-nonfree-el-{{ major }}"
+...

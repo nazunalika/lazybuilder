@@ -95,6 +95,14 @@ mock_isolation: auto
 bootstrap: false
 sig_or_constraint: false
 internal_buildsys: false
+# This turns on EPEL repositories
+# Turn on modular by setting to true as needed
+enable_epel: false
+enable_epel_modular: false
+# This turns on RPMFusion repositories - enable_rpmfusion only enables the free
+# repository. Turn on nonfree by setting to true as needed.
+enable_rpmfusion: false
+enable_rpmfusion_nonfree: false
 # This tells us where the repos (relative to the filesystem on the repo box) is
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap

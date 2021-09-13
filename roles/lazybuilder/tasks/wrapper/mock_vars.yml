@@ -181,6 +181,21 @@
     - internal_buildsys|bool
   tags:
     - mock
+
+- name: "Import epel {{ major }} repos"
+  include_vars: "el/epel.yml"
+  when:
+    - enable_epel|bool
+  tags:
+    - mock
+
+- name: "Import rpmfusion el{{ major }} repos"
+  include_vars: "el/rpmfusion.yml"
+  when:
+    - enable_rpmfusion|bool
+  tags:
+    - mock
+
 # End
 ################################################################################
 ...
