@@ -18,6 +18,6 @@ mock_repos:
   - repoid: "devel"
     baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/Devel/{{ mock_arch }}/os"
     gpgcheck: 1
-    enabled: 1
+    enabled: "{% if enable_devel is defined and enable_devel|bool %}1{% else %}0{% endif %}"
     gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
 ...

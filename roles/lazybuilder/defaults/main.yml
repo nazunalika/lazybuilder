@@ -95,6 +95,9 @@ mock_isolation: auto
 bootstrap: false
 sig_or_constraint: false
 internal_buildsys: false
+# This turns on the devel repository - User takes responsibility for the use of
+# this repository
+enable_devel: false
 # This turns on EPEL repositories
 # Turn on modular by setting to true as needed
 enable_epel: false
