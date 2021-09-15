@@ -323,6 +323,16 @@
     - name: Set path to the srpm
       set_fact:
         mock_srpm_path: "{{ srpm_pull.dest }}"
+      when:
+        - not mock_chain|bool
+      tags:
+        - srpm_pull
+
+    - name: Append to srpm path list
+      set_fact:
+        mock_srpm_path: "{{ mock_srpm_path + [ srpm_pull.dest ] }}"
+      when:
+        - mock_chain|bool
       tags:
         - srpm_pull
 

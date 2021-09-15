@@ -19,6 +19,8 @@
 
     - name: "Pull the source RPM data"
       include_tasks: wrapper/mock_srpmpull.yml
+      when:
+        - not mock_chain|bool
       tags:
         - mock
         - git_pull
