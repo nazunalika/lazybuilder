@@ -19,6 +19,9 @@
 {% if mock_rpmbuild_opts is defined %}
   --rpmbuild-opts="{{ mock_rpmbuild_opts | join(" ") }}" \
 {% endif %}
+{% if disable_tests %}
+  --without=tests --nocheck \
+{% endif %}
 {% if mock_rpmbuild_timeout is defined %}
   --rpmbuild-timeout="{{ mock_rpmbuild_timeout | string }}" \
 {% endif %}

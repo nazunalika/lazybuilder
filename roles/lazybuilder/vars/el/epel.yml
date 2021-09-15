@@ -1,0 +1,14 @@
+---
+# in the event epel is needed or requested
+epel_repos:
+  - repoid: "epel"
+    baseurl: "https://dl.fedoraproject.org/pub/epel/{{ major }}/Everything/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: "file:///usr/share/distribution-gpg-keys/epel/RPM-GPG-KEY-EPEL-{{ major }}"
+  - repoid: "epel-modular"
+    baseurl: "https://dl.fedoraproject.org/pub/epel/{{ major }}/Modular/{{ mock_arch }}"
+    gpgcheck: 1
+    enabled: "{% if enable_epel_modular is defined and enable_epel_modular|bool %}1{% else %}0{% endif %}"
+    gpgkey: "file:///usr/share/distribution-gpg-keys/epel/RPM-GPG-KEY-EPEL-{{ major }}"
+...

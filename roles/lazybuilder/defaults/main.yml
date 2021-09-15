@@ -54,9 +54,7 @@ module_tracker: file
 
 # Generally, the MBS service will auto-generate a macros rpm (annoying or not,
 # this is what it does). We don't want to do that, so some of our stuff will be
-# here, other stuff will be in other vars or templates. Note that in the case of
-# koji, we *will* do so to mimic what MBS actually does. That's if we add full
-# koji support.
+# here, other stuff will be in other vars or templates.
 # module_stream: "1.0"
 module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
 # module_module_name: "{{ source_name }}"
@@ -97,6 +95,21 @@ mock_isolation: auto
 bootstrap: false
 sig_or_constraint: false
 internal_buildsys: false
+# This turns on the devel repository - User takes responsibility for the use of
+# this repository
+enable_devel: false
+# This turns on EPEL repositories
+# Turn on modular by setting to true as needed
+enable_epel: false
+enable_epel_modular: false
+# This turns on RPMFusion repositories - enable_rpmfusion only enables the free
+# repository. Turn on nonfree by setting to true as needed.
+enable_rpmfusion: false
+enable_rpmfusion_nonfree: false
+# Disable test checking - This turns on --nocheck and --without=tests
+# Note that this disables the commonly used macros, so some tests may still end
+# up running
+disable_tests: false
 # This tells us where the repos (relative to the filesystem on the repo box) is
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap

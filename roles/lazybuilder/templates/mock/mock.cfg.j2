@@ -153,4 +153,28 @@ priority=5
 
 {% endif %}
 
+{% if epel_repos is defined %}
+{% for repo in epel_repos %}
+[{{ repo.repoid }}]
+name={{ repo.repoid }}
+baseurl={{ repo.baseurl }}
+enabled=1
+gpgcheck=0
+priority={{ repo.priority|default("99") }}
+
+{% endfor %}
+{% endif %}
+
+{% if rpmfusion_repos is defined %}
+{% for repo in rpmfusion_repos %}
+[{{ repo.repoid }}]
+name={{ repo.repoid }}
+baseurl={{ repo.baseurl }}
+enabled=1
+gpgcheck=0
+priority={{ repo.priority|default("99") }}
+
+{% endfor %}
+{% endif %}
+
 """

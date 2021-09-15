@@ -14,11 +14,7 @@ Playbooks will sit in the root.
 Requirements
 ------------
 
-This will require your systems to have the appropriate packages installed or at the very least the right `/bin`'s to go to perform the work. For example:
-
-* mock
-* koji
-* pungi
+This will require your systems to have the appropriate packages installed or at the very least the right `/bin`'s to go to perform the work.
 
 Note that there are recommended version requirements for mock build hosts.
 

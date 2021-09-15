@@ -216,6 +216,9 @@
 - name: "Stretch out contexts and filters"
   include_vars:
     file: "module/module_data_contexts.yml"
+  when:
+    - module_context is not defined
+    - module_dist_hash is not defined
   tags:
     - module
 

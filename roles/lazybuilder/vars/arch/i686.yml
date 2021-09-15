@@ -12,7 +12,7 @@ mock_chroot_setup_cmd: "install tar gcc-c++ redhat-rpm-config redhat-release whi
 # There currently isn't a clean way of composing for i686, the repo data
 # gets all messy.
 mock_repos:
-  - repoid: "koji i686"
+  - repoid: "koji-i686"
     baseurl: "https://kojidev.rockylinux.org/kojifiles/repos/dist-rocky8-updates-build/latest/i386"
     gpgcheck: 0
     enabled: 1
