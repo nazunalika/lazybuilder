@@ -48,17 +48,17 @@
         - git_pull
         - srpm_pull
 
-    - name: "Loop through the RPM list for the chain"
-      include_tasks: wrapper/chain_source_rpm.yml
-      loop: "{{ srpm_url }}"
-      loop_control:
-        loop_var: "reg_item"
-      when:
-        - mock_chain|bool
-        - srpm_url is defined
-      tags:
-        - mock
-        - srpm_pull
+#    - name: "Loop through the RPM list for the chain"
+#      include_tasks: wrapper/chain_source_rpm.yml
+#      loop: "{{ srpm_url }}"
+#      loop_control:
+#        loop_var: "reg_item"
+#      when:
+#        - mock_chain|bool
+#        - srpm_url is defined
+#      tags:
+#        - mock
+#        - srpm_pull
 
     - name: "Loop through the git list for the chain"
       include_tasks: wrapper/chain_git_rpm.yml
