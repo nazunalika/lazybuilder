@@ -23,7 +23,12 @@ mock_builder: "rpmbuild"
 mock_rpmbuild_networking: "False"
 mock_use_host_resolv: "False"
 mock_build_root: "{{ distro }}-{{ major }}-{{ mock_arch }}"
+# This is if you want to chain builds. Set mock_chain_list to the list of
+# packages you want to build in a chain or ensure srpm_url is a list of
+# source RPM url's to download.
 mock_chain: false
+# mock_chain_list: []
+# chain_git_url: https://git.rockylinux.org/staging/rpms
 mock_quiet: false
 # If a special piece needs to be added to a release tag, use this var by
 # defining it in a playbook. Examples below (commented)
@@ -34,6 +39,8 @@ mock_quiet: false
 # mock_rpmbuild_opts
 # If you need a timeout on rpmbuilds, set it (in seconds)
 # mock_rpmbuild_timeout
+# If you need extra macros, set it here as a literal (|) multi-line block
+# mock_rpmbuild_macro_set
 
 # modes
 # mock is the only accepted option as of this public release
@@ -69,6 +76,7 @@ module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_d
 # The commented vars are examples.
 #
 module_yaml_location_type: git
+# module_git_url: https://git.rockylinux.org/staging/rpms
 # module_git_repo: https://git.rockylinux.org/staging/modules/{{ source_name }}.git
 # module_git_branch: "r{{ major }}-stream-version"
 # module_defaults_git_repo: https://git.rockylinux.org/rocky/rocky-module-defaults.git
@@ -169,7 +177,8 @@ source_mode: "git"
 #            https://git.example.com/rpms/something.git
 #            When using module mode, it is better to provide it a just the group
 #            name where it can reasonably find the next package to build. It will
-#            autofill, eg git.example.com/rpms/package_a.git
+#            autofill, eg git.example.com/rpms/package_a.git - The same applies
+#            when using mock_chain
 # git_source_url -> Set this to the lookaside cache that is generally a web URL
 #                   This place where the archives sit should be named of the 
 #                   sha*sum of the file. Original archive name is NOT supported.

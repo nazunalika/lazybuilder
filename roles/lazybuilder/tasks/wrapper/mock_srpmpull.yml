@@ -272,7 +272,7 @@
       set_fact:
         mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
       when:
-        - module_mode|bool
+        - module_mode|bool or mock_chain|bool
       tags:
         - git_pull
 

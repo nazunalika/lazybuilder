@@ -17,6 +17,60 @@
       set_fact:
         source_package_name: "{{ source_name }}"
 
+    ############################################################################
+    # This is only for chain builds - the other checks are done elsewhere
+    - name: "Verify mock_chain is true with a list of stuff to build"
+      assert:
+        that:
+          - mock_chain|bool
+          - (srpm_url is iterable
+            and (srpm_url is not string and srpm_url is not mapping))
+            or (mock_chain_list is iterable
+            and (mock_chain_list is not string and mock_chain_list is not mapping)
+            and chain_git_url is defined)
+        fail_msg: "srpm_url/mock_chain_list must be a list or chain_git_url is not defined"
+        success_msg: "everything is in order"
+      when:
+        - mock_chain|bool
+        - (srpm_url is defined or mock_chain_list is defined)
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
+
+    - name: "Make mock_srpm_path a list"
+      set_fact:
+        mock_srpm_path: []
+      when:
+        - mock_chain|bool
+
+    - name: "Loop through the RPM list for the chain"
+      include_tasks: wrapper/chain_source_rpm.yml
+      loop: "{{ srpm_url }}"
+      loop_control:
+        loop_var: "reg_item"
+      when:
+        - mock_chain|bool
+        - srpm_url is defined
+      tags:
+        - mock
+        - srpm_pull
+
+    - name: "Loop through the git list for the chain"
+      include_tasks: wrapper/chain_git_rpm.yml
+      loop: "{{ mock_chain_list }}"
+      loop_control:
+        loop_var: "reg_item"
+      when:
+        - mock_chain|bool
+        - mock_chain_list is defined
+        - chain_git_url is defined
+      tags:
+        - mock
+        - srpm_pull
+    # End chain setup
+    ############################################################################
+
     - name: "Pull the source RPM data"
       include_tasks: wrapper/mock_srpmpull.yml
       when:
