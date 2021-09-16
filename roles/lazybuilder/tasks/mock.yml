@@ -43,6 +43,10 @@
         mock_srpm_path: []
       when:
         - mock_chain|bool
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
 
     - name: "Loop through the RPM list for the chain"
       include_tasks: wrapper/chain_source_rpm.yml
@@ -52,8 +56,6 @@
       when:
         - mock_chain|bool
         - srpm_url is defined
-          and (srpm_url is iterable
-          and (srpm_url is not string and srpm_url is not mapping))
       tags:
         - mock
         - srpm_pull
@@ -66,8 +68,6 @@
       when:
         - mock_chain|bool
         - mock_chain_list is defined
-          and (mock_chain_list is iterable
-          and (mock_chain_list is not string and mock_chain_list is not mapping))
         - chain_git_url is defined
       tags:
         - mock
