@@ -23,6 +23,7 @@
       assert:
         that:
           - mock_chain|bool
+          - (srpm_url is defined or mock_chain_list is defined)
           - (srpm_url is iterable
             and (srpm_url is not string and srpm_url is not mapping))
             or (mock_chain_list is iterable
@@ -32,7 +33,6 @@
         success_msg: "everything is in order"
       when:
         - mock_chain|bool
-        - (srpm_url is defined or mock_chain_list is defined)
       tags:
         - mock
         - git_pull
@@ -52,6 +52,8 @@
       when:
         - mock_chain|bool
         - srpm_url is defined
+          and (srpm_url is iterable
+          and (srpm_url is not string and srpm_url is not mapping))
       tags:
         - mock
         - srpm_pull
@@ -64,6 +66,8 @@
       when:
         - mock_chain|bool
         - mock_chain_list is defined
+          and (mock_chain_list is iterable
+          and (mock_chain_list is not string and mock_chain_list is not mapping))
         - chain_git_url is defined
       tags:
         - mock
