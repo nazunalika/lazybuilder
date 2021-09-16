@@ -158,9 +158,9 @@ mock_use_file_path: true
 # simpler to import your own vars for the repo types. As of now, it's not at
 # all supported and I won't address issues pertaining to it.
 mock_el_repo_config: "el/el{{ major }}.yml"
-mock_solo_repo_config: "el/el{{ major }}_solo.yml"
+mock_solo_repo_config: "el/el_solo.yml"
 mock_bs_repo_config: "el/el{{ major }}_bootstrap.yml"
-mock_buildsys_repo_config: "el/el{{ major }}_buildsys.yml"
+mock_buildsys_repo_config: "el/el_buildsys.yml"
 
 # source settings
 # This tells the mock builder how to pull together the source rpm, whether from
