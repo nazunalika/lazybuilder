@@ -73,6 +73,11 @@ module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_d
 # yaml is expected to be at the root of the repo with the same name as
 # source_name.
 #
+# There may be occassions where older versions of a module may need to be
+# built. That option is offered by setting module_git_branch to the commit hash
+# in the appropriate git repo. Set module_follow_refs to true, and the
+# commit hashes/references of the YAML will be followed to each package.
+#
 # The commented vars are examples.
 #
 module_yaml_location_type: git
@@ -83,6 +88,7 @@ module_yaml_location_type: git
 # module_defaults_git_branch: "r{{ full }}"
 # module_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
 # module_defaults_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
+module_follow_refs: false
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
