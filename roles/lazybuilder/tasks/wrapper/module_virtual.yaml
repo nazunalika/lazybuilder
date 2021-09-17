@@ -1,0 +1,10 @@
+---
+- name: "Generate {{ mock_arch }} module document"
+  template:
+    src: "module/module.yaml.j2"
+    dest: "{{ repo_drop_path_results }}/module.{{ mock_arch }}.yaml"
+    owner: "{{ mock_builder }}"
+    mode: "0644"
+  tags:
+    - module
+...

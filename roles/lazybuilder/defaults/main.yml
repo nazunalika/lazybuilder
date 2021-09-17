@@ -100,6 +100,13 @@ module_follow_refs: false
 # instead of defining the above manually for a module build, keep the below set
 # to true, so that way the buildrequires are properly determined.
 module_needs_modules: true
+# Some modules are virtual modules, meaning they do not have a module dist, but
+# are still part of a module. The yamls they are built from do not have a list
+# of buildable components. Instead they are built normally and a YAML is
+# inserted after the fact to enable the module. Set this to true to generate
+# a standard YAML with no components. This can also be useful to generate/test
+# YAML creation for modules.
+module_no_components: false
 
 # build mode settings
 # isolation modes are auto|nspawn|simple
