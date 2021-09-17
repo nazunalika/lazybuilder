@@ -12,6 +12,8 @@
     - "{{ mock_builder_module_dir }}"
     - "/var/tmp/.build_in_progress"
     - "/var/lib/mock/{{ source_name }}"
+  when:
+    - enable_cleanup|bool
   tags:
     - mock
     - module

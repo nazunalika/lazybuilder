@@ -10,6 +10,7 @@ source_name: name
 # Override this with a mock_dist var
 dist: "el{{ major }}"
 distro: "rocky"
+enable_cleanup: true
 # This needs to be set explicitly and the right build host will need to be
 # picked from the inventory. There is logic in the tasks that will actually
 # stop everything if the mock_arch and the architecture fact do falset match.

@@ -289,6 +289,8 @@
         - '{{ mock_builder_source_dir }}/{{ source_package_name }}'
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_module_dir }}'
+      when:
+        - enable_cleanup|bool
 
     - name: Fail when there's an error in the block
       fail:
