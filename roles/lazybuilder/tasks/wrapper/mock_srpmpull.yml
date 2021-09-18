@@ -292,6 +292,13 @@
       when:
         - enable_cleanup|bool
 
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
+
     - name: Fail when there's an error in the block
       fail:
         msg: "Exiting entire play"
@@ -350,6 +357,15 @@
       loop:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_module_dir }}'
+      when:
+        - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
       fail:

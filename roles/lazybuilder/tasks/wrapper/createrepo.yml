@@ -47,9 +47,15 @@
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
         - '{{ mock_builder_module_dir }}'
-        - '/var/tmp/.build_in_progress'
       when:
         - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
       fail:

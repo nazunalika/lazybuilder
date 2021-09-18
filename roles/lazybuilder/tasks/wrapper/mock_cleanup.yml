@@ -10,10 +10,20 @@
     - "{{ mock_builder_source_dir }}"
     - "{{ mock_builder_rpmbuild_dir }}"
     - "{{ mock_builder_module_dir }}"
-    - "/var/tmp/.build_in_progress"
     - "/var/lib/mock/{{ source_name }}"
   when:
     - enable_cleanup|bool
+  tags:
+    - mock
+    - module
+    - cleanup
+
+- name: System is no longer in use
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - "/var/tmp/.build_in_progress"
   tags:
     - mock
     - module
