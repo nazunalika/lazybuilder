@@ -147,7 +147,7 @@
 - name: "Set relevant dropbox path - Module"
   set_fact:
     repo_drop_path: "{{ repo_path }}/{{ module_format }}-{{ module_context }}"
-    repo_drop_path_results: "{{ repo_path }}/module-results/{{ source_name }}-{{ module_data.data.stream }}"
+    repo_drop_path_results: "{{ repo_path }}/module-results/{{ source_name }}-{{ module_data.data.stream }}-{{ module_version }}"
     repo_drop_path_results_root: "{{ repo_path }}/module-results"
   when:
     - module_mode|bool

@@ -136,6 +136,7 @@ disable_tests: false
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap
 repo_path: "/opt/repo"
+repo_result_root: "{{ repo_path }}/results"
 # This is the file URL to the repo store if the builder is using repos locally.
 # It will combined to look sort of like: file:///opt/repo/lazystrap
 mock_file_repo_path: "file://{{ repo_path }}"
