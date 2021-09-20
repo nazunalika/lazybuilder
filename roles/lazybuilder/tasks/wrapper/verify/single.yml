@@ -71,7 +71,10 @@
 
     - name: "Ending play if a condition is met"
       meta: end_play
-      when: '(ident_build_rpms.files > 0) or (skip_file_check.stat.exists) or ("{{ source_package_name }}" in global_skip_file_check.stdout)'
+      when: 
+        - (ident_build_rpms.files|length > 0)
+          or (skip_file_check.stat.exists)
+          or (source_package_name in global_skip_file_check.stdout)
       tags:
         - mock
         - verify
