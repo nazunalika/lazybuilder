@@ -68,7 +68,7 @@
         msg:
           - "Name: {{ mock_vendor }}"
           - "Version: {{ full }}"
-          - "Dist tag: {{ mock_dist | default(dist) }} {{ module_dist | default('') }}"
+          - "Dist tag: {{ mock_combined_dist }} {{ module_dist | default('') }}"
           - "Source: {{ source_name }} {{ mock_srpm_path }}"
           - "Architecture: {{ mock_arch }}"
           - "Module: {{ module_mode }}"
