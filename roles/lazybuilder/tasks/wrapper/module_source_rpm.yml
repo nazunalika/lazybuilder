@@ -3,8 +3,25 @@
 - name: "Pull the source RPM data"
   include_tasks: mock_srpmpull.yml
   vars:
+    source_mode: "git"
     git_url: "{{ module_git_url }}/{{ mod_item[0] }}.git"
     source_package_name: "{{ mod_item[0] }}"
+  when:
+    - not module_follow_refs|bool
+  tags:
+    - mock
+    - module
+    - git_pull
+
+- name: "Pull the source RPM data"
+  include_tasks: mock_srpmpull.yml
+  vars:
+    source_mode: "git"
+    git_url: "{{ module_git_url }}/{{ mod_item[0] }}.git"
+    source_package_name: "{{ mod_item[0] }}"
+    git_commit_hash: "{{ mod_item[1]['ref'] }}"
+  when:
+    - module_follow_refs|bool
   tags:
     - mock
     - module

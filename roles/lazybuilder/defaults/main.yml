@@ -10,6 +10,8 @@ source_name: name
 # Override this with a mock_dist var
 dist: "el{{ major }}"
 distro: "rocky"
+enable_cleanup: true
+system_requires_init: false
 # This needs to be set explicitly and the right build host will need to be
 # picked from the inventory. There is logic in the tasks that will actually
 # stop everything if the mock_arch and the architecture fact do falset match.
@@ -23,7 +25,12 @@ mock_builder: "rpmbuild"
 mock_rpmbuild_networking: "False"
 mock_use_host_resolv: "False"
 mock_build_root: "{{ distro }}-{{ major }}-{{ mock_arch }}"
+# This is if you want to chain builds. Set mock_chain_list to the list of
+# packages you want to build in a chain or ensure srpm_url is a list of
+# source RPM url's to download.
 mock_chain: false
+# mock_chain_list: []
+# chain_git_url: https://git.rockylinux.org/staging/rpms
 mock_quiet: false
 # If a special piece needs to be added to a release tag, use this var by
 # defining it in a playbook. Examples below (commented)
@@ -34,12 +41,14 @@ mock_quiet: false
 # mock_rpmbuild_opts
 # If you need a timeout on rpmbuilds, set it (in seconds)
 # mock_rpmbuild_timeout
+# If you need extra macros, set it here as a literal (|) multi-line block
+# mock_rpmbuild_macro_set
 
 # modes
 # mock is the only accepted option as of this public release
 build_mode: mock
 module_mode: false
-transfer_mode: false
+scratch_build: false
 
 # transfer mode settings
 repo_host: localhost
@@ -66,15 +75,22 @@ module_version: "{{ major }}0{{ minor }}00{{ '%Y%m%d%H%M%S' | strftime(ansible_d
 # yaml is expected to be at the root of the repo with the same name as
 # source_name.
 #
+# There may be occassions where older versions of a module may need to be
+# built. That option is offered by setting module_git_branch to the commit hash
+# in the appropriate git repo. Set module_follow_refs to true, and the
+# commit hashes/references of the YAML will be followed to each package.
+#
 # The commented vars are examples.
 #
 module_yaml_location_type: git
+# module_git_url: https://git.rockylinux.org/staging/rpms
 # module_git_repo: https://git.rockylinux.org/staging/modules/{{ source_name }}.git
 # module_git_branch: "r{{ major }}-stream-version"
 # module_defaults_git_repo: https://git.rockylinux.org/rocky/rocky-module-defaults.git
 # module_defaults_git_branch: "r{{ full }}"
 # module_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
 # module_defaults_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
+module_follow_refs: false
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
@@ -86,6 +102,13 @@ module_yaml_location_type: git
 # instead of defining the above manually for a module build, keep the below set
 # to true, so that way the buildrequires are properly determined.
 module_needs_modules: true
+# Some modules are virtual modules, meaning they do not have a module dist, but
+# are still part of a module. The yamls they are built from do not have a list
+# of buildable components. Instead they are built normally and a YAML is
+# inserted after the fact to enable the module. Set this to true to generate
+# a standard YAML with no components. This can also be useful to generate/test
+# YAML creation for modules.
+module_no_components: false
 
 # build mode settings
 # isolation modes are auto|nspawn|simple
@@ -114,6 +137,7 @@ disable_tests: false
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap
 repo_path: "/opt/repo"
+repo_result_root: "{{ repo_path }}/results"
 # This is the file URL to the repo store if the builder is using repos locally.
 # It will combined to look sort of like: file:///opt/repo/lazystrap
 mock_file_repo_path: "file://{{ repo_path }}"
@@ -150,9 +174,9 @@ mock_use_file_path: true
 # simpler to import your own vars for the repo types. As of now, it's not at
 # all supported and I won't address issues pertaining to it.
 mock_el_repo_config: "el/el{{ major }}.yml"
-mock_solo_repo_config: "el/el{{ major }}_solo.yml"
+mock_solo_repo_config: "el/el_solo.yml"
 mock_bs_repo_config: "el/el{{ major }}_bootstrap.yml"
-mock_buildsys_repo_config: "el/el{{ major }}_buildsys.yml"
+mock_buildsys_repo_config: "el/el_buildsys.yml"
 
 # source settings
 # This tells the mock builder how to pull together the source rpm, whether from
@@ -169,7 +193,8 @@ source_mode: "git"
 #            https://git.example.com/rpms/something.git
 #            When using module mode, it is better to provide it a just the group
 #            name where it can reasonably find the next package to build. It will
-#            autofill, eg git.example.com/rpms/package_a.git
+#            autofill, eg git.example.com/rpms/package_a.git - The same applies
+#            when using mock_chain
 # git_source_url -> Set this to the lookaside cache that is generally a web URL
 #                   This place where the archives sit should be named of the 
 #                   sha*sum of the file. Original archive name is NOT supported.

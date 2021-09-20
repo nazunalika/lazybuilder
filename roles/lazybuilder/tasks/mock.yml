@@ -13,14 +13,83 @@
 
 - name: Regular Build Block
   block:
+    # This is currently a workaround for chains and modules
     - name: "Set a new var for the source name"
       set_fact:
         source_package_name: "{{ source_name }}"
+
+    ############################################################################
+    # This is only for chain builds - the other checks are done elsewhere
+    - name: "Verify mock_chain is true with a list of stuff to build"
+      assert:
+        that:
+          - mock_chain|bool
+          - (srpm_url is defined or mock_chain_list is defined)
+          - (srpm_url is iterable
+            and (srpm_url is not string and srpm_url is not mapping))
+            or (mock_chain_list is iterable
+            and (mock_chain_list is not string and mock_chain_list is not mapping)
+            and chain_git_url is defined)
+        fail_msg: "srpm_url/mock_chain_list must be a list or chain_git_url is not defined"
+        success_msg: "everything is in order"
+      when:
+        - mock_chain|bool
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
+
+    - name: "Make mock_srpm_path a list"
+      set_fact:
+        mock_srpm_path: []
+      when:
+        - mock_chain|bool
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
+
+    - name: "Loop through the RPM list for the chain"
+      include_tasks: wrapper/chain_source_rpm.yml
+      loop: "{{ srpm_url }}"
+      loop_control:
+        loop_var: "reg_item"
+      when:
+        - (mock_chain|bool and srpm_url is defined)
+        - (srpm_url is iterable
+          and (srpm_url is not string and srpm_url is not mapping))
+      tags:
+        - mock
+        - srpm_pull
+
+    - name: "Loop through the git list for the chain"
+      include_tasks: wrapper/chain_git_rpm.yml
+      loop: "{{ mock_chain_list }}"
+      loop_control:
+        loop_var: "reg_item"
+      when:
+        - mock_chain|bool
+        - mock_chain_list is defined
+        - chain_git_url is defined
+      tags:
+        - mock
+        - srpm_pull
+    # End chain setup
+    ############################################################################
 
     - name: "Pull the source RPM data"
       include_tasks: wrapper/mock_srpmpull.yml
       when:
         - not mock_chain|bool
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
+
+    - name: "Verify if the build was ever done"
+      include_tasks: wrapper/verify.yml
+      when:
+        - not scratch_build|bool
       tags:
         - mock
         - git_pull
@@ -33,14 +102,15 @@
 
     - name: "Transfer RPMs"
       include_tasks: wrapper/transfer.yml
-      when: 'transfer_mode|bool'
       tags:
         - mock
         - transfer
 
     - name: "Import createrepo tasks"
       include_tasks: wrapper/createrepo.yml
-      when: generate_repo|bool or bootstrap|bool
+      when:
+        - generate_repo|bool or bootstrap|bool
+        - not scratch_build|bool
       tags:
         - mock
         - createrepo
@@ -70,7 +140,8 @@
     - name: "Verify that the platform for the module matches"
       assert:
         that:
-          - module_data.data.dependencies[0].buildrequires.platform[0] == dist
+          - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
+            or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
         fail_msg: "Platform mismatch"
         success_msg: "Platform matches"
       tags:
@@ -132,6 +203,27 @@
         - createrepo
   when:
     - module_mode|bool
+    - not module_no_components|bool
+
+- name: Virtual Module Build Block
+  block:
+    - name: "Verify that the platform for the module matches"
+      assert:
+        that:
+          - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
+            or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
+        fail_msg: "Platform mismatch"
+        success_msg: "Platform matches"
+      tags:
+        - module
+
+    - name: "Generate virtual module YAML"
+      include_tasks: wrapper/module_virtual.yaml
+      tags:
+        - module
+  when:
+    - module_mode|bool
+    - module_no_components|bool
 
 - name: "Cleanup"
   include_tasks: wrapper/mock_cleanup.yml

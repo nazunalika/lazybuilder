@@ -9,18 +9,33 @@
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
         patterns:
+          - '*.rpm'
+      register: result_all_build_rpms
+      tags:
+        - transfer
+
+    - name: Identify all non-debug built RPMs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns:
           - '*.noarch.rpm'
           - '*.{{ mock_arch }}.rpm'
+        excludes:
+          - "*-debuginfo-*"
+          - "*-debugsource-*"
       register: result_build_rpms
       tags:
         - transfer
 
-    - name: Identify the source RPMs
+    - name: Identify all debug RPMs if applicable
       find:
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
-        patterns: '*.src.rpm'
-      register: result_src_rpms
+        patterns:
+          - '*-debuginfo-*'
+          - '*-debugsource-*'
+      register: result_debug_build_rpms
       tags:
         - transfer
 
@@ -42,9 +57,23 @@
         state: directory
       loop:
         - "{{ repo_drop_path }}"
-        - "{{ repo_drop_path_results }}"
-      become: true
-      become_user: root
+        - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+      tags:
+        - transfer
+
+    # There are plenty of noarch builds out there, no point in making a
+    # debug directory in every instance, especially during constraints or
+    # builds that are designed NOT to produce debuginfo/debugsource packages
+    - name: Ensure there is a drop for debug packages
+      file:
+        path: '{{ item }}'
+        owner: '{{ mock_builder }}'
+        group: '{{ mock_builder }}'
+        mode: '0755'
+        state: directory
+      loop:
+        - "{{ repo_drop_path }}-debug"
+      when: result_debug_build_rpms.matched > 0
       tags:
         - transfer
 
@@ -59,21 +88,33 @@
       tags:
         - transfer
 
-    - name: Copy source RPMs into the results area
+    - name: Copy debug RPMs into their spot
       copy:
         src: "{{ item.path }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path }}-debug/"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
-      with_items: "{{ result_src_rpms.files }}"
+      with_items: "{{ result_debug_build_rpms.files }}"
+      when: result_debug_build_rpms.matched > 0
+      tags:
+        - transfer
+
+    - name: Copy all source RPMs into the results area
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ result_all_build_rpms.files }}"
       tags:
         - transfer
 
     - name: Copy build logs into the results area
       copy:
         src: "{{ item.path }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
@@ -84,7 +125,7 @@
     - name: Copy mock configs
       copy:
         src: "{{ item }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
@@ -110,7 +151,15 @@
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
         - '{{ mock_builder_module_dir }}'
         - '{{ repo_drop_path_results }}'
-        - '/var/tmp/.build_in_progress'
+      when:
+        - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
       fail:
@@ -122,11 +171,19 @@
   tags:
     - transfer
 
-- name: Perform a remote transfer
+- name: Perform a non-local transfer
   block:
-    - name: copy
+    - name: Not supported
       debug:
-        msg: copy
+        msg:
+          - "!! This method is not supported"
+          - "This method of transport will likely not be supported in the"
+          - "future. If you need remote transfers, you may need to build your"
+          - "playbooks to support such transfers."
+
+    - name: Ending
+      fail:
+        msg: "Exiting entire play"
   when:
     - (not repo_host == "localhost") and (not transfer_type == "nfs")
   tags:

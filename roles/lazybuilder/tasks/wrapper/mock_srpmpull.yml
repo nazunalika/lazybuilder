@@ -255,7 +255,7 @@
         - git_pull
 
     - name: Generate srpm
-      command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }}"
+      command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --define 'dist .{{ mock_combined_dist }}'"
       changed_when: '"Wrote:" in srpm_build_ret.stdout'
       failed_when: "srpm_build_ret.rc != 0"
       register: srpm_build_ret
@@ -272,7 +272,7 @@
       set_fact:
         mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
       when:
-        - module_mode|bool
+        - module_mode|bool or mock_chain|bool
       tags:
         - git_pull
 
@@ -289,6 +289,15 @@
         - '{{ mock_builder_source_dir }}/{{ source_package_name }}'
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_module_dir }}'
+      when:
+        - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
       fail:
@@ -348,6 +357,15 @@
       loop:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_module_dir }}'
+      when:
+        - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
       fail:

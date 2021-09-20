@@ -4,6 +4,4 @@
 module_stream: "{{ module_data.data.stream }}"
 module_build_context_full: "{{ module_xmd_data | hash('sha1') }}"
 module_runtime_context_full: "{{ module_data.data.dependencies[0]['requires'] | hash('sha1') }}"
-artifacts:
-  rpms: []
 ...

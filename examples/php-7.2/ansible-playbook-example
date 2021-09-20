@@ -1,0 +1,63 @@
+---
+# This is an example of PHP 7.2 module builds in playbook form
+- hosts: "{{ host | default('localhost') }}"
+  become: true
+  become_user: root
+  gather_facts: true
+  vars:
+    module_git_url: https://git.rockylinux.org/staging/rpms
+    source_name: php
+    transfer_mode: true
+    generate_repo: true
+    git_source_url: https://rocky-linux-sources-staging.a1.rockylinux.org
+    module_mode: true
+    module_git_repo: https://git.rockylinux.org/staging/modules/php.git
+    module_git_branch: r8-stream-7.2
+
+  pre_tasks:
+    - name: Check if ansible cannot be run here
+      stat:
+        path: /etc/no-ansible
+      register: no_ansible
+
+    - name: Verify if we can run ansible
+      assert:
+        that:
+          - "not no_ansible.stat.exists"
+        success_msg: "Builder is available"
+        fail_msg: "Builder is unavailable"
+
+    - name: Verify that source_name is not name
+      assert:
+        that:
+          - source_name is defined
+          - '"source_name" != "name"'
+        fail_msg: "You did not set a source package name"
+        success_msg: "Source package name is set"
+
+    - name: Reset mock_builder fact
+      set_fact:
+        mock_builder: "{{ mock_builder | default('rpmbuild') }}"
+
+    - name: Verifying user information
+      getent:
+        key: "{{ mock_builder }}"
+        database: passwd
+      ignore_errors: true
+
+    - name: "Check that {{ mock_builder }} exists"
+      assert:
+        that:
+          - getent_passwd[mock_builder] is defined
+        fail_msg: "Please run the lazy_mock_setup playbook"
+        success_msg: "User exists"
+
+  tasks:
+    - name: Include lazybuilder mock tasks
+      include_role:
+        name: lazybuilder
+        tasks_from: "mock.yml"
+        apply:
+          become: true
+          become_user: "{{ mock_builder }}"
+...
