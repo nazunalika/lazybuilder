@@ -21,7 +21,7 @@
 
     - name: "Check for skip file"
       stat:
-        path: "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/skip"
+        path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/skip"
       register: skip_file_check
       check_mode: false
       changed_when: "1 != 1"
@@ -43,7 +43,7 @@
 
     - name: "Identify all built RPMs from previous build if possible"
       find:
-        paths: "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        paths: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         recurse: true
         patterns:
           - '*.noarch.rpm'
