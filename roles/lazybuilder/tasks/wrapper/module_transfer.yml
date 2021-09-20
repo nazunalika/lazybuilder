@@ -46,8 +46,6 @@
       loop:
         - "{{ repo_drop_path }}"
         - "{{ repo_drop_path_results }}"
-      become: true
-      become_user: root
       tags:
         - transfer
         - module

@@ -13,6 +13,7 @@
 
 - name: Regular Build Block
   block:
+    # This is currently a workaround for chains and modules
     - name: "Set a new var for the source name"
       set_fact:
         source_package_name: "{{ source_name }}"
@@ -48,17 +49,18 @@
         - git_pull
         - srpm_pull
 
-#    - name: "Loop through the RPM list for the chain"
-#      include_tasks: wrapper/chain_source_rpm.yml
-#      loop: "{{ srpm_url }}"
-#      loop_control:
-#        loop_var: "reg_item"
-#      when:
-#        - mock_chain|bool
-#        - srpm_url is defined
-#      tags:
-#        - mock
-#        - srpm_pull
+    - name: "Loop through the RPM list for the chain"
+      include_tasks: wrapper/chain_source_rpm.yml
+      loop: "{{ srpm_url }}"
+      loop_control:
+        loop_var: "reg_item"
+      when:
+        - (mock_chain|bool and srpm_url is defined)
+        - (srpm_url is iterable
+          and (srpm_url is not string and srpm_url is not mapping))
+      tags:
+        - mock
+        - srpm_pull
 
     - name: "Loop through the git list for the chain"
       include_tasks: wrapper/chain_git_rpm.yml
@@ -84,6 +86,15 @@
         - git_pull
         - srpm_pull
 
+    - name: "Verify if the build was ever done"
+      include_tasks: wrapper/verify.yml
+      when:
+        - not scratch_build|bool
+      tags:
+        - mock
+        - git_pull
+        - srpm_pull
+
     - name: "Perform the build tasks"
       include_tasks: wrapper/mock_build.yml
       tags:
@@ -91,14 +102,15 @@
 
     - name: "Transfer RPMs"
       include_tasks: wrapper/transfer.yml
-      when: 'transfer_mode|bool'
       tags:
         - mock
         - transfer
 
     - name: "Import createrepo tasks"
       include_tasks: wrapper/createrepo.yml
-      when: generate_repo|bool or bootstrap|bool
+      when:
+        - generate_repo|bool or bootstrap|bool
+        - not scratch_build|bool
       tags:
         - mock
         - createrepo

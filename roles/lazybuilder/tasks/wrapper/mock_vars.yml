@@ -108,13 +108,14 @@
     mock_solo_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_solo_name }}-{{ mock_arch }}"
     mock_bs_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_bootstrap_name }}-{{ mock_arch }}"
     mock_default_full_path: "{{ mock_repo_path }}/{{ major }}-{{ mock_repo_name }}-{{ mock_arch }}"
+    repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}"
   tags:
     - mock
 
 - name: "Set relevant dropbox path - Default"
   set_fact:
     repo_drop_path: "{{ mock_default_path }}"
-    repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
+    #repo_drop_path_results: "{{ repo_path }}/results/{{ source_name }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool
@@ -122,10 +123,10 @@
   tags:
     - mock
 
-- name: "Set relevant dropbox path - Bootstrap/Buildsys"
+- name: "Set relevant dropbox path - Bootstrap"
   set_fact:
     repo_drop_path: "{{ mock_bootstrap_path }}"
-    repo_drop_path_results: "{{ repo_path }}/bootstrap-results/{{ source_name }}"
+    #repo_drop_path_results: "{{ repo_path }}/bootstrap-results/{{ source_name }}"
   when:
     - not module_mode|bool
     - bootstrap|bool
@@ -136,7 +137,7 @@
 - name: "Set relevant dropbox path - Constraint"
   set_fact:
     repo_drop_path: "{{ mock_solo_path }}"
-    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}/{{ '%Y%m%d%H%M' | strftime(ansible_date_time.epoch) }}"
+    #repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool

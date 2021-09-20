@@ -1,0 +1,29 @@
+---
+# Verification that the builds were already done at some point. We verify
+# against the NEVRA and the directory structure. We check for:
+#   * A global preferences skip file
+#   * A skip file
+#   * log files + pass file
+#
+# In the event a build was already done, this will happen:
+#  * Entire play will end as success if it's a single package
+#  * List will be modified accordingly (play will end when the list is empty)
+
+- name: "Verify non-chain builds"
+  include_tasks: verify/single.yml
+  when: not mock_chain|bool
+  tags:
+    - mock
+    - srpm_pull
+    - git_pull
+    - verify
+
+- name: "Verify chain builds"
+  include_tasks: verify/chain.yml
+  when: mock_chain|bool
+  tags:
+    - mock
+    - srpm_pull
+    - git_pull
+    - verify
+...

@@ -11,6 +11,7 @@ source_name: name
 dist: "el{{ major }}"
 distro: "rocky"
 enable_cleanup: true
+system_requires_init: false
 # This needs to be set explicitly and the right build host will need to be
 # picked from the inventory. There is logic in the tasks that will actually
 # stop everything if the mock_arch and the architecture fact do falset match.
@@ -47,7 +48,7 @@ mock_quiet: false
 # mock is the only accepted option as of this public release
 build_mode: mock
 module_mode: false
-transfer_mode: false
+scratch_build: false
 
 # transfer mode settings
 repo_host: localhost

@@ -24,4 +24,23 @@
       - mock
   tags:
     - mock_setup
+
+################################################################################
+# The directory in which everything is dropped should exist and be owned by
+# the build user. regardless if it's an NFS mount or not, it needs to be there.
+# root by default can't change things in NFSv4 mounts, so ensure your playbook
+# or otherwise is ready to handle this sort of setup.
+- name: "Ensure drop directory exists and is owned properly"
+  file:
+    path: '{{ item }}'
+    owner: '{{ mock_builder }}'
+    group: '{{ mock_builder }}'
+    mode: '0755'
+    state: directory
+  loop:
+    - "{{ repo_path }}"
+    - "{{ repo_path }}/common"
+    - "{{ repo_result_root }}"
+  tags:
+    - transfer
 ...

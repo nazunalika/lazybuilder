@@ -9,6 +9,16 @@
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
         patterns:
+          - '*.rpm'
+      register: result_all_build_rpms
+      tags:
+        - transfer
+
+    - name: Identify all non-debug built RPMs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns:
           - '*.noarch.rpm'
           - '*.{{ mock_arch }}.rpm'
         excludes:
@@ -26,15 +36,6 @@
           - '*-debuginfo-*'
           - '*-debugsource-*'
       register: result_debug_build_rpms
-      tags:
-        - transfer
-
-    - name: Identify the source RPMs
-      find:
-        paths: "/var/lib/mock/{{ mock_build_root }}/result"
-        recurse: true
-        patterns: '*.src.rpm'
-      register: result_src_rpms
       tags:
         - transfer
 
@@ -57,14 +58,13 @@
       loop:
         - "{{ repo_drop_path }}"
         - "{{ repo_drop_path_results }}"
-      become: true
-      become_user: root
+        - "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
       tags:
         - transfer
 
     # There are plenty of noarch builds out there, no point in making a
     # debug directory in every instance, especially during constraints or
-    # builds that are designed NOT to produce debuginfo/debugsour packages
+    # builds that are designed NOT to produce debuginfo/debugsource packages
     - name: Ensure there is a drop for debug packages
       file:
         path: '{{ item }}'
@@ -74,8 +74,6 @@
         state: directory
       loop:
         - "{{ repo_drop_path }}-debug"
-      become: true
-      become_user: root
       when: result_debug_build_rpms.matched > 0
       tags:
         - transfer
@@ -103,14 +101,14 @@
       tags:
         - transfer
 
-    - name: Copy source RPMs into the results area
+    - name: Copy all source RPMs into the results area
       copy:
         src: "{{ item.path }}"
         dest: "{{ repo_drop_path_results }}/"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
-      with_items: "{{ result_src_rpms.files }}"
+      with_items: "{{ result_all_build_rpms.files }}"
       tags:
         - transfer
 

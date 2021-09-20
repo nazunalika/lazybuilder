@@ -1,0 +1,107 @@
+---
+# single check
+- name: "Single NEVRA verification"
+  block:
+    - name: "Get NEVRA from RPM"
+      command:
+        argv:
+          - "/usr/bin/rpm"
+          - "-qp"
+          - "{{ mock_srpm_path }}"
+          - "--qf"
+          - "'%{NAME}-%{VERSION}-%{RELEASE}'"
+      changed_when: '"{{ source_package_name }}" in srpm_nevra_ret.stdout'
+      failed_when: "srpm_nevra_ret.rc != 0"
+      register: srpm_nevra_ret
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+    - name: "Check for skip file"
+      stat:
+        path: "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/skip"
+      register: skip_file_check
+      check_mode: false
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+    - name: "Check global skip file"
+      shell: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
+      register: global_skip_file_check
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+    - name: "Identify all built RPMs from previous build if possible"
+      find:
+        paths: "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        recurse: true
+        patterns:
+          - '*.noarch.rpm'
+          - '*.{{ mock_arch }}.rpm'
+      register: ident_build_rpms
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+    - name: "Notification of potential role end"
+      debug:
+        msg:
+          - "!! Warning !!"
+          - "This role will exit if:"
+          - "  * This package has a skip file for this version"
+          - "  * This package has a global skip file"
+          - "  * There are already built packages for this version"
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+    - name: "Ending play if a condition is met"
+      meta: end_play
+      when: '(ident_build_rpms.files > 0) or (skip_file_check.stat.exists) or ("{{ source_package_name }}" in global_skip_file_check.stdout)'
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+  rescue:
+    - name: We failed, display the error.
+      debug:
+        msg: "Failed to build our RPM: {{ ansible_failed_result }}"
+
+    - name: Perform full cleanup
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - '{{ mock_builder_source_dir }}/{{ source_package_name }}'
+        - '{{ mock_builder_rpmbuild_dir }}'
+        - '{{ mock_builder_module_dir }}'
+      when:
+        - enable_cleanup|bool
+
+    - name: System is no longer in use
+      file:
+        path: '{{ item }}'
+        state: absent
+      loop:
+        - "/var/tmp/.build_in_progress"
+
+    - name: Fail when there's an error in the block
+      fail:
+        msg: "Exiting entire play"
+...

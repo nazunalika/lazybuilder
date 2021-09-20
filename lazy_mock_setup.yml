@@ -23,7 +23,7 @@
         mock_builder: "{{ mock_builder | default('rpmbuild') }}"
 
   tasks:
-    - name: Include lazybuilder mock tasks
+    - name: Include lazybuilder mock setup tasks
       include_role:
         name: lazybuilder
         tasks_from: "wrapper/mock_setup_only.yml"
