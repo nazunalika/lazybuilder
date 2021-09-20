@@ -57,8 +57,7 @@
         state: directory
       loop:
         - "{{ repo_drop_path }}"
-        - "{{ repo_drop_path_results }}"
-        - "{{ repo_drop_path_results }}/{{ source_package_name }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
       tags:
         - transfer
 
@@ -104,7 +103,7 @@
     - name: Copy all source RPMs into the results area
       copy:
         src: "{{ item.path }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
@@ -115,7 +114,7 @@
     - name: Copy build logs into the results area
       copy:
         src: "{{ item.path }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
@@ -126,7 +125,7 @@
     - name: Copy mock configs
       copy:
         src: "{{ item }}"
-        dest: "{{ repo_drop_path_results }}/"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true

@@ -9,7 +9,7 @@
           - "-qp"
           - "{{ mock_srpm_path }}"
           - "--qf"
-          - "'%{NAME}-%{VERSION}-%{RELEASE}'"
+          - "%{NAME}-%{VERSION}-%{RELEASE}"
       changed_when: source_package_name in srpm_nevra_ret.stdout
       failed_when: "srpm_nevra_ret.rc != 0"
       register: srpm_nevra_ret
