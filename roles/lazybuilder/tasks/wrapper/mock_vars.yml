@@ -138,7 +138,7 @@
 - name: "Set relevant dropbox path - Constraint"
   set_fact:
     repo_drop_path: "{{ mock_solo_path }}"
-    #repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
+    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool

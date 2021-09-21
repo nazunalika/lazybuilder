@@ -32,7 +32,7 @@
         - srpm_pull
 
     - name: "Check global skip file"
-      shell: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
+      command: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
       register: global_skip_file_check
       changed_when: "1 != 1"
       tags:

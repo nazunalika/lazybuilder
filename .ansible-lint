@@ -1,0 +1,6 @@
+---
+# .ansible-lint
+warn_list:
+  - command-instead-of-module  # Using command rather than module
+  - command-instead-of-shell  # Use shell only when shell functionality is required
+...

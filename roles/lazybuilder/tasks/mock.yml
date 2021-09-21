@@ -86,10 +86,8 @@
         - git_pull
         - srpm_pull
 
-    - name: "Verify if the build was ever done"
+    - name: "Verify if the build or builds were ever done"
       include_tasks: wrapper/verify.yml
-      when:
-        - not scratch_build|bool
       tags:
         - mock
         - git_pull

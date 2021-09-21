@@ -9,18 +9,26 @@
 #  * Entire play will end as success if it's a single package
 #  * List will be modified accordingly (play will end when the list is empty)
 
-- name: "Verify non-chain builds"
-  include_tasks: verify/single.yml
-  when: not mock_chain|bool
-  tags:
-    - mock
-    - srpm_pull
-    - git_pull
-    - verify
+- name: "Verify build block"
+  block:
+    - name: "Verify non-chain builds"
+      include_tasks: verify/single.yml
+      when: not mock_chain|bool
+      tags:
+        - mock
+        - srpm_pull
+        - git_pull
+        - verify
 
-- name: "Verify chain builds"
-  include_tasks: verify/chain.yml
-  when: mock_chain|bool
+    - name: "Verify chain builds"
+      include_tasks: verify/chain.yml
+      when: mock_chain|bool
+      tags:
+        - mock
+        - srpm_pull
+        - git_pull
+        - verify
+  when: not scratch_build|bool or not override_package|bool
   tags:
     - mock
     - srpm_pull
