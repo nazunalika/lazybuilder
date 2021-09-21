@@ -31,10 +31,24 @@
         - git_pull
         - srpm_pull
 
+    - name: "Check for global skip file"
+      stat:
+        path: "{{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
+      register: global_skip_file
+      check_mode: false
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
+
     - name: "Check global skip file"
       command: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
       register: global_skip_file_check
       changed_when: "1 != 1"
+      when: global_skip_file.stat.exists|bool
       tags:
         - mock
         - verify
