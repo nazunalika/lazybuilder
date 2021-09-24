@@ -58,7 +58,7 @@
 
     - name: "Adding to list if valid"
       set_fact:
-        mock_srpm_path: ...
+        mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
       when:
         - (ident_build_rpms.files|length < 0)
         - (not skip_file_check.stat.exists)
