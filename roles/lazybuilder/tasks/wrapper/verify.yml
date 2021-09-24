@@ -12,7 +12,9 @@
 - name: "Verify build block"
   block:
     - name: "Verify non-chain builds"
-      include_tasks: verify/single.yml
+      block:
+        - name: "Verification of non-chain builds"
+          include_tasks: verify/single.yml
       when: not mock_chain|bool
       tags:
         - mock
@@ -21,13 +23,36 @@
         - verify
 
     - name: "Verify chain builds"
-      include_tasks: verify/chain.yml
+      block:
+        - name: "Move mock_srpm_path to another var for now"
+          set_fact:
+            mock_srpm_pathway: "{{ mock_srpm_path }}"
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "Clear out mock_srpm_path"
+          set_fact:
+            mock_srpm_path: []
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "Verify chain builds"
+          include_tasks: verify/chain.yml
+          loop: "{{ mock_srpm_pathway }}"
+          loop_control:
+            loop_var: "chain_item"
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
       when: mock_chain|bool
-      tags:
-        - mock
-        - srpm_pull
-        - git_pull
-        - verify
   when: not scratch_build|bool or not override_package|bool
   tags:
     - mock

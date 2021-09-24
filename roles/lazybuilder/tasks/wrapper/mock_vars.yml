@@ -156,6 +156,15 @@
     - not sig_or_constraint|bool
   tags:
     - mock
+
+- name: "Reset dropbox results if this is a scratch build"
+  set_fact:
+    repo_drop_path_results: "{{ repo_path }}/scratch-results/{{ source_name }}/{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
+  when:
+    - scratch_build|bool
+    - not module_mode|bool
+  tags:
+    - mock
 # End
 ################################################################################
 
