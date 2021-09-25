@@ -1,7 +1,7 @@
 ---
 # blocks don't support loop
 - name: "Pull the git RPM data"
-  include_tasks: mock_srpmpull.yml
+  include_tasks: ../mock/srpmpull.yml
   vars:
     source_mode: git
     git_url: "{{ chain_git_url }}/{{ reg_item }}.git"

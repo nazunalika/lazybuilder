@@ -10,7 +10,7 @@
           - "{{ chain_item }}"
           - "--qf"
           - "%{NAME}-%{VERSION}-%{RELEASE}"
-      changed_when: source_package_name in srpm_nevra_ret.stdout
+      changed_when: "1 != 1"
       failed_when: "srpm_nevra_ret.rc != 0"
       register: srpm_nevra_ret
       tags:
@@ -19,9 +19,26 @@
         - git_pull
         - srpm_pull
 
+    - name: "Get name from RPM"
+      command:
+        argv:
+          - "/usr/bin/rpm"
+          - "-qp"
+          - "{{ chain_item }}"
+          - "--qf"
+          - "%{NAME}"
+      changed_when: "1 != 1"
+      failed_when: "srpm_name_ret.rc != 0"
+      register: srpm_name_ret
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
     - name: "Check for skip file"
       stat:
-        path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/skip"
+        path: "{{ repo_drop_path_results }}/{{ srpm_name_ret.stdout }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/skip"
       register: skip_file_check
       check_mode: false
       changed_when: "1 != 1"
@@ -44,7 +61,7 @@
 
     - name: "Identify all built RPMs from previous build if possible"
       find:
-        paths: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        paths: "{{ repo_drop_path_results }}/{{ srpm_name_ret.stdout }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         recurse: true
         patterns:
           - '*.noarch.rpm'
@@ -58,11 +75,11 @@
 
     - name: "Adding to list if valid"
       set_fact:
-        mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
+        mock_srpm_path: "{{ mock_srpm_path + [ chain_item ] }}"
       when:
         - (ident_build_rpms.files|length < 0)
         - (not skip_file_check.stat.exists)
-        - (not source_package_name in global_skip_file_check.stdout)
+        - (not srpm_name_ret.stdout in global_skip_file_check.stdout)
       tags:
         - mock
         - verify
@@ -79,7 +96,7 @@
         path: '{{ item }}'
         state: absent
       loop:
-        - '{{ mock_builder_source_dir }}/{{ source_package_name }}'
+        - '{{ mock_builder_source_dir }}/{{ source_name }}'
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_module_dir }}'
       when:

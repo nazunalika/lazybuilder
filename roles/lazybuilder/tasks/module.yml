@@ -1,14 +1,123 @@
 ---
-# module specific builds, inherits some mock tasks but not all
-- name: "Import el{{ major }} bootstrap repos"
-  include_tasks: wrapper/mock_vars.yml
+################################################################################
+# These tasks were originally in mock.yml, but they have been moved to try to
+# create some form of separation and make things easier to work with and find.
+# The rest of the task files will be broken out in a similar manner where
+# absolutely necessary.
+################################################################################
+# This will need to be a loop - I basically want to avoid having to have an
+# entirely different set of tasks (eg mock.yml vs module.yml) - This should
+# make things a bit more compact at the tasks root.
+# TODO: Some module tasks should be done locally to be able to do multi-arch
+#       builds. The basic idea is that if a build is being done, all applicable
+#       arches should be done at the same time, if at all possible. There should
+#       be a var that defines this and some other magic.
+- name: Module Build Block
+  block:
+    - name: "Set preliminary vars"
+      set_fact:
+        mock_srpm_path: []
+        mock_rpm_build_order: []
+        git_commit_hash: "{{ module_git_branch }}"
+        artifacts:
+          rpms: []
+      tags:
+        - mock
+        - module
+
+    - name: "Verify that the platform for the module matches"
+      assert:
+        that:
+          - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
+            or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
+        fail_msg: "Platform mismatch"
+        success_msg: "Platform matches"
+      tags:
+        - module
+
+    - name: "Assign initial list of rpms that are implicit group 0"
+      set_fact:
+        mock_rpm_build_group_zero: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'undefined') | list }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Assign initial list of rpms with sorted groups"
+      set_fact:
+        mock_rpm_build_groups: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'defined') | sort(attribute='1.buildorder') | list }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Combine build order for module list"
+      set_fact:
+        mock_rpm_build_order: "{{ mock_rpm_build_group_zero + mock_rpm_build_groups }}"
+      tags:
+        - mock
+        - module
+
+    - name: "Loop through the RPM list for the module"
+      include_tasks: wrapper/module/source_rpm.yml
+      loop: "{{ mock_rpm_build_order }}"
+      loop_control:
+        loop_var: "mod_item"
+      tags:
+        - mock
+        - module
+
+    - name: "Perform the build tasks"
+      include_tasks: wrapper/mock/build.yml
+      tags:
+        - mock
+        - module
+
+    - name: "Generate module documents"
+      include_tasks: wrapper/module/subtasks.yml
+      tags:
+        - module
+
+    - name: "Transfer module RPMs"
+      include_tasks: wrapper/transfer/module.yml
+      tags:
+        - mock
+        - module
+        - transfer
+
+    - name: "Import createrepo tasks"
+      include_tasks: wrapper/repo/createrepo.yml
+      tags:
+        - mock
+        - module
+        - createrepo
+  when:
+    - module_mode|bool
+    - not module_no_components|bool
+    - repo_drop_path_results is defined
   tags:
     - mock
+    - module
+    - createrepo
 
-- name: "Ensure that {{ mock_builder }} is setup properly"
-  include_tasks: wrapper/mock_setup.yml
+- name: Virtual Module Build Block
+  block:
+    - name: "Verify that the platform for the module matches"
+      assert:
+        that:
+          - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
+            or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
+        fail_msg: "Platform mismatch"
+        success_msg: "Platform matches"
+      tags:
+        - module
+
+    - name: "Generate virtual module YAML"
+      include_tasks: wrapper/module/virtual.yml
+      tags:
+        - module
+  when:
+    - module_mode|bool
+    - module_no_components|bool
+    - repo_drop_path_results is defined
   tags:
-    - mock
-
-# !! OTHER STEPS REMOVED FOR NOW - WILL BE REDONE !!
+    - module
 ...

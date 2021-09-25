@@ -85,6 +85,7 @@
         mode: "0644"
         remote_src: true
       with_items: "{{ result_build_rpms.files }}"
+      when: not scratch_build|bool
       tags:
         - transfer
 
@@ -96,7 +97,9 @@
         mode: "0644"
         remote_src: true
       with_items: "{{ result_debug_build_rpms.files }}"
-      when: result_debug_build_rpms.matched > 0
+      when:
+        - result_debug_build_rpms.matched > 0
+        - not scratch_build|bool
       tags:
         - transfer
 

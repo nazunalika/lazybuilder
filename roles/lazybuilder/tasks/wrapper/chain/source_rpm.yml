@@ -1,7 +1,7 @@
 ---
 # blocks don't support loop
 - name: "Pull the source RPMs"
-  include_tasks: mock_srpmpull.yml
+  include_tasks: ../mock/srpmpull.yml
   vars:
     source_mode: srpm
     srpm_url: "{{ reg_item }}"
