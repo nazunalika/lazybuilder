@@ -17,71 +17,18 @@
 # This section is for regular (non-module) builds
 - name: Regular Build Block
   block:
-    # This is currently a workaround for chains and modules
+    # This is currently a workaround for chains
     - name: "Set a new var for the source name"
       set_fact:
         source_package_name: "{{ source_name }}"
 
-    ############################################################################
-    # This is only for chain builds - the other checks are done elsewhere
-    - name: "Verify mock_chain is true with a list of stuff to build"
-      assert:
-        that:
-          - mock_chain|bool
-          - (srpm_url is defined or mock_chain_list is defined)
-          - (srpm_url is iterable
-            and (srpm_url is not string and srpm_url is not mapping))
-            or (mock_chain_list is iterable
-            and (mock_chain_list is not string and mock_chain_list is not mapping)
-            and chain_git_url is defined)
-        fail_msg: "srpm_url/mock_chain_list must be a list or chain_git_url is not defined"
-        success_msg: "everything is in order"
+    # Chain related tasks are off-loaded here
+    - name: "Import chain tasks"
+      include_tasks: wrapper/chain.yml
       when:
         - mock_chain|bool
-      tags:
-        - mock
-        - git_pull
-        - srpm_pull
 
-    - name: "Make mock_srpm_path a list"
-      set_fact:
-        mock_srpm_path: []
-        mock_srpm_names: []
-      when:
-        - mock_chain|bool
-      tags:
-        - mock
-        - git_pull
-        - srpm_pull
-
-    - name: "Loop through the RPM list for the chain"
-      include_tasks: wrapper/chain/source_rpm.yml
-      loop: "{{ srpm_url }}"
-      loop_control:
-        loop_var: "reg_item"
-      when:
-        - (mock_chain|bool and srpm_url is defined)
-        - (srpm_url is iterable
-          and (srpm_url is not string and srpm_url is not mapping))
-      tags:
-        - mock
-        - srpm_pull
-
-    - name: "Loop through the git list for the chain"
-      include_tasks: wrapper/chain/git_rpm.yml
-      loop: "{{ mock_chain_list }}"
-      loop_control:
-        loop_var: "reg_item"
-      when:
-        - mock_chain|bool
-        - mock_chain_list is defined
-        - chain_git_url is defined
-      tags:
-        - mock
-        - srpm_pull
-    # End chain setup
-    ############################################################################
-
+    # Source RPM data is pulled here, whether git or url
     - name: "Pull the source RPM data"
       include_tasks: wrapper/mock/srpmpull.yml
       when:
@@ -91,6 +38,7 @@
         - git_pull
         - srpm_pull
 
+    # Here we check if the builds were done before and skip them if so
     - name: "Verify if the build or builds were ever done"
       include_tasks: wrapper/verify.yml
       tags:
@@ -98,17 +46,20 @@
         - git_pull
         - srpm_pull
 
+    # Build tasks are performed
     - name: "Perform the build tasks"
       include_tasks: wrapper/mock/build.yml
       tags:
         - mock
 
+    # Finished packages and logs are transfered to their respective spots
     - name: "Transfer RPMs"
       include_tasks: wrapper/transfer.yml
       tags:
         - mock
         - transfer
 
+    # If we are creating repos, we'll do so here. Scratch builds are skipped.
     - name: "Import createrepo tasks"
       include_tasks: wrapper/repo/createrepo.yml
       when:

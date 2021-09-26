@@ -5,15 +5,13 @@
 # The rest of the task files will be broken out in a similar manner where
 # absolutely necessary.
 ################################################################################
-# This will need to be a loop - I basically want to avoid having to have an
-# entirely different set of tasks (eg mock.yml vs module.yml) - This should
-# make things a bit more compact at the tasks root.
 # TODO: Some module tasks should be done locally to be able to do multi-arch
 #       builds. The basic idea is that if a build is being done, all applicable
 #       arches should be done at the same time, if at all possible. There should
 #       be a var that defines this and some other magic.
 - name: Module Build Block
   block:
+    # Preliminary vars have to be set before we continue
     - name: "Set preliminary vars"
       set_fact:
         mock_srpm_path: []
@@ -25,6 +23,8 @@
         - mock
         - module
 
+    # We don't want to try to build a module that isn't for our major version
+    # We try to avoid doing complex modules for now.
     - name: "Verify that the platform for the module matches"
       assert:
         that:
@@ -35,6 +35,8 @@
       tags:
         - module
 
+    # Components that do not have buildorder assigned are implicit 0. We set
+    # them here first in the list.
     - name: "Assign initial list of rpms that are implicit group 0"
       set_fact:
         mock_rpm_build_group_zero: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'undefined') | list }}"
@@ -42,6 +44,8 @@
         - mock
         - module
 
+    # Now the ones that do have buildorder set, we'll sort them properly and
+    # add them in.
     - name: "Assign initial list of rpms with sorted groups"
       set_fact:
         mock_rpm_build_groups: "{{ module_data.data.components.rpms.items() | selectattr('1.buildorder', 'defined') | sort(attribute='1.buildorder') | list }}"
@@ -49,6 +53,7 @@
         - mock
         - module
 
+    # Combine both lists here
     - name: "Combine build order for module list"
       set_fact:
         mock_rpm_build_order: "{{ mock_rpm_build_group_zero + mock_rpm_build_groups }}"
@@ -56,6 +61,7 @@
         - mock
         - module
 
+    # Loop through the list and download each source RPM and build the srpm
     - name: "Loop through the RPM list for the module"
       include_tasks: wrapper/module/source_rpm.yml
       loop: "{{ mock_rpm_build_order }}"
@@ -65,17 +71,21 @@
         - mock
         - module
 
+    # We do the actual build here
+    # TODO: Investigate what packages did NOT build and report them?
     - name: "Perform the build tasks"
       include_tasks: wrapper/mock/build.yml
       tags:
         - mock
         - module
 
+    # Generate the module.yaml that is imported into the repodata
     - name: "Generate module documents"
       include_tasks: wrapper/module/subtasks.yml
       tags:
         - module
 
+    # Transfer the RPMs and logs into their respective spots
     - name: "Transfer module RPMs"
       include_tasks: wrapper/transfer/module.yml
       tags:
@@ -83,6 +93,7 @@
         - module
         - transfer
 
+    # Create the repo and import the modular data
     - name: "Import createrepo tasks"
       include_tasks: wrapper/repo/createrepo.yml
       tags:
@@ -100,6 +111,8 @@
 
 - name: Virtual Module Build Block
   block:
+    # We don't want to try to build a module that isn't for our major version
+    # We try to avoid doing complex modules for now.
     - name: "Verify that the platform for the module matches"
       assert:
         that:
@@ -110,6 +123,10 @@
       tags:
         - module
 
+    # Generate a yaml without doing a build. These RPM's do NOT have a release
+    # tag that mention module at all. This is for the case of virtual default
+    # modules, think for example perl 5.26 in EL8 where it's the default and
+    # most things rely on it, but the release tag is normal "el8"
     - name: "Generate virtual module YAML"
       include_tasks: wrapper/module/virtual.yml
       tags:
