@@ -362,7 +362,7 @@
         argv:
           - "/usr/bin/rpm"
           - "-qp"
-          - "{{ srpm_build_ret.stdout.split()[1] }}"
+          - "{{ srpm_pull.dest }}"
           - "--qf"
           - "%{NAME}"
       changed_when: "1 != 1"

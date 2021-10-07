@@ -31,7 +31,7 @@
 {% for source in mock_srpm_path %}
   {{ source }} \
 {% endfor %}
-  --chain
+  --chain {% if mock_chain_recurse %} --recurse {% endif %}
 {% else %}
   {{ mock_srpm_path }}
 {% endif %}

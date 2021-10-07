@@ -29,6 +29,7 @@ mock_build_root: "{{ distro }}-{{ major }}-{{ mock_arch }}"
 # packages you want to build in a chain or ensure srpm_url is a list of
 # source RPM url's to download.
 mock_chain: false
+mock_chain_recurse: false
 # mock_chain_list: []
 # chain_git_url: https://git.rockylinux.org/staging/rpms
 mock_quiet: false
