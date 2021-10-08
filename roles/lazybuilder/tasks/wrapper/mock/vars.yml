@@ -72,7 +72,7 @@
     - mock
 
 - name: "Import module data for el{{ major }}"
-  include_tasks: "module_data_import.yml"
+  include_tasks: "../module/data_import.yml"
   when:
     - module_mode|bool
   tags:
@@ -138,7 +138,7 @@
 - name: "Set relevant dropbox path - Constraint"
   set_fact:
     repo_drop_path: "{{ mock_solo_path }}"
-    #repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
+    repo_drop_path_results: "{{ repo_path }}/solo-results/{{ source_name }}"
   when:
     - not module_mode|bool
     - not bootstrap|bool
@@ -156,6 +156,27 @@
     - not sig_or_constraint|bool
   tags:
     - mock
+
+- name: "Reset dropbox results if this is a scratch build"
+  set_fact:
+    repo_drop_path_results: "{{ repo_path }}/scratch-results/{{ source_name }}/{{ '%Y%m%d%H%M%S' | strftime(ansible_date_time.epoch) }}"
+  when:
+    - scratch_build|bool
+    - not module_mode|bool
+  tags:
+    - mock
+
+- name: "Reset dropbox results if this is a chain build only"
+  set_fact:
+    repo_drop_path_results: "{{ repo_path }}/results"
+  when:
+    - not scratch_build|bool
+    - not module_mode|bool
+    - not sig_or_constraint|bool
+    - mock_chain|bool
+  tags:
+    - mock
+
 # End
 ################################################################################
 

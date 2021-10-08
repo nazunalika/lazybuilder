@@ -9,18 +9,69 @@
 #  * Entire play will end as success if it's a single package
 #  * List will be modified accordingly (play will end when the list is empty)
 
-- name: "Verify non-chain builds"
-  include_tasks: verify/single.yml
-  when: not mock_chain|bool
-  tags:
-    - mock
-    - srpm_pull
-    - git_pull
-    - verify
+- name: "Verify build block"
+  block:
+    - name: "Verify non-chain builds"
+      block:
+        - name: "Verification of non-chain builds"
+          include_tasks: verify/single.yml
+      when: not mock_chain|bool
+      tags:
+        - mock
+        - srpm_pull
+        - git_pull
+        - verify
 
-- name: "Verify chain builds"
-  include_tasks: verify/chain.yml
-  when: mock_chain|bool
+    - name: "Verify chain builds"
+      block:
+        - name: "Move mock_srpm_path to another var for now"
+          set_fact:
+            mock_srpm_pathway: "{{ mock_srpm_path }}"
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "Clear out mock_srpm_path"
+          set_fact:
+            mock_srpm_path: []
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "Verify chain builds"
+          include_tasks: verify/chain.yml
+          loop: "{{ mock_srpm_pathway }}"
+          loop_control:
+            loop_var: "chain_item"
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "Warn of play end"
+          debug:
+            msg: "This play will end if the list is empty."
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+
+        - name: "End if list is empty"
+          meta: end_play
+          when: mock_srpm_path|length == 0
+          tags:
+            - mock
+            - srpm_pull
+            - git_pull
+            - verify
+      when: mock_chain|bool
+  when: not scratch_build|bool or not override_package|bool
   tags:
     - mock
     - srpm_pull

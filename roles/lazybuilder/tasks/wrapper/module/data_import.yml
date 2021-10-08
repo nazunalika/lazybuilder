@@ -170,6 +170,7 @@
 
   when:
     - module_yaml_location_type == 'git'
+    - module_data is not defined
 
 - name: "Module Info - http mode"
   block:

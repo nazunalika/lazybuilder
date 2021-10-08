@@ -29,6 +29,7 @@ mock_build_root: "{{ distro }}-{{ major }}-{{ mock_arch }}"
 # packages you want to build in a chain or ensure srpm_url is a list of
 # source RPM url's to download.
 mock_chain: false
+mock_chain_recurse: false
 # mock_chain_list: []
 # chain_git_url: https://git.rockylinux.org/staging/rpms
 mock_quiet: false
@@ -133,6 +134,8 @@ enable_rpmfusion_nonfree: false
 # Note that this disables the commonly used macros, so some tests may still end
 # up running
 disable_tests: false
+# override/overwrite packages?
+override_package: false
 # This tells us where the repos (relative to the filesystem on the repo box) is
 # located. Repos will be in subdirectories under here (including for modules).
 # Expect that it will look sort of like: /opt/repo/lazystrap
