@@ -79,7 +79,7 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 config_opts['module_setup_commands'] = [
 # ('enable', 'idm:DL1')
 # NOTE: We only support EL modules, which expects simplistic module yamls
-{% if module_setup_commands is defined and module_mode|bool %}
+{% if module_setup_commands is defined %}
 {% for k,v in module_setup_commands.items() %}
 ('{{ v }}', '{{ k }}'){% if not loop.last %}{{','}}{% endif %}
 {% endfor %}
