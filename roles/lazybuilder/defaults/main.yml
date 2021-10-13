@@ -91,7 +91,7 @@ module_yaml_location_type: git
 # module_defaults_git_branch: "r{{ full }}"
 # module_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
 # module_defaults_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
-module_follow_refs: false
+module_follow_refs: true
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
