@@ -49,6 +49,7 @@ config_opts['files']['/etc/rpm/macros.zz-extended'] = """
 # enabled, this can be used for that. At the time of this writing, koji doesn't
 # support this. The format is ('action', 'name'), where action is enable or
 # disable, and name is the module name.
+# ('enable', 'idm:DL1')
 config_opts['module_setup_commands'] = [
 {% for k,v in module_setup_commands.items() %}
 ('{{ v }}', '{{ k }}'){% if not loop.last %}{{','}}{% endif %}
@@ -77,16 +78,15 @@ config_opts['files']['/etc/rpm/macros.zz-modules'] = """
 # If a module requires other modules, they'll be setup below.
 {% if module_needs_modules %}
 config_opts['module_setup_commands'] = [
-# ('enable', 'idm:DL1')
 # NOTE: We only support EL modules, which expects simplistic module yamls
+{% for x in module_data.data.dependencies[0].buildrequires if x != 'platform' %}
+('enable','{{ x }}:{{ module_data.data.dependencies[0].buildrequires[x][0] }}'){% if not loop.last or module_setup_commands is defined %}{{','}}{% endif %}
+{% endfor %}
 {% if module_setup_commands is defined %}
 {% for k,v in module_setup_commands.items() %}
 ('{{ v }}', '{{ k }}'){% if not loop.last %}{{','}}{% endif %}
 {% endfor %}
 {% endif %}
-{% for x in module_data.data.dependencies[0].buildrequires if x != 'platform' %}
-('enable','{{ x }}:{{ module_data.data.dependencies[0].buildrequires[x][0] }}'){% if not loop.last %}{{','}}{% endif %}
-{% endfor %}
 ]
 {% endif %}
 {% endif %}
