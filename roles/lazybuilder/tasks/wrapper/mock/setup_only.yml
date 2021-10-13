@@ -41,6 +41,7 @@
     - "{{ repo_path }}"
     - "{{ repo_path }}/common"
     - "{{ repo_path }}/module-results"
+    - "{{ repo_path }}/module-repos"
     - "{{ repo_result_root }}"
   tags:
     - transfer
