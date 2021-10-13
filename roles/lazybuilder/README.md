@@ -15,6 +15,7 @@ This will require your systems to have the appropriate packages installed or at 
 * `mock`
 * `git`
 * `createrepo_c`
+* `rpm-build`
 
 Minimum recommended versions:
 
@@ -24,6 +25,9 @@ Minimum recommended versions:
 
 Notes
 -----
+
+Build Requires
+==============
 
 If you are running `module_mode`, your yaml must have simple buildrequires (only **one** list item)
 
@@ -47,6 +51,11 @@ Currently it is hardcoded to expect `module_data.data.dependencies[0].buildrequi
 * Anything more than `[0]` for both `dependencies` and `platform` will be ignored
 
 In the future, this may be fixed to address modularity for both el8 and el9 at the same time.
+
+References
+==========
+
+Module yamls typically have git hashes that reference the repo that the RPM comes from. This isn't done by lazybuilder. A separate process creates these yamls with the git hashes. By default, lazybuilder follows the branch name specifically rather than the git hash. If you wish to follow the hashes, set `module_follow_refs: true` for your playbook.
 
 Dependencies
 ------------

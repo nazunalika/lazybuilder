@@ -228,7 +228,7 @@
     - name: Get spec name
       find:
         paths: "{{ mock_builder_source_dir }}/{{ source_package_name }}"
-        patterns: "{{ source_package_name }}*.spec"
+        patterns: "*{{ source_package_name }}*.spec"
         recurse: true
       register: srpm_find
 

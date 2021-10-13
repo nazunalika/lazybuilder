@@ -96,8 +96,8 @@ module_follow_refs: false
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
 # module_setup_commands:
-#   - ('disable', 'idm')
-#   - ('enable', 'idm:DL1')
+#   idm: "disable"
+#   idm:DL1: "enable"
 #
 # However, there are module builds that will need the above no matter what. So
 # instead of defining the above manually for a module build, keep the below set

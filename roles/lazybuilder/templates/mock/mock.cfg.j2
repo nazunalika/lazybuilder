@@ -44,14 +44,14 @@ config_opts['files']['/etc/rpm/macros.zz-extended'] = """
 
 """
 {% endif %}
-{% if module_setup_commands is defined %}
+{% if module_setup_commands is defined and not module_mode|bool %}
 # If a build requires non-default modules or a module needs another module
 # enabled, this can be used for that. At the time of this writing, koji doesn't
 # support this. The format is ('action', 'name'), where action is enable or
 # disable, and name is the module name.
 config_opts['module_setup_commands'] = [
-{% for modder in module_setup_commands %}
-{{ modder }},
+{% for k,v in module_setup_commands %}
+('{{ v }}', '{{ k }}'){% if not loop.last %}{{','}}{% endif %}
 {% endfor %}
 ]
 {% endif %}
