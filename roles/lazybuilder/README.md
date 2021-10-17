@@ -10,6 +10,9 @@ In the event that it *does* do something, it will be reliant on tags and modes s
 Requirements
 ------------
 
+Packages
+========
+
 This will require your systems to have the appropriate packages installed or at the very least the right `/bin`'s to go to perform the work. For example:
 
 * `mock`
@@ -22,6 +25,14 @@ Minimum recommended versions:
 * `mock` -> `2.10`
 * `rpm` -> `4.14` (`4.13` may work on EL7, but is **not** recommended)
 * `createrepo_c` -> `0.16`
+
+Permissions
+===========
+
+lazybuilder requires a properly setup repo root that has correct permissions. The default setup requires:
+
+* rpmbuild user, default is `rpmbuild` (can by defined by `mock_builder`)
+* primary repo directory owned by the rpmbuild user, default is `/opt/repo`
 
 Notes
 -----

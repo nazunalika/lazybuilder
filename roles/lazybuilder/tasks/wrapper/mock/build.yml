@@ -153,7 +153,8 @@
   rescue:
     - name: We failed, display the error.
       debug:
-        msg: "Failed to build our RPM: {{ ansible_failed_result }}"
+        msg:
+          - "Failed to build our RPM: {{ ansible_failed_result }}"
 
     - name: Perform full cleanup
       file:
@@ -174,6 +175,47 @@
         state: absent
       loop:
         - "/var/tmp/.build_in_progress"
+
+    # This only works for single builds for now
+    - name: Drop path should exist for the failure
+      file:
+        path: '{{ item }}'
+        owner: '{{ mock_builder }}'
+        group: '{{ mock_builder }}'
+        mode: '0755'
+        state: directory
+      loop:
+        - "{{ repo_drop_path }}"
+        - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+
+    - name: Drop fail file
+      file:
+        path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/failed"
+        state: touch
+
+    - name: Identify all build logs
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns: '*.log'
+      register: result_fail_build_logs
+      tags:
+        - transfer
+
+    - name: Copy build logs into the results area for failure
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ result_fail_build_logs.files }}"
+      tags:
+        - transfer
+
+    - name: Tell user where to find the logs
+      debug:
+        msg: "Logs are located: {{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
 
     - name: Fail when there's an error in the block
       fail:
