@@ -138,6 +138,13 @@
       tags:
         - transfer
 
+    - name: Ensure fail file doesn't exist
+      file:
+        path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/failed"
+        state: absent
+      tags:
+        - transfer
+
   rescue:
     - name: We failed, display the error.
       debug:
