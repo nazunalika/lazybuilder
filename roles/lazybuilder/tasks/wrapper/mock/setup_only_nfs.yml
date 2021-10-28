@@ -1,0 +1,59 @@
+---
+################################################################################
+# Install rpm and mock packages
+- name: Ensure mock and git is installed
+  package:
+    state: present
+    name:
+      - mock
+      - rpm-build
+      - git
+      - rsync
+      - nfs-utils
+  tags:
+    - mock_setup
+
+################################################################################
+# The user that builds the RPMs that should be part of the mock group
+- name: "Ensure the {{ mock_builder }} user exists and is part of the mock group"
+  user:
+    name: "{{ mock_builder }}"
+    state: present
+    uid: '11011'
+    system: true
+    groups:
+      - mock
+  tags:
+    - mock_setup
+
+################################################################################
+# The directory in which everything is dropped should exist and be owned by
+# the build user. regardless if it's an NFS mount or not, it needs to be there.
+# root by default can't change things in NFSv4 mounts, so ensure your playbook
+# or otherwise is ready to handle this sort of setup.
+- name: "Mount NFS Volume"
+  mount:
+    path: "{{ repo_path }}"
+    src: "{{ nfs_server_path }}"
+    opts: "{{ nfs_server_opts | default('rw,sync,hard,intr') }}"
+    state: mounted
+    fstype: nfs
+  tags:
+    - mock_setup
+
+- name: "Ensure drop directory exists and is owned properly"
+  file:
+    path: '{{ item }}'
+    owner: '{{ mock_builder }}'
+    group: '{{ mock_builder }}'
+    mode: '0755'
+    state: directory
+  loop:
+    - "{{ repo_path }}"
+    - "{{ repo_path }}/common"
+    - "{{ repo_path }}/module-results"
+    - "{{ repo_path }}/module-repos"
+    - "{{ repo_result_root }}"
+  tags:
+    - transfer
+...
