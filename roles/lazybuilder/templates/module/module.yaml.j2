@@ -1,7 +1,7 @@
 {% if module_default_data is defined %}
 ---
 document: modulemd-defaults
-version: 1
+version: {{ module_default_data.version }}
 data:
   module: {{ module_default_data.data.module }}
   stream: {{ module_default_data.data.stream }}
