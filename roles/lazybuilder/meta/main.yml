@@ -10,4 +10,5 @@ galaxy_info:
         - 8
         - 9
   galaxy_tags: []
-dependencies: []
+dependencies:
+  - ansible.posix

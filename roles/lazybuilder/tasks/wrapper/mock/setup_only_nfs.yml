@@ -32,7 +32,7 @@
 # root by default can't change things in NFSv4 mounts, so ensure your playbook
 # or otherwise is ready to handle this sort of setup.
 - name: "Mount NFS Volume"
-  mount:
+  ansible.posix.mount:
     path: "{{ repo_path }}"
     src: "{{ nfs_server_path }}"
     opts: "{{ nfs_server_opts | default('rw,sync,hard,intr') }}"
