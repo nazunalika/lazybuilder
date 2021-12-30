@@ -1,0 +1,30 @@
+---
+# Note, these are used to bootstrap off of what's in the CentOS vault. This is
+# used mainly in the case of bootstrapping a new arch starting at 8.0 and going
+# upwards. At a certain point, this won't be needed. In fact, for 9, it can
+# either use stream snapshots or RHEL 9 proper. Beyond that, this isn't needed.
+mock_repos:
+  - repoid: "baseos"
+    baseurl: "http://mirror.stream.centos.org/{{ major }}-stream/BaseOS/{{ mock_arch }}/os"
+    gpgcheck: 0
+    enabled: 1
+    gpgkey: "file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-{{ major }}"
+    priority: "50"
+  - repoid: "appstream"
+    baseurl: "http://mirror.stream.centos.org/{{ major }}-stream/AppStream/{{ mock_arch }}/os"
+    gpgcheck: 0
+    enabled: 1
+    gpgkey: "file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-{{ major }}"
+    priority: "50"
+  - repoid: "crb"
+    baseurl: "http://mirror.stream.centos.org/{{ major }}-stream/CRB/{{ mock_arch }}/os"
+    gpgcheck: 0
+    enabled: 1
+    gpgkey: "file:///usr/share/distribution-gpg-keys/centos/RPM-GPG-KEY-CentOS-{{ major }}"
+    priority: "50"
+
+bootstrap_repos:
+  - repoid: "{{ mock_bootstrap_name }}"
+    baseurl: "{{ mock_bs_full_path }}"
+    priority: "10"
+...
