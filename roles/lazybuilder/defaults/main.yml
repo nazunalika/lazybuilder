@@ -65,7 +65,7 @@ module_tracker: file
 # el8. el9 it may or may not change. It hasn't changed in Fedora. Assuming this
 # project continues to be maintained, we'll need to be ready for future
 # versions or changes.
-module_version: "2"
+module_version_type: "2"
 
 # Generally, the MBS service will auto-generate a macros rpm (annoying or not,
 # this is what it does). We don't want to do that, so some of our stuff will be
