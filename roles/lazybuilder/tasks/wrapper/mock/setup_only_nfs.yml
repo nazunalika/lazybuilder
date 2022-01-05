@@ -9,6 +9,7 @@
       - rpm-build
       - git
       - rsync
+      - nfs-utils
   tags:
     - mock_setup
 
@@ -30,6 +31,16 @@
 # the build user. regardless if it's an NFS mount or not, it needs to be there.
 # root by default can't change things in NFSv4 mounts, so ensure your playbook
 # or otherwise is ready to handle this sort of setup.
+- name: "Mount NFS Volume"
+  ansible.posix.mount:
+    path: "{{ repo_path }}"
+    src: "{{ nfs_server_path }}"
+    opts: "{{ nfs_server_opts | default('rw,sync,hard,intr') }}"
+    state: mounted
+    fstype: nfs
+  tags:
+    - mock_setup
+
 - name: "Ensure drop directory exists and is owned properly"
   file:
     path: '{{ item }}'

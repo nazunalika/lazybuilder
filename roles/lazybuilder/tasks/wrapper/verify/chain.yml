@@ -49,7 +49,7 @@
         - srpm_pull
 
     - name: "Check global skip file"
-      command: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
+      shell: "grep '^{{ srpm_name_ret.stdout }}$' {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
       register: global_skip_file_check
       changed_when: "1 != 1"
       ignore_errors: true
@@ -80,7 +80,7 @@
       when:
         - (ident_build_rpms.files|length < 0)
         - (not skip_file_check.stat.exists)
-        - (not srpm_name_ret.stdout in global_skip_file_check.stdout)
+        - (global_skip_file_check.rc == 0)
       tags:
         - mock
         - verify

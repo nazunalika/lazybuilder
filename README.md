@@ -21,6 +21,7 @@ Note that there are recommended version requirements for mock build hosts.
 * `mock` -> `2.10`
 * `rpm` -> `4.14` (`4.13` may work on EL7, but is **not** recommended)
 * `createrepo_c` -> `0.16`
+* `rpm-build`
 
 Dependencies
 ------------
@@ -51,10 +52,15 @@ At a minimum, a pre task section should be added.
 
 Post tasks for the lazybuilder aren't completely necessary.
 
+Setup
+-----
+
+To setup a system to be ran with lazybuilder, you should run the `lazy_mock_setup.yml` playbook. It will install the necessary packages and setup the necessary directories. If there is more than one builder, it may be easier to have an NFS mount (mounted rw). You can then set `repo_path` to where it is mounted. Optionally, you can mount at `/opt/repo` and not change the vars for simplicity.
+
 Vars
 ----
 
-It is *highly* recommended that you set vars for the lazy builder. There are some sane defaults that are already available, but sometimes they are not practical or you need to be specific on something. Below is a list of common vars you may want to consider setting from the default.
+It is *highly* recommended that you set vars for the lazy builder. There are some sane defaults that are already available, but sometimes they are not practical or you need to be specific on something. Below is a list of common vars you may want to consider setting from the default. Note that this is not all of the vars that can be set. Please see `defaults/main.yml` for more information.
 
 ```
 # base defaults

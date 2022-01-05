@@ -26,4 +26,12 @@
     - mock
     - module
     - git_pull
+
+- name: "Reset metadata_ds"
+  set_fact:
+    metadata_ds: {}
+  tags:
+    - mock
+    - module
+    - git_pull
 ...

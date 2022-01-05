@@ -3,6 +3,7 @@
 - name: "Pull the git RPM data"
   include_tasks: ../mock/srpmpull.yml
   vars:
+    metadata_ds: {}
     source_mode: git
     git_url: "{{ chain_git_url }}/{{ reg_item }}.git"
     source_package_name: "{{ reg_item }}"

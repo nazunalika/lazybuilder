@@ -31,8 +31,9 @@
         - git_pull
         - srpm_pull
 
+    # Leaving this as shell for now
     - name: "Check global skip file"
-      command: "cat {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
+      shell: "grep '^{{ source_package_name }}$' {{ repo_path }}/common/{{ dist }}_{{ mock_arch }}_skip"
       register: global_skip_file_check
       changed_when: "1 != 1"
       ignore_errors: true
@@ -75,7 +76,7 @@
       when: 
         - (ident_build_rpms.files|length > 0)
           or (skip_file_nevra_check.stat.exists)
-          or (source_package_name in global_skip_file_check.stdout)
+          or (global_skip_file_check.rc == 0)
       tags:
         - mock
         - verify

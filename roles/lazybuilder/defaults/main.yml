@@ -61,6 +61,11 @@ generate_repo: "false"
 
 # module mode settings
 module_tracker: file
+# This is module version we'll assume. For example, module version 2 is used in
+# el8. el9 it may or may not change. It hasn't changed in Fedora. Assuming this
+# project continues to be maintained, we'll need to be ready for future
+# versions or changes.
+module_version_type: "2"
 
 # Generally, the MBS service will auto-generate a macros rpm (annoying or not,
 # this is what it does). We don't want to do that, so some of our stuff will be
@@ -91,13 +96,13 @@ module_yaml_location_type: git
 # module_defaults_git_branch: "r{{ full }}"
 # module_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
 # module_defaults_yaml_http_url: https://example.rockylinux.org/{{ source_name }}.yaml
-module_follow_refs: false
+module_follow_refs: true
 
 # There are some cases where we need to ask for a module to be enabled in the
 # first place. You will need to create a list, sort of like this:
 # module_setup_commands:
-#   - ('disable', 'idm')
-#   - ('enable', 'idm:DL1')
+#   idm: "disable"
+#   idm:DL1: "enable"
 #
 # However, there are module builds that will need the above no matter what. So
 # instead of defining the above manually for a module build, keep the below set
