@@ -58,7 +58,7 @@ If you are running `module_mode`, your yaml must have simple buildrequires (only
 
 Currently it is hardcoded to expect `module_data.data.dependencies[0].buildrequires.platform[0]`. In summary:
 
-* If `module_data.data.dependencies[0].buildrequires.platform[0]` does not match `dist`, play will end
+* If `module_data.data.dependencies[0].buildrequires.platform[0]` does not match `dist` or `dist.minor.0`, play will end
 * Anything more than `[0]` for both `dependencies` and `platform` will be ignored
 
 In the future, this may be fixed to address modularity for both el8 and el9 at the same time.

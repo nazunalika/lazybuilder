@@ -60,7 +60,7 @@ To setup a system to be ran with lazybuilder, you should run the `lazy_mock_setu
 Vars
 ----
 
-It is *highly* recommended that you set vars for the lazy builder. There are some sane defaults that are already available, but sometimes they are not practical or you need to be specific on something. Below is a list of common vars you may want to consider setting from the default. Note that this is not all of the vars that can be set. Please see `defaults/main.yml` for more information.
+It is *highly* recommended that you set vars for the lazy builder. There are some sane defaults that are already available, but sometimes they are not practical or you need to be specific on something. Below is a list of common vars you may want to consider setting from the default. Note that this is not all of the vars that can be set and some may change during development. This is not an exhaustive list. Please see `defaults/main.yml` for more information.
 
 ```
 # base defaults
