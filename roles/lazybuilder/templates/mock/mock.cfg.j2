@@ -124,6 +124,9 @@ enabled={{ repo.enabled }}
 gpgkey={{ repo.gpgkey }}
 priority={{ repo.priority|default("99") }}
 module_hotfixes={{ repo.module_hotfixes|default("0") }}
+{% if repo.exclude is defined %}
+exclude={{ repo.exclude  }}
+{% endif %}
 
 {% endfor %}
 {% endif %}
@@ -141,6 +144,9 @@ enabled=1
 gpgcheck=0
 priority={{ repo.priority|default("99") }}
 module_hotfixes={{ repo.module_hotfixes|default("0") }}
+{% if repo.exclude is defined %}
+exclude={{ repo.exclude  }}
+{% endif %}
 
 {% endfor %}
 {% endif %}
@@ -154,6 +160,9 @@ enabled=1
 gpgcheck=0
 priority={{ repo.priority|default("99") }}
 module_hotfixes={{ repo.module_hotfixes|default("0") }}
+{% if repo.exclude is defined %}
+exclude={{ repo.exclude  }}
+{% endif %}
 
 {% endfor %}
 {% endif %}
