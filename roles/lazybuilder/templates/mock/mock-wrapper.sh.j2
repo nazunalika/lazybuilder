@@ -12,14 +12,14 @@
 #
 
 /usr/bin/mock \
-{% if mock_quiet %}
+{% if mock_quiet|bool %}
   --quiet \
 {% endif %}
   --isolation={{ mock_isolation }} \
 {% if mock_rpmbuild_opts is defined %}
   --rpmbuild-opts="{{ mock_rpmbuild_opts | join(" ") }}" \
 {% endif %}
-{% if disable_tests %}
+{% if disable_tests|bool %}
   --without=tests --nocheck \
 {% endif %}
 {% if mock_rpmbuild_timeout is defined %}
