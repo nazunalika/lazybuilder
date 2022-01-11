@@ -73,6 +73,18 @@
         - git_pull
         - srpm_pull
 
+    - name: "Check if there is a build in progress for this package"
+      stat:
+        path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}_{{ mock_arch }}_in_progress"
+      register: in_progress_file_nevra_check
+      check_mode: false
+      changed_when: "1 != 1"
+      tags:
+        - mock
+        - verify
+        - git_pull
+        - srpm_pull
+
     - name: "Adding to list if valid"
       set_fact:
         mock_srpm_path: "{{ mock_srpm_path + [ chain_item ] }}"
@@ -81,6 +93,7 @@
         - (ident_build_rpms.files|length < 0)
         - (not skip_file_check.stat.exists)
         - (global_skip_file_check.rc == 0)
+        - (not in_progress_file_nevra_check.stat.exists)
       tags:
         - mock
         - verify

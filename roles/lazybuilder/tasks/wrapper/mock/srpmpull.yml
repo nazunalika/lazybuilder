@@ -383,7 +383,7 @@
       when:
         - mock_chain|bool
       tags:
-        - git_pull
+        - srpm_pull
 
   rescue:
     - name: We failed, display the error.

@@ -19,6 +19,7 @@
           - '--revision={{ full }}'
           - '--workers=8'
           - '--distro=cpe:/o:{{ distro }}:{{ distro }}:{{ major }},{{ mock_vendor }} {{ major }}'
+          - '--update'
           - '{{ repo_drop_path }}'
       register: createrepo_finish
       ignore_errors: true
