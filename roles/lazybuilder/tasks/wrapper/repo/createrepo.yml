@@ -3,6 +3,13 @@
 # createrepo wrapper
 - name: Perform local createrepo with our finished rpms
   block:
+    - name: "Waiting until createrepo process finished (if any)"
+      wait_for:
+        path: "{{ repo_drop_path  }}/.repodata"
+        state: absent
+      tags:
+        - createrepo
+
     - name: "Run createrepo for {{ repo_drop_path }}"
       command:
         argv:
