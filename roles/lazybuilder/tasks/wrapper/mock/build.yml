@@ -146,7 +146,8 @@
     - name: Check that mock exited cleanly
       assert:
         that:
-          - (mock_finish.rc == 0) or (mock_built_rpms.matched > 0)
+          - mock_finish.rc == 0
+          # (mock_finish.rc == 0) or (mock_built_rpms.matched > 0)
         fail_msg:
           - "=========================================================================="
           - "Mock did not exit cleanly - build likely failed"
