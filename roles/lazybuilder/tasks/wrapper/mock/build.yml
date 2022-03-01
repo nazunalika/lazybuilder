@@ -131,12 +131,22 @@
         - mock
         - build_phase
 
+    - name: Identify all built RPMs post-build
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns:
+          - '*.rpm'
+      register: mock_built_rpms
+      tags:
+        - transfer
+
     ############################################################################
     # Verify that mock exited cleanly.
     - name: Check that mock exited cleanly
       assert:
         that:
-          - mock_finish.rc == 0
+          - (mock_finish.rc == 0) or (mock_built_rpms.matched > 0)
         fail_msg:
           - "=========================================================================="
           - "Mock did not exit cleanly - build likely failed"
