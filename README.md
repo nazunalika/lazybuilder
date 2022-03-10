@@ -5,18 +5,20 @@ lazybuilder
 
 The lazybuilder lazily builds RPMs whether for bootstrapping purposes or otherwise. This isn't really a role, this isn't really a collection. This thing doesn't really know *what* it is. It's up for you to figure it out.
 
-Ultimately, this is meant to be run by itself on an ansible box or imported as a project into tower (being careful with your tower settings). Right now it is built to be ran on an ansible box that is not tower.
+Ultimately, this is meant to be run by itself on an ansible box or imported as a project into tower (being careful with your tower settings). Right now it is built to be ran on an ansible box that is not tower. In the future, it will be designed with the idea that it can be ran via tower.
 
-Playbooks will sit in the root.
+Playbooks will (and should) sit in the root.
 
 **Note**: If you are using lazybuilder in module mode, the modules must have simple requirements. Please review the lazybuilder `README.md` for more information.
+
+This project is mirrored.
 
 Requirements
 ------------
 
 This will require your systems to have the appropriate packages installed or at the very least the right `/bin`'s to go to perform the work.
 
-Note that there are recommended version requirements for mock build hosts.
+Note that there are recommended minimum version requirements for mock build hosts.
 
 * `mock` -> `2.10`
 * `rpm` -> `4.14` (`4.13` may work on EL7, but is **not** recommended)

@@ -1,6 +1,6 @@
 galaxy_info:
   author: Louis Abel
-  description: Lazily builds RPMs
+  description: Lazily Composes RPM Repos
   company: Lazy Utility Net
   license: MIT
   min_ansible_version: 2.9
@@ -10,5 +10,4 @@ galaxy_info:
         - 8
         - 9
   galaxy_tags: []
-collections:
-  - ansible.posix
+dependencies: []
