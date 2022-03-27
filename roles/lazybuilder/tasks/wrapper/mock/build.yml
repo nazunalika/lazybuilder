@@ -39,7 +39,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
@@ -52,7 +52,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
@@ -171,7 +171,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
@@ -184,7 +184,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - "/var/tmp/.build_in_progress"
 
     # This only works for single builds for now
@@ -195,7 +195,7 @@
         group: '{{ mock_builder }}'
         mode: '0755'
         state: directory
-      loop:
+      with_items:
         - "{{ repo_drop_path }}"
         - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
 

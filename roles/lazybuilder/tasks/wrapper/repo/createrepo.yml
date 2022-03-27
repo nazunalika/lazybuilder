@@ -49,7 +49,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
@@ -62,7 +62,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block

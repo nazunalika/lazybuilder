@@ -55,7 +55,7 @@
         group: '{{ mock_builder }}'
         mode: '0755'
         state: directory
-      loop:
+      with_items:
         - "{{ repo_drop_path }}"
         - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
       tags:
@@ -71,7 +71,7 @@
         group: '{{ mock_builder }}'
         mode: '0755'
         state: directory
-      loop:
+      with_items:
         - "{{ repo_drop_path }}-debug"
       when: result_debug_build_rpms.matched > 0
       tags:
@@ -132,7 +132,7 @@
         owner: "{{ mock_builder }}"
         mode: "0644"
         remote_src: true
-      loop:
+      with_items:
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
       tags:
@@ -154,7 +154,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - '{{ mock_builder_rpmbuild_dir }}'
         - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
@@ -168,7 +168,7 @@
       file:
         path: '{{ item }}'
         state: absent
-      loop:
+      with_items:
         - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
