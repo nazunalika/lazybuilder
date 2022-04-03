@@ -6,6 +6,7 @@
     state: absent
   with_items:
     - "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
+    - "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}-srpm.cfg"
     - "/home/{{ mock_builder }}/mock-wrapper.sh"
     - "{{ mock_builder_source_dir }}"
     - "{{ mock_builder_rpmbuild_dir }}"

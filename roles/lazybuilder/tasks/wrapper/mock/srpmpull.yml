@@ -254,18 +254,52 @@
       tags:
         - git_pull
 
+    ############################################################################
+    # Mock config file that will control the srpm build
+    - name: "Deploy mock config file"
+      template:
+        src: "mock/mock.cfg.j2"
+        dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}-srpm.cfg"
+        owner: "{{ mock_builder }}"
+        group: "{{ mock_builder }}"
+        mode: "0644"
+      tags:
+        - mock
+        - build_phase
+
     - name: Generate srpm
-      command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --define 'dist .{{ mock_combined_dist }}'"
-      changed_when: '"Wrote:" in srpm_build_ret.stdout'
+      command: "/usr/bin/mock --buildsrpm --spec {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --sources {{ mock_builder_rpmbuild_dir  }}/SOURCES/ --define 'dist .{{ mock_combined_dist }}' -r /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}-srpm.cfg"
+      changed_when: '"Finish: buildsrpm" in srpm_build_ret.stderr'
       failed_when: "srpm_build_ret.rc != 0"
       register: srpm_build_ret
+
+    - name: Identify all initially built srpms
+      find:
+        paths: "/var/lib/mock/{{ mock_build_root }}/result"
+        recurse: true
+        patterns:
+          - '*.src.rpm'
+      register: mock_srpm_rpms
+
+    - name: Copy source RPMs back to our build user
+      copy:
+        src: "{{ item.path }}"
+        dest: "{{ mock_builder_rpmbuild_dir }}/SRPMS/"
+        owner: "{{ mock_builder }}"
+        mode: "0644"
+        remote_src: true
+      with_items: "{{ mock_srpm_rpms.files }}"
+
+    - name: Set copied path
+      set_fact:
+        mock_srpm_copied_path: "{{ mock_builder_rpmbuild_dir }}/SRPMS/{{ mock_srpm_rpms.files[0]['path'].split('/')[-1] }}"
 
     - name: Get srpm name only
       command:
         argv:
           - "/usr/bin/rpm"
           - "-qp"
-          - "{{ srpm_build_ret.stdout.split()[1] }}"
+          - "{{ mock_srpm_copied_path }}"
           - "--qf"
           - "%{NAME}"
       changed_when: "1 != 1"
@@ -274,7 +308,7 @@
 
     - name: Set path to the srpm
       set_fact:
-        mock_srpm_path: "{{ srpm_build_ret.stdout.split()[1] }}"
+        mock_srpm_path: "{{ mock_srpm_copied_path }}"
       when:
         - not module_mode|bool
       tags:
@@ -282,7 +316,7 @@
 
     - name: Append to srpm path list
       set_fact:
-        mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
+        mock_srpm_path: "{{ mock_srpm_path + [ mock_srpm_copied_path ] }}"
       when:
         - module_mode|bool or mock_chain|bool
       tags:

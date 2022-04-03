@@ -54,6 +54,7 @@
         - '{{ mock_builder_source_dir }}'
         - '/home/{{ mock_builder }}/mock-wrapper.sh'
         - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg'
+        - '/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}-srpm.cfg'
         - '{{ mock_builder_module_dir }}'
       when:
         - enable_cleanup|bool
