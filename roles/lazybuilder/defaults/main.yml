@@ -52,6 +52,11 @@ mock_quiet: false
 # If you need extra options given to mock directly, put them as a full string
 # mock_extra_opts
 
+# Set the below to true to avoid using mock to build the srpm. This will
+# greatly speed up the process of building an RPM, but may cause issues with
+# creating an srpm destined for a newer EL when being created on an older host.
+mock_force_classic_rpmbuild: false
+
 # modes
 # mock is the only accepted option as of this public release
 build_mode: mock

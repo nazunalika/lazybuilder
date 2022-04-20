@@ -1,0 +1,43 @@
+---
+- name: Generate srpm
+  command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --define 'dist .{{ mock_combined_dist }}'"
+  changed_when: '"Wrote:" in srpm_build_ret.stdout'
+  failed_when: "srpm_build_ret.rc != 0"
+  register: srpm_build_ret
+
+- name: Get srpm name only
+  command:
+    argv:
+      - "/usr/bin/rpm"
+      - "-qp"
+      - "{{ srpm_build_ret.stdout.split()[1] }}"
+      - "--qf"
+      - "%{NAME}"
+  changed_when: "1 != 1"
+  failed_when: "srpm_build_name_ret.rc != 0"
+  register: srpm_build_name_ret
+
+- name: Set path to the srpm
+  set_fact:
+    mock_srpm_path: "{{ srpm_build_ret.stdout.split()[1] }}"
+  when:
+    - not module_mode|bool
+  tags:
+    - git_pull
+
+- name: Append to srpm path list
+  set_fact:
+    mock_srpm_path: "{{ mock_srpm_path + [ srpm_build_ret.stdout.split()[1] ] }}"
+  when:
+    - module_mode|bool or mock_chain|bool
+  tags:
+    - git_pull
+
+- name: Append to srpm name list
+  set_fact:
+    mock_srpm_names: "{{ mock_srpm_names + [ srpm_build_name_ret.stdout ] }}"
+  when:
+    - mock_chain|bool
+  tags:
+    - git_pull
+...
