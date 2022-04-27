@@ -203,6 +203,8 @@
       register: git_sources_dir
       check_mode: false
       changed_when: "1 != 1"
+      when:
+        - (source_metadata_check.stat.size > 0) or (metadata_check.stat.size > 0)
       tags:
         - mock
         - git_pull
@@ -222,8 +224,8 @@
       fail:
         msg: "SPECS or SOURCES directory were not found or are not directories. Failed."
       when:
-        - (not git_specs_dir.stat.exists) or (not git_sources_dir.stat.exists)
-        - (not git_specs_dir.stat.isdir) or (not git_sources_dir.stat.isdir)
+        - (not git_specs_dir.stat.exists) or (git_sources_dir is defined and not git_sources_dir.stat.exists)
+        - (not git_specs_dir.stat.isdir) or (git_sources_dir is defined and not git_sources_dir.stat.isdir)
 
     - name: Get spec name
       find:
