@@ -204,7 +204,8 @@
       check_mode: false
       changed_when: "1 != 1"
       when:
-        - (source_metadata_check.stat.size > 0) or (metadata_check.stat.size > 0)
+        - (source_metadata_check is defined and source_metadata_check.stat.size > 0)
+          or (metadata_check is defined and metadata_check.stat.size > 0)
       tags:
         - mock
         - git_pull
