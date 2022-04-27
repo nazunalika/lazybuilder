@@ -19,6 +19,24 @@
         - mock
         - git_pull
 
+    - name: Ensure SPECS directory exists regardless of repo type
+      file:
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SPECS"
+        state: directory
+        mode: '0755'
+      tags:
+        - git_pull
+        - metadata
+
+    - name: Ensure SOURCES directory exists regardless of repo type
+      file:
+        path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
+        state: directory
+        mode: '0755'
+      tags:
+        - git_pull
+        - metadata
+
     - name: Check for metadata file
       stat:
         path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/.{{ source_package_name }}.metadata"
@@ -72,15 +90,6 @@
             - git_pull
             - metadata
 
-        - name: Ensure SOURCES directory exists
-          file:
-            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
-            state: directory
-            mode: '0755'
-          tags:
-            - git_pull
-            - metadata
-
         - name: Pull down sources
           get_url:
             url: "{{ git_source_url }}/{{ item.key }}"
@@ -109,24 +118,6 @@
     # something custom.
     - name: sources based lookup and pull
       block:
-        - name: Ensure SOURCES directory exists
-          file:
-            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SOURCES"
-            state: directory
-            mode: '0755'
-          tags:
-            - git_pull
-            - metadata
-
-        - name: Ensure SPECS directory exists
-          file:
-            path: "{{ mock_builder_source_dir }}/{{ source_package_name }}/SPECS"
-            state: directory
-            mode: '0755'
-          tags:
-            - git_pull
-            - metadata
-
         - name: Lookup the metadata file
           set_fact:
             metadata_ls: "{{ lookup('file', '{{ mock_builder_source_dir }}/{{ source_package_name }}/sources') }}"
@@ -222,8 +213,8 @@
       fail:
         msg: "SPECS or SOURCES directory were not found or are not directories. Failed."
       when:
-        - (not git_specs_dir.stat.exists) or (git_sources_dir is defined and not git_sources_dir.stat.exists)
-        - (not git_specs_dir.stat.isdir) or (git_sources_dir is defined and not git_sources_dir.stat.isdir)
+        - (not git_specs_dir.stat.exists) or (not git_sources_dir.stat.exists)
+        - (not git_specs_dir.stat.isdir) or (not git_sources_dir.stat.isdir)
 
     - name: Get spec name
       find:
