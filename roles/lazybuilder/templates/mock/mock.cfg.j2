@@ -25,7 +25,7 @@ config_opts['macros']['%dist'] = '.{{ mock_combined_dist }}'
 
 ################################################################################
 # Start specific macros for builds
-config_opts['macros']['%vendor'] = "{{ mock_vendor | default('Rocky') }}"
+config_opts['macros']['%vendor'] = "{{ mock_vendor | default('Rocky Enterprise Software Foundation') }}"
 config_opts['macros']['%packager'] = "{{ mock_packager | default('Lazy Builder <releng@rockylinux.org>') }}"
 
 ################################################################################
