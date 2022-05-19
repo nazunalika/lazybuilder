@@ -1,6 +1,6 @@
 ---
 - name: Generate srpm
-  command: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --define 'dist .{{ mock_combined_dist }}'"
+  shell: "/usr/bin/rpmbuild -bs {{ mock_builder_rpmbuild_dir }}/SPECS/{{ srpm_spec }} --define 'dist .{{ mock_combined_dist }}' | grep '^Wrote:'"
   changed_when: '"Wrote:" in srpm_build_ret.stdout'
   failed_when: "srpm_build_ret.rc != 0"
   register: srpm_build_ret
