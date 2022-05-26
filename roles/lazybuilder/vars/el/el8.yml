@@ -20,4 +20,5 @@ mock_repos:
     gpgcheck: 1
     enabled: "{% if enable_devel is defined and enable_devel|bool %}1{% else %}0{% endif %}"
     gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+mock_chroot_setup_cmd: "install tar gcc-c++ redhat-rpm-config redhat-release which xz sed make bzip2 gzip gcc coreutils unzip shadow-utils diffutils cpio bash gawk rpm-build info patch util-linux findutils grep"
 ...

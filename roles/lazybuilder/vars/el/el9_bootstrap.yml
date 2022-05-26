@@ -27,4 +27,6 @@ bootstrap_repos:
   - repoid: "{{ mock_bootstrap_name }}"
     baseurl: "{{ mock_bs_full_path }}"
     priority: "10"
+
+mock_chroot_setup_cmd: "install bash bzip2 coreutils cpio diffutils redhat-release findutils gawk glibc-minimal-langpack grep gzip info patch redhat-rpm-config rpm-build sed shadow-utils tar unzip util-linux which xz"
 ...

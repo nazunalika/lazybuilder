@@ -1,0 +1,24 @@
+---
+mock_repos:
+  - repoid: "baseos"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/BaseOS/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+  - repoid: "appstream"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/AppStream/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+  - repoid: "crb"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/CRB/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+  - repoid: "devel"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/Devel/{{ mock_arch }}/os"
+    gpgcheck: 1
+    enabled: "{% if enable_devel is defined and enable_devel|bool %}1{% else %}0{% endif %}"
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+mock_chroot_setup_cmd: "install bash bzip2 coreutils cpio diffutils redhat-release findutils gawk glibc-minimal-langpack grep gzip info patch redhat-rpm-config rpm-build sed shadow-utils tar unzip util-linux which xz"
+...
