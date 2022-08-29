@@ -1,0 +1,10 @@
+---
+# vars specific to riscv64
+mock_host: "riscv64-redhat-linux-gnu"
+mock_host_arches: "('riscv64',)"
+
+# It is expected that you cannot override this. If your build root requires
+# additional packages, instead of overriding this, create an additional var
+# called "mock_chroot_additional" and put in the package(s) that you will need
+# for your build.
+#mock_chroot_setup_cmd: "install tar gcc-c++ redhat-rpm-config redhat-release which xz sed make bzip2 gzip gcc coreutils unzip shadow-utils diffutils cpio bash gawk rpm-build info patch util-linux findutils grep"
