@@ -4,17 +4,17 @@ mock_repos:
     baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/BaseOS/{{ mock_arch }}/os"
     gpgcheck: 1
     enabled: 1
-    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-Rocky-9
   - repoid: "appstream"
     baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/AppStream/{{ mock_arch }}/os"
     gpgcheck: 1
     enabled: 1
-    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-Rocky-9
   - repoid: "crb"
     baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/CRB/{{ mock_arch }}/os"
     gpgcheck: 1
     enabled: 1
-    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-9
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-Rocky-9
   - repoid: "devel"
     baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/devel/{{ mock_arch }}/os"
     gpgcheck: 1
