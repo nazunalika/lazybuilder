@@ -1,6 +1,7 @@
 ---
 # General vars that are usable across all modes
 # These vars should NOT be overridden
+mock_srpm_names: []
 sum_lengths:
   sum_length_32: "md5"
   sum_length_40: "sha1"
