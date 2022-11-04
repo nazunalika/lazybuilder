@@ -228,7 +228,7 @@
         srpm_spec: "{{ srpm_find['files'][0]['path'].split('/')[-1] }}"
 
     - name: Copy the relevant sources into rpmbuild
-      synchronize:
+      ansible.posix.synchronize:
         src: "{{ mock_builder_source_dir }}/{{ source_package_name }}/"
         dest: "{{ mock_builder_rpmbuild_dir }}"
         rsync_opts:
