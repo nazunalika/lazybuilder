@@ -84,6 +84,15 @@
   include_vars: "arch/{{ mock_arch }}.yml"
   tags:
     - mock
+
+- name: "Override mock_full_dist"
+  set_fact:
+    mock_full_dist: "{{ module_dist }}"
+  when:
+    - module_mode|bool
+  tags:
+    - mock
+    - module
 # End
 ################################################################################
 
