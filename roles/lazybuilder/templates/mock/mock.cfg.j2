@@ -21,7 +21,7 @@ config_opts['macros']['%_host'] = '{{ mock_host }}'
 config_opts['macros']['%_host_cpu'] = '{{ mock_arch }}'
 config_opts['macros']['%_vendor'] = "redhat"
 config_opts['macros']['%_vendor_host'] = "redhat"
-config_opts['macros']['%dist'] = '{% if module_mode %}{{ module_dist }}{{ mock_dist_append | default("") }}{% else %}.{{ mock_combined_dist }}{% endif %}'
+config_opts['macros']['%dist'] = '{{ mock_full_dist }}'
 
 ################################################################################
 # Start specific macros for builds
@@ -63,7 +63,7 @@ config_opts['module_setup_commands'] = [
 # Modules, if required will be in this section
 {% if module_mode %}
 config_opts['files']['/etc/rpm/macros.zz-modules'] = """
-%dist {{ module_dist }}{{ mock_dist_append | default("") }}
+%dist {{ module_dist }}
 %modularitylabel {{ module_modularitylabel }}
 %_module_build 1
 %_module_name {{ source_name }}
