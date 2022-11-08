@@ -2,7 +2,7 @@
 ############################################################################
 # This is only for chain builds - the other checks are done elsewhere
 - name: "Verify mock_chain is true with a list of stuff to build"
-  assert:
+  ansible.builtin.assert:
     that:
       - mock_chain|bool
       - (srpm_url is defined or mock_chain_list is defined)

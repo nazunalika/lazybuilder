@@ -2,7 +2,7 @@
 ################################################################################
 # Verify certain things are not default
 - name: "Verify that our source_name is not defaulted as name"
-  assert:
+  ansible.builtin.assert:
     that:
       - source_name != "name"
     fail_msg: "You cannot use the default source_name: {{ source_name }}"
@@ -11,7 +11,7 @@
     - mock
 
 - name: "Verify that build mode is mock"
-  assert:
+  ansible.builtin.assert:
     that:
       - build_mode == "mock"
     fail_msg: "Build mode is not set to mock."
@@ -41,7 +41,7 @@
     - mock
 
 - name: "Verify that a build is not already in process"
-  assert:
+  ansible.builtin.assert:
     that:
       - not in_progress_check.stat.exists
     fail_msg: "A build is likely already in progress on this host."

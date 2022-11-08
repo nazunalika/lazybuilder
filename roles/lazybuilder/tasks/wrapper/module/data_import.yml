@@ -79,7 +79,7 @@
   block:
     # Assert that our required vars are set
     - name: "Verify that our required vars are set"
-      assert:
+      ansible.builtin.assert:
         that:
           - module_git_repo is defined
           - module_git_branch is defined
@@ -133,7 +133,7 @@
         - module
 
     - name: "Verify that the yaml exists for a module"
-      assert:
+      ansible.builtin.assert:
         that:
           - module_data_yaml.stat.exists
         fail_msg: "{{ source_name }}.yaml does NOT exist in this repo"

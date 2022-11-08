@@ -2,7 +2,7 @@
 - name: Pull down source rpm - git mode
   block:
     - name: Verify that at most git_url is set
-      assert:
+      ansible.builtin.assert:
         that:
           - git_url is defined
           - '"http" in git_url'
@@ -58,7 +58,7 @@
         - git_pull
 
     - name: Verify that git_source_url is defined when metadata is non-zero
-      assert:
+      ansible.builtin.assert:
         that:
           - git_source_url is defined
         success_msg: "Source URL is defined"
@@ -289,7 +289,7 @@
 - name: Pull down source rpm - srpm mode
   block:
     - name: Check that srpm_url is a web URL
-      assert:
+      ansible.builtin.assert:
         that:
           - '("http:" in srpm_url or "https:" in srpm_url)'
           - '".rpm" in srpm_url'

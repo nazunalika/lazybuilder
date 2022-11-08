@@ -4,7 +4,7 @@
 - name: Check mock_srpm_path
   block:
     - name: Verify that that the srpm path is defined and is a src file
-      assert:
+      ansible.builtin.assert:
         that:
           - mock_srpm_path is defined
           - '"src.rpm" in mock_srpm_path'
@@ -12,31 +12,31 @@
           - "The path to the srpm was not defined."
           - "Did you properly pull it or build it from source?"
         success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
-      when: not module_mode|bool
+      when: not module_mode | bool
       tags:
         - mock
         - build_phase
 
     - name: Verify that that the srpm path is defined and is a list
-      assert:
+      ansible.builtin.assert:
         that:
           - mock_srpm_path is defined
           - mock_srpm_path is iterable and (mock_srpm_path is not string and mock_srpm_path is not mapping)
         fail_msg: |
           - "mock_srpm_path is not a list"
         success_msg: "mock_srpm_path is properly defined as {{ mock_srpm_path }}"
-      when: module_mode|bool
+      when: module_mode | bool
       tags:
         - mock
         - module
         - build_phase
   rescue:
     - name: We failed, display the error.
-      debug:
+      ansible.builtin.debug:
         msg: "Failed to build our RPM: {{ ansible_failed_result }}"
 
     - name: Perform full cleanup
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
@@ -50,14 +50,14 @@
         - enable_cleanup|bool
 
     - name: System is no longer in use
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
         - "/var/tmp/.build_in_progress"
 
     - name: Fail when there's an error in the block
-      fail:
+      ansible.builtin.fail:
         msg: "Exiting entire play"
 
 ################################################################################
@@ -65,7 +65,7 @@
 - name: Build Process
   block:
     - name: Display vars
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Name: {{ mock_vendor }}"
           - "Version: {{ full }}"
@@ -80,7 +80,7 @@
     ############################################################################
     # Mock config file that will control the build
     - name: "Deploy mock config file"
-      template:
+      ansible.builtin.template:
         src: "mock/mock.cfg.j2"
         dest: "/home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg"
         owner: "{{ mock_builder }}"
@@ -93,20 +93,36 @@
     ############################################################################
     # Mock wrapper that calls the config deployed
     - name: Deploy mock build script
-      template:
+      ansible.builtin.template:
         src: "mock/mock-wrapper.sh.j2"
         dest: "/home/{{ mock_builder }}/mock-wrapper.sh"
         owner: "{{ mock_builder }}"
         group: "{{ mock_builder }}"
         mode: "0755"
+      when: not module_mode | bool
       tags:
         - mock
         - build_phase
 
     ############################################################################
+    # Mock wrapper that calls the config deployed
+    - name: Deploy module build script
+      ansible.builtin.template:
+        src: "mock/mock-wrapper-module.sh.j2"
+        dest: "/home/{{ mock_builder }}/mock-wrapper.sh"
+        owner: "{{ mock_builder }}"
+        group: "{{ mock_builder }}"
+        mode: "0755"
+      when: module_mode | bool
+      tags:
+        - mock
+        - build_phase
+
+
+    ############################################################################
     # Runs the mock build
     - name: Mark system as in use
-      file:
+      ansible.builtin.file:
         path: "/var/tmp/.build_in_progress"
         state: touch
         mode: "0644"
@@ -115,14 +131,14 @@
         - build_phase
 
     - name: Notification of build start
-      debug:
+      ansible.builtin.debug:
         msg: "Starting/continuing build for {{ source_name }}"
       tags:
         - mock
         - build_phase
 
     - name: Run the mock build
-      command:
+      ansible.builtin.command:
         cmd: "/home/{{ mock_builder }}/mock-wrapper.sh"
         chdir: "/home/{{ mock_builder }}"
       register: mock_finish
@@ -133,7 +149,7 @@
         - build_phase
 
     - name: Identify all built RPMs post-build
-      find:
+      ansible.builtin.find:
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
         patterns:
@@ -145,7 +161,7 @@
     ############################################################################
     # Verify that mock exited cleanly.
     - name: Check that mock exited cleanly
-      assert:
+      ansible.builtin.assert:
         that:
           - mock_finish.rc == 0
           # (mock_finish.rc == 0) or (mock_built_rpms.matched > 0)
@@ -164,12 +180,12 @@
         - build_phase
   rescue:
     - name: We failed, display the error.
-      debug:
+      ansible.builtin.debug:
         msg:
           - "Failed to build our RPM: {{ ansible_failed_result }}"
 
     - name: Perform full cleanup
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
@@ -183,7 +199,7 @@
         - enable_cleanup|bool
 
     - name: System is no longer in use
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
@@ -191,7 +207,7 @@
 
     # This only works for single builds for now
     - name: Drop path should exist for the failure
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         owner: '{{ mock_builder }}'
         group: '{{ mock_builder }}'
@@ -202,12 +218,12 @@
         - "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
 
     - name: Drop fail file
-      file:
+      ansible.builtin.file:
         path: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}/failed"
         state: touch
 
     - name: Identify all build logs
-      find:
+      ansible.builtin.find:
         paths: "/var/lib/mock/{{ mock_build_root }}/result"
         recurse: true
         patterns: '*.log'
@@ -216,7 +232,7 @@
         - transfer
 
     - name: Copy build logs into the results area for failure
-      copy:
+      ansible.builtin.copy:
         src: "{{ item.path }}"
         dest: "{{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
         owner: "{{ mock_builder }}"
@@ -227,10 +243,10 @@
         - transfer
 
     - name: Tell user where to find the logs
-      debug:
+      ansible.builtin.debug:
         msg: "Logs are located: {{ repo_drop_path_results }}/{{ srpm_nevra_ret.stdout }}/{{ mock_arch }}"
 
     - name: Fail when there's an error in the block
-      fail:
+      ansible.builtin.fail:
         msg: "Exiting entire play"
 ...

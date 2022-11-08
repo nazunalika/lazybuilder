@@ -26,7 +26,7 @@
     # We don't want to try to build a module that isn't for our major version
     # We try to avoid doing complex modules for now.
     - name: "Verify that the platform for the module matches"
-      assert:
+      ansible.builtin.assert:
         that:
           - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
             or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
@@ -114,7 +114,7 @@
     # We don't want to try to build a module that isn't for our major version
     # We try to avoid doing complex modules for now.
     - name: "Verify that the platform for the module matches"
-      assert:
+      ansible.builtin.assert:
         that:
           - (module_data.data.dependencies[0].buildrequires.platform[0] == dist)
             or (module_data.data.dependencies[0].buildrequires.platform[0] == "{{ dist }}.{{ minor }}.0")
