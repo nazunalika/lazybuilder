@@ -27,7 +27,7 @@
 {% endif %}
   --root /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg \
 {% if mock_srpm_path is iterable and (mock_srpm_path is not string and mock_srpm_path is not mapping) and (mock_chain or module_mode) %}
-  --localrepo /var/lib/mock/{{ source_name }} \
+  --localrepo {{ module_repo_path }} \
 {% for source in mock_srpm_path %}
   {{ source }} \
 {% endfor %}
