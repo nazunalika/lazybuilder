@@ -179,7 +179,7 @@ module_hotfixes=1
 
 [local-{{ module_format }}-{{ module_context | default('01010100') }}]
 name={{ module_format }}-{{ module_context | default('01010100') }}
-baseurl=/var/lib/mock/{{ source_name }}
+baseurl=file:///var/lib/mock/{{ source_name }}
 enabled=1
 gpgcheck=0
 priority=5
