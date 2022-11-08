@@ -203,19 +203,19 @@
 # TODO: Allow contexts or hashes to be manually defined in playbooks
 # generate fake xmd data
 - name: "Generating initial fake (and limited) xmd data"
-  include_vars:
+  ansible.builtin.include_vars:
     file: "module/module_data_xmd.yml"
   tags:
     - module
 
 - name: "Generate necessary vars"
-  include_vars:
+  ansible.builtin.include_vars:
     file: "module/module_data_init.yml"
   tags:
     - module
 
 - name: "Stretch out contexts and filters"
-  include_vars:
+  ansible.builtin.include_vars:
     file: "module/module_data_contexts.yml"
   when:
     - module_context is not defined
@@ -224,14 +224,14 @@
     - module
 
 - name: "Create wildcarded filter list"
-  set_fact:
+  ansible.builtin.set_fact:
     module_interim_filter: "{% for x in module_data.data.filter.rpms %}{{ x }}* {% endfor %}"
   when: module_data.data.filter is defined
   tags:
     - module
 
 - name: "Create interim filter list"
-  set_fact:
+  ansible.builtin.set_fact:
     module_filtered_rpms: "{{ module_interim_filter.split() }}"
   when: module_data.data.filter is defined
   tags:
@@ -239,7 +239,7 @@
 
 # import vars/module/main.yml to fulfill other pieces
 - name: "Importing final required vars"
-  include_vars:
+  ansible.builtin.include_vars:
     file: "module/main.yml"
   tags:
     - module
