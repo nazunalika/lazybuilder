@@ -35,7 +35,7 @@ PKG_NAME="${PKG//.src.rpm/}"
 {% endif %}
   --root /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg \
   --resultdir "${RESULT_ROOT}/${PKG_NAME}"
-  {{ mock_srpm_path }}
+  {{ pathway }}
 
 createrepo_c "${RESULT_ROOT}"
 
