@@ -34,7 +34,7 @@ PKG_NAME="${PKG//.src.rpm/}"
   --rpmbuild-timeout="{{ mock_rpmbuild_timeout | string }}" \
 {% endif %}
   --root /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg \
-  --resultdir "${RESULT_ROOT}/${PKG_NAME}"
+  --resultdir "${RESULT_ROOT}/${PKG_NAME}" \
   {{ pathway }}
 
 createrepo_c "${RESULT_ROOT}"
