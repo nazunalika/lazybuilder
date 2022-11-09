@@ -37,6 +37,12 @@ PKG_NAME="${PKG//.src.rpm/}"
   --resultdir "${RESULT_ROOT}/${PKG_NAME}" \
   {{ pathway }}
 
+ret_val=$?
+if [[ "$ret_val" != "0" ]]; then
+  echo "Build failed."
+  exit 1
+fi
+
 createrepo_c "${RESULT_ROOT}"
 
 {% endfor %}
