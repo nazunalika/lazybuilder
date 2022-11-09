@@ -171,7 +171,8 @@ exclude={{ repo.exclude  }}
 {% if module_mode %}
 [{{ module_format }}-{{ module_context | default('01010100') }}]
 name={{ module_format }}-{{ module_context | default('01010100') }}
-baseurl={{ module_repo_url }}
+#baseurl={{ module_repo_url }}
+baseurl=file:///var/lib/mock/{{ source_name }}/results/{{ distro }}-{{ major }}-{{ mock_arch }}
 enabled=1
 gpgcheck=0
 priority=5

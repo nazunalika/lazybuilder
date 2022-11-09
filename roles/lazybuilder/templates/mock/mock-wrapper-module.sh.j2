@@ -1,0 +1,42 @@
+#!/bin/bash
+################################################################################
+# Mock wrapper
+#
+# This is a template to do mock builds on a system (instead of directly calling
+# mock with shell or command in ansible). It's just easier to address possible
+# command line arguments this way via vars.
+#
+# Any possible configuration for the rpmbuild will be contained within the mock
+# configuration file. Changes can be made by passing vars that override the
+# defaults set out by this role.
+#
+
+RESULT_ROOT="/var/lib/mock/{{ source_name }}/results/{{ distro }}-{{ major }}-{{ mock_arch }}"
+mkdir -p "${RESULT_ROOT}"
+createrepo_c "${RESULT_ROOT}"
+
+{% for pathway in mock_srpm_path %}
+PKG="{{ pathway.split('/')[-1] }}"
+PKG_NAME="${PKG//.src.rpm/}"
+
+/usr/bin/mock \
+{% if mock_quiet|bool %}
+  --quiet \
+{% endif %}
+  --isolation={{ mock_isolation }} \
+{% if mock_rpmbuild_opts is defined %}
+  --rpmbuild-opts="{{ mock_rpmbuild_opts | join(" ") }}" \
+{% endif %}
+{% if disable_tests|bool %}
+  --without=tests --nocheck \
+{% endif %}
+{% if mock_rpmbuild_timeout is defined %}
+  --rpmbuild-timeout="{{ mock_rpmbuild_timeout | string }}" \
+{% endif %}
+  --root /home/{{ mock_builder }}/{{ distro }}-{{ major }}-{{ mock_arch }}.cfg \
+  --resultdir "${RESULT_ROOT}/${PKG_NAME}"
+  {{ mock_srpm_path }}
+
+createrepo_c "${RESULT_ROOT}"
+
+{% endfor %}
