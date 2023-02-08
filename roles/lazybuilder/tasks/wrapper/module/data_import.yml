@@ -1,7 +1,7 @@
 ---
 # Module vars and data import
 - name: "Setup the {{ mock_builder }} module directories"
-  file:
+  ansible.builtin.file:
     path: '{{ item }}'
     owner: '{{ mock_builder }}'
     group: '{{ mock_builder }}'
@@ -17,7 +17,7 @@
 - name: "Module tracker data - file data"
   block:
     - name: "Check for the module tracker file"
-      stat:
+      ansible.builtin.stat:
         path: "{{ repo_path }}/module-results/tracker.yaml"
       register: module_tracker_check
       changed_when: "1 != 1"
@@ -25,14 +25,14 @@
         - module
 
     - name: "Import increment tracker"
-      include_vars:
+      ansible.builtin.include_vars:
         file: "{{ repo_path }}/module-results/tracker.yaml"
       when: module_tracker_check.stat.exists
       tags:
         - module
 
     - name: "Increment the tracker"
-      set_fact:
+      ansible.builtin.set_fact:
         module_dist_increment_track: "{{ '%03d' % (module_dist_increment_track|int + 1) }}"
       when: module_tracker_check.stat.exists
       tags:
@@ -41,7 +41,7 @@
     # This should only happen if the module tracker doesn't exist, we'll create
     # it later.
     - name: "Setting increment to 000 as a starting point"
-      set_fact:
+      ansible.builtin.set_fact:
         module_dist_increment_track: "000"
       when: not module_tracker_check.stat.exists
       tags:
@@ -50,23 +50,23 @@
     - module_tracker == 'file'
   rescue:
     - name: We failed, display the error
-      debug:
+      ansible.builtin.debug:
         msg: "We failed to set the fact for some reason."
 
     - name: Fail when there's an error in the block
-      fail:
+      ansible.builtin.fail:
         msg: "Exiting entire play"
 
 - name: "Module tracker data - database"
+  when:
+    - module_tracker == 'db'
   block:
     - name: debug
-      debug:
+      ansible.builtin.debug:
         msg: "Not available yet."
 
     - name: "End play"
-      meta: end_play
-  when:
-    - module_tracker == 'db'
+      ansible.builtin.meta: end_play
 # End
 ################################################################################
 
@@ -90,7 +90,7 @@
 
     # checkout the git repo with the module data
     - name: "Check out the module git repo"
-      git:
+      ansible.builtin.git:
         repo: "{{ module_git_repo }}"
         dest: "{{ mock_builder_source_dir }}/module/{{ source_name }}"
         version: "{{ module_git_branch }}"
@@ -100,7 +100,7 @@
 
     # If modules have defaults, checkout git repo
     - name: "Check out the defaults git repo if needed"
-      git:
+      ansible.builtin.git:
         repo: "{{ module_defaults_git_repo }}"
         dest: "{{ mock_builder_source_dir }}/module/defaults"
         version: "{{ module_defaults_git_branch }}"
@@ -112,7 +112,7 @@
         - module
 
     - name: "Check that the yaml exists for a module"
-      stat:
+      ansible.builtin.stat:
         path: "{{ mock_builder_source_dir }}/module/{{ source_name }}/{{ source_name }}.yaml"
       register: module_data_yaml
       check_mode: false
@@ -121,7 +121,7 @@
         - module
 
     - name: "Check that a default yaml exists for a module"
-      stat:
+      ansible.builtin.stat:
         path: "{{ mock_builder_source_dir }}/module/defaults/{{ source_name }}.yaml"
       register: module_data_defaults_yaml
       check_mode: false
@@ -143,7 +143,7 @@
 
     # import the yaml associated
     - name: "Importing module vars from file"
-      include_vars:
+      ansible.builtin.include_vars:
         file: "{{ mock_builder_source_dir }}/module/{{ source_name }}/{{ source_name }}.yaml"
         name: module_data
       tags:
@@ -151,7 +151,7 @@
 
     # import the default yaml associated if available
     - name: "Importing default module vars from file"
-      include_vars:
+      ansible.builtin.include_vars:
         file: "{{ mock_builder_source_dir }}/module/defaults/{{ source_name }}.yaml"
         name: module_default_data
       when:
@@ -163,7 +163,7 @@
 
     # generate the filter list if it exists
     - name: "Generate the RPM filter list"
-      set_fact:
+      ansible.builtin.set_fact:
         module_filtered_rpms: "{{ module_filtered_rpms|default([]) + [item ~ '*'] }}"
       loop: "{{ module_data.data.filter.rpms }}"
       when: module_data.data.filter.rpms is defined
@@ -173,15 +173,26 @@
     - module_data is not defined
 
 - name: "Module Info - http mode"
+  when:
+    - module_yaml_location_type == 'http'
   block:
-    - name: debug
-      debug:
+    - name: Debug
+      ansible.builtin.debug:
         msg: "Not supported."
 
     - name: "End play"
-      meta: end_play
+      ansible.builtin.meta: end_play
+
+- name: "Check for v3"
   when:
-    - module_yaml_location_type == 'http'
+    - module_data.version == 3
+  block:
+    - name: "Message for v3"
+      ansible.builtin.debug:
+        msg: "Play will end if module version is v3 - This is not supported yet"
+
+    - name: "End play"
+      ansible.builtin.meta: end_play
 
 # generate necessary vars
 # the contexts in MBS land are an odd combination of different things. The
