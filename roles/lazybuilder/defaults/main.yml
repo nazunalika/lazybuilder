@@ -1,9 +1,9 @@
 ---
 # defaults file for lazybuilder
 major: 9
-minor: 0
+minor: 1
 # centos stream does not use this format - this will be reused elsewhere
-year_month: 2209
+year_month: 2305
 full: "{{ major }}.{{ minor }}"
 # this can be a source rpm name or a module name
 source_name: name

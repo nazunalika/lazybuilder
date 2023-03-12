@@ -12,9 +12,9 @@ mock_host_arches: "('i386', 'i486', 'i586', 'i686', 'x86_64',)"
 # There currently isn't a clean way of composing for i686, the repo data
 # gets all messy.
 mock_repos:
-  - repoid: "koji-i686"
-    baseurl: "https://kojidev.rockylinux.org/kojifiles/repos/dist-rocky8-updates-build/latest/i386"
+  - repoid: "devel-i686"
+    baseurl: "https://dl.rockylinux.org/pub/rocky/{{ major }}/devel/i686"
     gpgcheck: 0
     enabled: 1
-    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-rockyofficial
+    gpgkey: "file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-{{ major }}"
 ...
