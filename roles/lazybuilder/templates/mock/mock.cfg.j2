@@ -8,6 +8,7 @@ config_opts['dist'] = '{{ mock_combined_dist }}'
 config_opts['releasever'] = '{{ major }}'
 config_opts['package_manager'] = 'dnf'
 config_opts['extra_chroot_dirs'] = [ '/run/lock', ]
+config_opts['bootstrap_image_ready'] = False
 
 ################################################################################
 # Mimicking some build options
