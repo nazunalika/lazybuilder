@@ -1,0 +1,9 @@
+---
+mock_repos:
+  - repoid: "devel"
+    baseurl: "https://yumrepofs.build.resf.org/v1/projects/e7b83c0a-b514-4903-b739-6943bbb307f7/repo/all/{{ mock_arch }}"
+    gpgcheck: 0
+    enabled: 1
+    gpgkey: file:///usr/share/distribution-gpg-keys/rocky/RPM-GPG-KEY-Rocky-9
+mock_chroot_setup_cmd: "install bash bzip2 coreutils cpio diffutils redhat-release findutils gawk glibc-minimal-langpack grep gzip info patch redhat-rpm-config rpm-build sed shadow-utils tar unzip util-linux which xz"
+...
